@@ -1,25 +1,12 @@
 # make_prediction.py
+# Enhanced with professor's feedback: expanded materials, DIN friction tables,
+# hub stiffness consideration, corrected maintenance values, durability criterion
 from fastapi import HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, Tuple, List
 from dataclasses import dataclass
 import math
 import numpy as np
-
-#add more criteria according to book:
-#maintenance(repair), durability
-#press fit is easier for repair compared to keys and splines
-#hub outer diameter: stiff/fleixible
-#reduce torque margin dominance
-#for friction lookup, add more materials:
-#use DIN table and consider the following factors:
-#machining: rough, fine
-#hardness
-#material
-#treatment
-#lubrication
-#choose smaller value
-#add steel, cast iron
 
 # -----------------------
 # Global settings
@@ -28,50 +15,188 @@ MARGIN_TIE_BAND = 0.35
 RNG_SEED_DEFAULT = 7
 
 # -----------------------
-# Materials & allowables
+# Materials & allowables (expanded per professor's notes)
 # -----------------------
+# Material properties based on DIN standards
+# E = Young's modulus (MPa), nu = Poisson's ratio
+# sigma_yield = yield strength (MPa), sigma_uts = ultimate tensile strength (MPa)
+# SF = safety factor for ductile, SB = safety factor for brittle
+# tau_allow_key = allowable shear stress for keys (MPa)
+# p_allow_key = allowable bearing pressure for keys (MPa)
+# p_allow_spline = allowable bearing pressure for splines (MPa)
+
 materials = {
+    # Steels
+    "Steel S235": {
+        "E": 210000.0, "nu": 0.30,
+        "sigma_yield": 235.0, "sigma_uts": 360.0,
+        "ductile": True, "SF": 1.5, "SB": 2.5,
+        "tau_allow_key": 45.0,
+        "p_allow_key":   70.0,
+        "p_allow_spline": 55.0,
+        "category": "steel"
+    },
     "Steel C45": {
         "E": 210000.0, "nu": 0.30,
         "sigma_yield": 340.0, "sigma_uts": 600.0,
         "ductile": True, "SF": 1.5, "SB": 2.5,
         "tau_allow_key": 60.0,
         "p_allow_key":   90.0,
-        "p_allow_spline": 70.0
+        "p_allow_spline": 70.0,
+        "category": "steel"
     },
+    "Steel 42CrMo4": {
+        "E": 210000.0, "nu": 0.30,
+        "sigma_yield": 650.0, "sigma_uts": 900.0,
+        "ductile": True, "SF": 1.5, "SB": 2.5,
+        "tau_allow_key": 100.0,
+        "p_allow_key":   150.0,
+        "p_allow_spline": 120.0,
+        "category": "steel"
+    },
+    # Stainless Steel
+    "Stainless 304": {
+        "E": 193000.0, "nu": 0.29,
+        "sigma_yield": 215.0, "sigma_uts": 505.0,
+        "ductile": True, "SF": 1.6, "SB": 2.5,
+        "tau_allow_key": 40.0,
+        "p_allow_key":   65.0,
+        "p_allow_spline": 50.0,
+        "category": "steel"
+    },
+    # Cast Irons
+    "Cast Iron GG25": {
+        "E": 110000.0, "nu": 0.26,
+        "sigma_yield": 165.0, "sigma_uts": 250.0,  # No clear yield, use 0.2% proof
+        "ductile": False, "SF": 2.0, "SB": 3.0,   # Brittle - higher safety factors
+        "tau_allow_key": 30.0,
+        "p_allow_key":   50.0,
+        "p_allow_spline": 40.0,
+        "category": "cast_iron"
+    },
+    "Cast Iron GGG40": {
+        "E": 169000.0, "nu": 0.275,
+        "sigma_yield": 250.0, "sigma_uts": 400.0,
+        "ductile": True, "SF": 1.6, "SB": 2.5,    # Ductile iron
+        "tau_allow_key": 50.0,
+        "p_allow_key":   75.0,
+        "p_allow_spline": 60.0,
+        "category": "cast_iron"
+    },
+    # Bronze
+    "Bronze CuSn8": {
+        "E": 110000.0, "nu": 0.34,
+        "sigma_yield": 150.0, "sigma_uts": 300.0,
+        "ductile": True, "SF": 1.6, "SB": 2.5,
+        "tau_allow_key": 30.0,
+        "p_allow_key":   45.0,
+        "p_allow_spline": 35.0,
+        "category": "bronze"
+    },
+    # Aluminum
     "Aluminum 6061": {
         "E": 69000.0, "nu": 0.33,
         "sigma_yield": 95.0, "sigma_uts": 290.0,
         "ductile": True, "SF": 1.6, "SB": 2.5,
         "tau_allow_key": 25.0,
         "p_allow_key":   40.0,
-        "p_allow_spline": 30.0
+        "p_allow_spline": 30.0,
+        "category": "aluminum"
+    },
+    "Aluminum 7075": {
+        "E": 71700.0, "nu": 0.33,
+        "sigma_yield": 503.0, "sigma_uts": 572.0,
+        "ductile": True, "SF": 1.6, "SB": 2.5,
+        "tau_allow_key": 80.0,
+        "p_allow_key":   120.0,
+        "p_allow_spline": 95.0,
+        "category": "aluminum"
     },
 }
 
 # -----------------------
-# Friction pairs (μ)
+# Friction coefficients based on DIN 7190-1 Table 1
 # -----------------------
-friction_lookup = {
-    ("Steel C45", "Steel C45"): 0.18,   # default mid-conservative for steel–steel
-    ("Aluminum 6061", "Aluminum 6061"): 0.22,  # default for Al–Al
-}
-#machining: rough, fine
-#hardness
-#material
-#treatment
-#lubrication
-#choose smaller value
-#add steel, cast iron
+# Format: (shaft_category, hub_category, surface_condition) -> μ
+# surface_condition: "dry", "oiled", "greased"
+# Using CONSERVATIVE (lower) values per professor's guidance
 
-def mu_for(a: str, b: str, override: float | None = None) -> float:
+FRICTION_TABLE_DIN = {
+    # Steel - Steel
+    ("steel", "steel", "dry"):      0.12,   # DIN 7190: 0.12-0.20, use lower
+    ("steel", "steel", "oiled"):    0.08,   # DIN 7190: 0.08-0.12
+    ("steel", "steel", "greased"):  0.06,   # With grease lubrication
+    
+    # Steel - Cast Iron
+    ("steel", "cast_iron", "dry"):      0.10,   # DIN 7190: 0.10-0.16
+    ("steel", "cast_iron", "oiled"):    0.06,   # DIN 7190: 0.06-0.10
+    ("steel", "cast_iron", "greased"):  0.05,
+    
+    # Steel - Bronze
+    ("steel", "bronze", "dry"):      0.08,   # DIN 7190: 0.08-0.14
+    ("steel", "bronze", "oiled"):    0.05,   # DIN 7190: 0.05-0.08
+    ("steel", "bronze", "greased"):  0.04,
+    
+    # Steel - Aluminum
+    ("steel", "aluminum", "dry"):      0.10,
+    ("steel", "aluminum", "oiled"):    0.07,
+    ("steel", "aluminum", "greased"):  0.05,
+    
+    # Cast Iron - Cast Iron
+    ("cast_iron", "cast_iron", "dry"):      0.10,
+    ("cast_iron", "cast_iron", "oiled"):    0.06,
+    ("cast_iron", "cast_iron", "greased"):  0.04,
+    
+    # Aluminum - Aluminum
+    ("aluminum", "aluminum", "dry"):      0.15,   # Higher for Al-Al
+    ("aluminum", "aluminum", "oiled"):    0.10,
+    ("aluminum", "aluminum", "greased"):  0.08,
+    
+    # Bronze - Bronze
+    ("bronze", "bronze", "dry"):      0.08,
+    ("bronze", "bronze", "oiled"):    0.05,
+    ("bronze", "bronze", "greased"):  0.04,
+}
+
+def get_material_category(mat_name: str) -> str:
+    """Get the category of a material for friction lookup."""
+    if mat_name in materials:
+        return materials[mat_name].get("category", "steel")
+    return "steel"  # Default
+
+def mu_for(shaft_mat: str, hub_mat: str, 
+           surface_condition: str = "dry",
+           override: float | None = None) -> float:
+
     """
-    Return μ. If 'override' is provided, clamp to a sane range [0.05, 0.5] and use it.
-    Otherwise fall back to the pair lookup (symmetric), and if missing -> 0.18.
+    Return friction coefficient μ based on DIN 7190-1.
+    
+    Args:
+        shaft_mat: Shaft material name
+        hub_mat: Hub material name
+        surface_condition: "dry", "oiled", or "greased"
+        override: Manual override value (clamped to 0.05-0.50)
+    
+    Returns:
+        Friction coefficient (conservative/lower value per DIN guidance)
     """
     if override is not None:
         return max(0.05, min(0.50, float(override)))
-    return friction_lookup.get((a, b)) or friction_lookup.get((b, a), 0.18)
+    
+    cat_shaft = get_material_category(shaft_mat)
+    cat_hub = get_material_category(hub_mat)
+    
+    # Try both orderings (symmetric lookup)
+    key1 = (cat_shaft, cat_hub, surface_condition)
+    key2 = (cat_hub, cat_shaft, surface_condition)
+    
+    if key1 in FRICTION_TABLE_DIN:
+        return FRICTION_TABLE_DIN[key1]
+    if key2 in FRICTION_TABLE_DIN:
+        return FRICTION_TABLE_DIN[key2]
+    
+    # Fallback: conservative steel-steel dry
+    return 0.12
 
 # -----------------------
 # Spline & key tables
@@ -140,45 +265,58 @@ def key_geometry_from_d(d_mm: float) -> Tuple[float, float]:
     return float(last["b"]), float(last["h"])
 
 # -----------------------
-# User preferences
+# User preferences (8 criteria total)
 # -----------------------
 @dataclass
 class UserPrefs:
-    ease: float
-    movement: float
-    cost: float
-    bidirectional: float
+    ease: float           # importance of assembly/disassembly ease
+    movement: float       # importance of frequent axial movement capability
+    cost: float           # importance of low manufacturing cost
+    bidirectional: float  # importance of bidirectional torque capability
+    vibration: float      # importance of vibration resistance
+    speed: float          # importance of high-speed suitability
+    maintenance: float    # importance of easy maintenance/repair (replacement simplicity)
+    durability: float     # importance of fatigue life / durability under cyclic loads
 
-# reward not cost
-# CONN_PROFILE = {
-#     "press":  {"assembly/disassembly_ease": 0.25, "manufacturing_cost": 0.60, "movement_ease": 0.05, "bidirectional": 0.10},
-#     "key":    {"assembly/disassembly_ease": 0.70, "manufacturing_cost": 0.25, "movement_ease": 0.20, "bidirectional": 0.20},
-#     "spline": {"assembly/disassembly_ease": 0.90, "manufacturing_cost": 0.15, "movement_ease": 0.75, "bidirectional": 0.70},
-# }
-
+# Full engineering profile with 8 criteria
+# MAINTENANCE: Per professor's note - press fit is EASIER for repair because replacement
+# only requires simple cylindrical machining, while key/spline need matching geometry
+# DURABILITY: Based on fatigue behavior - splines distribute load best, keys have stress concentration
 CONN_PROFILE = {
-    # Press fit: cheapest, compact, but poor for repeated dis/assembly or sliding motion
+    # Press fit: cheapest, excellent vibration/speed, easy repair (simple geometry)
     "press": {
-        "assembly/disassembly_ease": 0.20,  # heat/press needed; not service-friendly
-        "manufacturing_cost":        0.75,  # turning + bore tolerance only (cheapest)
-        "movement_ease":             0.05,  # not suited to frequent axial movement
-        "bidirectional":             0.60,  # symmetric torque, but micro-slip risk under reversals
+        "assembly/disassembly_ease": 0.15,  # requires special equipment (press/heating)
+        "manufacturing_cost":        0.80,  # cheapest: only toleranced turning/boring
+        "movement_ease":             0.00,  # zero - it's a permanent fit
+        "bidirectional":             0.95,  # excellent: symmetric friction, no backlash
+        "vibration_resistance":      0.90,  # excellent damping due to friction interface
+        "high_speed_suitability":    0.95,  # no moving parts, perfect balance possible
+        "maintenance_ease":          0.70,  # CORRECTED: easy repair - just machine new cylinder
+        "durability":                0.60,  # fretting fatigue at interface under cyclic loads
     },
 
-    # Keyed: very serviceable, moderate cost, okay for occasional movement, some backlash
+    # Keyed: easy assembly, but repair needs new keyway, poor fatigue at keyway corners
     "key": {
-        "assembly/disassembly_ease": 0.65,  # quick install/remove 
-        "manufacturing_cost":        0.45,  # broach + keyway in hub (medium)
-        "movement_ease":             0.35,  # can slide with clearance; not ideal for constant motion
-        "bidirectional":             0.55,  # works both ways, but fretting/backlash can appear
+        "assembly/disassembly_ease": 0.70,  # slide-in, screw/tap out
+        "manufacturing_cost":        0.45,  # medium: keyway broaching required
+        "movement_ease":             0.30,  # possible with clearance fit, not intended
+        "bidirectional":             0.35,  # poor: backlash causes hammering under reversals
+        "vibration_resistance":      0.40,  # backlash amplifies vibration
+        "high_speed_suitability":    0.55,  # imbalance from keyway, stress concentration
+        "maintenance_ease":          0.40,  # CORRECTED: repair needs matching keyway (broaching)
+        "durability":                0.35,  # stress concentration at keyway corners
     },
 
-    # Spline: best for frequent movement & high cyclic/bidirectional torque; expensive
+    # Spline: best for movement & bidirectional, good fatigue life, expensive repair
     "spline": {
-        "assembly/disassembly_ease": 0.85,  # easy axial slide/locate, but alignment needed
-        "manufacturing_cost":        0.20,  # spline cutting/grinding (expensive/inspection-heavy)
-        "movement_ease":             0.85,  # designed for frequent sliding/locational accuracy
-        "bidirectional":             0.90,  # excellent for reversing & high-cycle loads
+        "assembly/disassembly_ease": 0.80,  # easy axial insertion, but alignment critical
+        "manufacturing_cost":        0.15,  # expensive: hobbing/grinding + inspection
+        "movement_ease":             0.90,  # designed for this purpose
+        "bidirectional":             0.85,  # very good: multiple teeth share load symmetrically
+        "vibration_resistance":      0.70,  # good load distribution, some play possible
+        "high_speed_suitability":    0.85,  # symmetric, self-centering
+        "maintenance_ease":          0.25,  # CORRECTED: repair needs matching spline (expensive)
+        "durability":                0.85,  # distributed load = best fatigue life
     },
 }
 
@@ -286,44 +424,91 @@ def spline_capacity(d_mm: float, shaft_mat_name: str) -> Dict[str, Any]:
     return {"Mt": Mt, "z": z, "b_mm": b_mm, "h_proj_mm": h_proj_mm, "D_mm": D_mm}
 
 # -----------------------
-# Scoring (feasible-only)
+# Hub stiffness evaluation (for press fit penalty)
+# -----------------------
+def calculate_hub_stiffness_factor(d_mm: float, DaA_mm: Optional[float]) -> float:
+    """
+    Calculate hub stiffness factor based on wall thickness ratio QA = d/DaA.
+    
+    Returns a factor 0-1 where:
+    - 1.0 = thick-walled hub (QA < 0.5), suitable for press fits
+    - 0.0 = very thin-walled hub (QA > 0.8), risky for press fits
+    
+    Per professor's note: thin/flexible hubs are problematic for press fits
+    due to stress concentration and potential plastic deformation.
+    """
+    if DaA_mm is None or DaA_mm <= d_mm:
+        return 0.5  # Unknown geometry, neutral
+    
+    QA = d_mm / DaA_mm  # Wall thickness ratio
+    
+    if QA < 0.5:
+        return 1.0   # Thick-walled: excellent for press fit
+    elif QA < 0.6:
+        return 0.85  # Good
+    elif QA < 0.7:
+        return 0.60  # Acceptable but not ideal
+    elif QA < 0.8:
+        return 0.30  # Thin: problematic for press fits
+    else:
+        return 0.10  # Very thin: press fit risky
+
+# -----------------------
+# Scoring (feasible-only) with 8 criteria + hub stiffness
 # -----------------------
 def score_candidate(conn: str, Mt_cap: float, M_req: float,
                     d_mm: float, L_mm: float, prefs: UserPrefs,
+                    DaA_mm: Optional[float] = None,
                     weights = {
-                        "margin":   0.30,   # reward for useful safety margin
-                        "prefs":    0.70,   # user intent drives choice  
-                        "overkill": 0.10,   # SMALL penalty for excessive overdesign
+                        "margin":       0.20,   # reward for useful safety margin
+                        "prefs":        0.70,   # user intent drives choice (8 criteria)
+                        "overkill":     0.06,   # SMALL penalty for excessive overdesign
+                        "hub_stiffness": 0.10,  # penalty for press fit on thin hubs
                     },
                     margin_cap: float = 0.35  # +35% surplus capacity treated as fully useful
                     ) -> float:
     """
-    User-preference-first scoring with minimal overkill penalty.
-    Strong user preferences can overcome moderate overdesign penalties.
+    User-preference-first scoring with 8 criteria + hub stiffness consideration.
+    
+    Criteria: ease, movement, cost, bidirectional, vibration, speed, maintenance, durability.
+    
+    Hub stiffness penalty: Applies to press fits when hub wall is thin (QA > 0.6).
+    Per professor's guidance on stiff/flexible hub consideration.
     """
     
     # 1) Margin with diminishing returns
     margin_raw = max(0.0, (Mt_cap - M_req) / max(M_req, 1e-6))
-    
-    # Useful margin (0-35%) gets full reward
     margin_useful = min(margin_raw, margin_cap) / margin_cap
     s_margin = weights["margin"] * margin_useful
 
-    # SMALL overkill penalty (>35%) - just enough to nudge away from extreme overdesign
+    # SMALL overkill penalty (>35%)
     overkill = max(0.0, margin_raw - margin_cap)
     s_overkill = -weights["overkill"] * overkill
 
-    # 2) User preferences (dominant factor)
+    # 2) User preferences (dominant factor) - all 8 criteria
     prof = CONN_PROFILE[conn]
     pref_util = (
         prefs.ease          * prof.get("assembly/disassembly_ease", 0.0) +
         prefs.movement      * prof.get("movement_ease", 0.0) +
         prefs.cost          * prof.get("manufacturing_cost", 0.0) +
-        prefs.bidirectional * prof.get("bidirectional", 0.0)
+        prefs.bidirectional * prof.get("bidirectional", 0.0) +
+        prefs.vibration     * prof.get("vibration_resistance", 0.0) +
+        prefs.speed         * prof.get("high_speed_suitability", 0.0) +
+        prefs.maintenance   * prof.get("maintenance_ease", 0.0) +
+        prefs.durability    * prof.get("durability", 0.0)
     )
+    # Normalize by number of criteria (8)
     s_prefs = weights["prefs"] * pref_util
 
-    return s_margin + s_overkill + s_prefs
+    # 3) Hub stiffness penalty (only for press fits)
+    s_hub_stiffness = 0.0
+    if conn == "press" and DaA_mm is not None:
+        hub_factor = calculate_hub_stiffness_factor(d_mm, DaA_mm)
+        # Penalty when hub is thin (factor < 1.0)
+        # Thin hub = lower factor = higher penalty
+        s_hub_stiffness = weights["hub_stiffness"] * (hub_factor - 1.0)  # Negative when thin
+
+    return s_margin + s_overkill + s_prefs + s_hub_stiffness
 # -----------------------
 # Torque demand calculation
 # -----------------------
@@ -349,20 +534,28 @@ def select_shaft_connection(request) -> Dict[str, Any]:
         raise HTTPException(status_code=400, detail="required_torque is mandatory")
     M_req = float(request.required_torque)
 
-    # User preferences (only axes present in CONN_PROFILE will be used in scoring)
+
+        # User preferences - all 8 criteria
     prefs = UserPrefs(
         ease=request.user_preferences.ease,
         movement=request.user_preferences.movement,
         cost=request.user_preferences.cost,
-        bidirectional=request.user_preferences.bidirectional
+        bidirectional=request.user_preferences.bidirectional,
+        vibration=request.user_preferences.vibration,
+        speed=request.user_preferences.speed,
+        maintenance=request.user_preferences.maintenance,
+        durability=request.user_preferences.durability,
     )
 
-    # Friction μ (allow override)
+
+        # Friction μ (allow override)
     mu = mu_for(
         request.shaft_material,
         request.hub_material,
-        getattr(request, "mu_override", None)
+        surface_condition=getattr(request, "surface_condition", "dry"),
+        override=getattr(request, "mu_override", None),
     )
+
 
     # Geometry & defaults
     d = request.shaft_diameter
@@ -397,10 +590,14 @@ def select_shaft_connection(request) -> Dict[str, Any]:
             "capacities_Nmm": candidates,
             "feasible": False,
             "mu_used": mu,
+            "scores": None,
+            "surface_condition": request.surface_condition,  # 👈 add this
+            "hub_stiffness_factor": calculate_hub_stiffness_factor(d, DaA_mm),
             "input_parameters": request.dict(),
-            "details": {"press": pf, "key": key, "spline": spline}
+            "details": {"press": pf, "key": key, "spline": spline},
         }
 
+        
     # Score only feasible candidates (your scoring already ignores non-profile axes)
     scores = {k: score_candidate(k, v, M_req, d, request.hub_length, prefs) for k, v in feasible.items()}
     best_connection = max(scores.items(), key=lambda x: x[1])[0]
@@ -410,8 +607,12 @@ def select_shaft_connection(request) -> Dict[str, Any]:
         "required_torque_Nmm": M_req,
         "capacities_Nmm": candidates,
         "scores": scores,
+        "hub_stiffness_factor": calculate_hub_stiffness_factor(d, DaA_mm),
         "feasible": True,
         "mu_used": mu,
+        "surface_condition": request.surface_condition,  # 👈 add this
         "input_parameters": request.dict(),
-        "details": {"press": pf, "key": key, "spline": spline}
+        "details": {"press": pf, "key": key, "spline": spline},
     }
+
+

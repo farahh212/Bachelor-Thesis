@@ -20,11 +20,16 @@ function App() {
     hub_outer_diameter: '',
     shaft_inner_diameter: '',
     mu_override: '',
+    surface_condition: 'dry', // NEW: dry, oiled, greased
     user_preferences: {
       ease: 0.5,
       movement: 0.5,
       cost: 0.5,
-      bidirectional: 0.5
+      bidirectional: 0.5,
+      vibration: 0.5,
+      speed: 0.5,
+      maintenance: 0.5,
+      durability: 0.5  // NEW: fatigue life importance
     }
   });
 
@@ -32,7 +37,36 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState([]);
   const [lengthRecommendation, setLengthRecommendation] = useState('D (equal to shaft diameter)');
+
+  const DIAMETER_MIN = 6;
+  const DIAMETER_MAX = 230;
+
+  const validateParameters = () => {
+    const errors = [];
+    const d = formData.shaft_diameter;
+    if (d < DIAMETER_MIN) {
+      errors.push(`Shaft diameter must be ≥ ${DIAMETER_MIN} mm (DIN table minimum).`);
+    }
+    if (d > DIAMETER_MAX) {
+      errors.push(`Shaft diameter must be ≤ ${DIAMETER_MAX} mm (DIN table maximum).`);
+    }
+    if (formData.shaft_type === 'hollow') {
+      if (!formData.shaft_inner_diameter) {
+        errors.push('Hollow shafts require an inner diameter.');
+      } else if (formData.shaft_inner_diameter >= formData.shaft_diameter) {
+        errors.push('Shaft inner diameter must be less than the shaft diameter.');
+      }
+    }
+    if (formData.hub_outer_diameter !== '' && formData.hub_outer_diameter <= formData.shaft_diameter) {
+      errors.push('Hub outer diameter must be greater than the shaft diameter.');
+    }
+    if (!formData.required_torque || formData.required_torque <= 0) {
+      errors.push('Required torque must be a positive number.');
+    }
+    return errors;
+  };
 
   // --- Keep hub material locked to the shaft material ---
   useEffect(() => {
@@ -51,6 +85,17 @@ function App() {
       setFormData(prev => ({ ...prev, hub_length: Lrec }));
     }
   }, [formData.has_bending, formData.shaft_diameter, autoLength]);
+
+  useEffect(() => {
+    setValidationErrors(validateParameters());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    formData.shaft_diameter,
+    formData.shaft_type,
+    formData.shaft_inner_diameter,
+    formData.hub_outer_diameter,
+    formData.required_torque,
+  ]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -90,6 +135,13 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errors = validateParameters();
+    setValidationErrors(errors);
+    if (errors.length) {
+      setError('Fix validation issues before submitting.');
+      return;
+    }
+
     setLoading(true);
     setError('');
     setResult(null);
@@ -97,16 +149,26 @@ function App() {
     try {
       const requestData = {
         ...formData,
-        // Backend expects numbers or nulls for optional geometry
+        // Backend expects numbers or nulls for optional parameters
         hub_outer_diameter: formData.hub_outer_diameter === '' ? null : formData.hub_outer_diameter,
         shaft_inner_diameter: formData.shaft_inner_diameter === '' ? null : formData.shaft_inner_diameter,
+        mu_override: formData.mu_override === '' ? null : formData.mu_override,
         // hub_material locked by effect; send as-is
       };
 
       const response = await axios.post(`${API_BASE}/select-connection`, requestData);
       setResult(response.data);
     } catch (err) {
-      setError(err.response?.data?.detail || 'An error occurred');
+      // Handle Pydantic validation errors (array of objects) or string errors
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        // Pydantic validation error - extract messages
+        setError(detail.map(e => `${e.loc?.join('.')}: ${e.msg}`).join('; '));
+      } else if (typeof detail === 'object' && detail !== null) {
+        setError(JSON.stringify(detail));
+      } else {
+        setError(detail || err.message || 'An error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -222,10 +284,38 @@ function App() {
                   value={formData.shaft_material}
                   onChange={handleInputChange}
                 >
-                  <option value="Steel C45">Steel C45</option>
-                  <option value="Aluminum 6061">Aluminum 6061</option>
+                  <optgroup label="Steels">
+                    <option value="Steel S235">Steel S235 (mild)</option>
+                    <option value="Steel C45">Steel C45 (medium carbon)</option>
+                    <option value="Steel 42CrMo4">Steel 42CrMo4 (alloy)</option>
+                    <option value="Stainless 304">Stainless 304</option>
+                  </optgroup>
+                  <optgroup label="Cast Irons">
+                    <option value="Cast Iron GG25">Cast Iron GG25 (gray)</option>
+                    <option value="Cast Iron GGG40">Cast Iron GGG40 (ductile)</option>
+                  </optgroup>
+                  <optgroup label="Non-Ferrous">
+                    <option value="Bronze CuSn8">Bronze CuSn8</option>
+                    <option value="Aluminum 6061">Aluminum 6061</option>
+                    <option value="Aluminum 7075">Aluminum 7075</option>
+                  </optgroup>
                 </select>
                 <small>Hub material is locked to match the shaft.</small>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="surface_condition">Surface Condition (DIN 7190)</label>
+                <select
+                  id="surface_condition"
+                  name="surface_condition"
+                  value={formData.surface_condition}
+                  onChange={handleInputChange}
+                >
+                  <option value="dry">Dry (degreased)</option>
+                  <option value="oiled">Oiled</option>
+                  <option value="greased">Greased</option>
+                </select>
+                <small>Affects friction coefficient μ for press fits.</small>
               </div>
 
               <div className="form-group">
@@ -258,14 +348,32 @@ function App() {
             </div>
 
             <h2>User Preferences</h2>
+            <p className="section-hint">Rate the importance of each criterion (0 = not important, 1 = very important)</p>
             <div className="prefs">
+              {/* Operational preferences */}
               <PreferenceSlider name="ease" label="Ease of Assembly / Disassembly" value={formData.user_preferences.ease} />
-              <PreferenceSlider name="movement" label="Frequent Movement Needed" value={formData.user_preferences.movement} />
-              <PreferenceSlider name="cost" label="Cost Sensitivity (Affordability)" value={formData.user_preferences.cost} />
-              <PreferenceSlider name="bidirectional" label="Bidirectional Torque" value={formData.user_preferences.bidirectional} />
+              <PreferenceSlider name="movement" label="Frequent Axial Movement" value={formData.user_preferences.movement} />
+              <PreferenceSlider name="bidirectional" label="Bidirectional / Reversing Torque" value={formData.user_preferences.bidirectional} />
+              <PreferenceSlider name="maintenance" label="Easy Maintenance / Repair" value={formData.user_preferences.maintenance} />
+              {/* Performance preferences */}
+              <PreferenceSlider name="vibration" label="Vibration Resistance" value={formData.user_preferences.vibration} />
+              <PreferenceSlider name="speed" label="High-Speed Suitability" value={formData.user_preferences.speed} />
+              <PreferenceSlider name="durability" label="Durability / Fatigue Life" value={formData.user_preferences.durability} />
+              {/* Cost preference */}
+              <PreferenceSlider name="cost" label="Low Manufacturing Cost" value={formData.user_preferences.cost} />
             </div>
 
             <h2>Advanced (Decision-Critical)</h2>
+            {validationErrors.length > 0 && (
+              <div className="validation-panel">
+                <strong>Validation</strong>
+                <ul>
+                  {validationErrors.map(err => (
+                    <li key={err}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div className="grid2">
               <div className="form-group">
                 <label htmlFor="required_torque">Required Torque (Nmm) <span className="badge req">Required</span></label>
@@ -341,7 +449,7 @@ function App() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="submit-button">
+            <button type="submit" disabled={loading || validationErrors.length > 0} className="submit-button">
               {loading ? 'Calculating…' : 'Find Optimal Connection'}
             </button>
             {!!error && <div className="error-banner">{error}</div>}
@@ -374,9 +482,17 @@ function App() {
                     />
                     <StatCard
                       title="μ Used"
-                      value={typeof result.mu_used === 'number' ? result.mu_used.toFixed(2) : String(result.mu_used)}
-                      sub="Auto or override"
+                      value={typeof result.mu_used === 'number' ? result.mu_used.toFixed(3) : String(result.mu_used)}
+                      sub={`Surface: ${result.surface_condition || 'dry'}`}
                       tone="neutral"
+                    />
+                    <StatCard
+                      title="Hub Stiffness"
+                      value={typeof result.hub_stiffness_factor === 'number' 
+                        ? (result.hub_stiffness_factor >= 0.85 ? '✓ Thick' : result.hub_stiffness_factor >= 0.5 ? '◐ Medium' : '⚠ Thin')
+                        : 'N/A'}
+                      sub={typeof result.hub_stiffness_factor === 'number' ? `Factor: ${result.hub_stiffness_factor.toFixed(2)}` : ''}
+                      tone={result.hub_stiffness_factor >= 0.7 ? 'ok' : result.hub_stiffness_factor >= 0.4 ? 'warn' : 'fail'}
                     />
                     <StatCard
                       title="Feasible Options"
@@ -425,7 +541,7 @@ function App() {
       </div>
 
       <footer className="footer">
-        <span>Materials locked: Shaft = Hub (changeable later). Backend WIP.</span>
+        <span>Enhanced: 8 criteria + DIN 7190 friction tables + hub stiffness + {Object.keys(formData.user_preferences).length} materials</span>
       </footer>
     </div>
   );

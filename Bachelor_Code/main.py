@@ -20,12 +20,15 @@ app.add_middleware(
 # Pydantic models for request/response
 # -----------------------
 class UserPreferences(BaseModel):
-    ease: float = 0.5
-    movement: float = 0.5
-    cost: float = 0.5
-    vibration: float = 0.5
-    speed: float = 0.5
-    bidirectional: float = 0.5
+    """8 criteria for connection selection scoring."""
+    ease: float = 0.5           # Assembly/disassembly ease importance
+    movement: float = 0.5       # Frequent axial movement importance
+    cost: float = 0.5           # Low manufacturing cost importance
+    bidirectional: float = 0.5  # Bidirectional torque importance
+    vibration: float = 0.5      # Vibration resistance importance
+    speed: float = 0.5          # High-speed suitability importance
+    maintenance: float = 0.5    # Easy maintenance/repair importance
+    durability: float = 0.5     # Fatigue life / durability importance
 
 class ShaftConnectionRequest(BaseModel):
     shaft_diameter: float
@@ -44,6 +47,9 @@ class ShaftConnectionRequest(BaseModel):
     shaft_inner_diameter: Optional[float] = None
     assembly_method: str = "heat_hub"
     torque_coefficient: float = 135.0
+    # New: surface condition for friction coefficient (DIN 7190)
+    surface_condition: str = "dry"  # "dry", "oiled", or "greased"
+    mu_override: Optional[float] = None  # Manual friction coefficient override
 
 class ConnectionResult(BaseModel):
     recommended_connection: str
@@ -52,6 +58,9 @@ class ConnectionResult(BaseModel):
     scores: Optional[Dict[str, float]]
     feasible: bool
     reason: Optional[str] = None
+    mu_used: Optional[float] = None
+    surface_condition: Optional[str] = None
+    hub_stiffness_factor: Optional[float] = None
     input_parameters: Dict[str, Any]
     details: Dict[str, Any]
 
