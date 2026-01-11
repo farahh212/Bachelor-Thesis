@@ -1,0 +1,23 @@
+\appendix
+\renewcommand{\appendixtocname}{Appendix}
+\renewcommand{\appendixpagename}{\appendixtocname}
+\addappheadtotoc
+\setboolean{@twoside}{false}
+\appendixpage
+
+\chapter{Lists}
+\addcontentsline{toc}{section}{List of Abbreviations}
+\begin{acronym}[\hspace{3cm}]
+  \acro{ML}[ML]{Machine Learning}
+  \acro{DIN}[DIN]{Deutsches Institut für Normung (German Institute for Standardization)}
+  \acro{API}[API]{Application Programming Interface}
+  \acro{UI}[UI]{User Interface}
+  \acro{AHP}[AHP]{Analytical Hierarchy Process}
+  \acro{CAD}[CAD]{Computer-Aided Design}
+  \acro{CAE}[CAE]{Computer-Aided Engineering}
+\end{acronym}
+\clearpage
+\listoffigures
+\addcontentsline{toc}{section}{List of Figures}
+% \listoftables
+% \addcontentsline{toc}{section}{List of Tables}

@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from make_prediction import select_shaft_connection
+from model_service import predict_connection
 
 app = FastAPI(title="Shaft Connection Selector API")
 
@@ -50,6 +51,8 @@ class ShaftConnectionRequest(BaseModel):
     # New: surface condition for friction coefficient (DIN 7190)
     surface_condition: str = "dry"  # "dry", "oiled", or "greased"
     mu_override: Optional[float] = None  # Manual friction coefficient override
+    spline_major_diameter_override: Optional[float] = None
+    spline_tooth_count_override: Optional[int] = None
 
 class ConnectionResult(BaseModel):
     recommended_connection: str
@@ -63,6 +66,11 @@ class ConnectionResult(BaseModel):
     hub_stiffness_factor: Optional[float] = None
     input_parameters: Dict[str, Any]
     details: Dict[str, Any]
+    ml_recommendation: Optional[str] = None
+    ml_probabilities: Optional[Dict[str, float]] = None
+
+    feasible_connections_count: Optional[int] = None
+    M_design_Nmm: Optional[float] = None
 
 # -----------------------
 # API Endpoints
@@ -76,10 +84,39 @@ async def get_materials():
     from make_prediction import materials
     return {"materials": list(materials.keys())}
 
+def _assemble_ml_features(request: ShaftConnectionRequest) -> Dict[str, Any]:
+    prefs = request.user_preferences
+    return {
+        "shaft_diameter": request.shaft_diameter,
+        "hub_length": request.hub_length,
+        "has_bending": float(request.has_bending),
+        "safety_factor": request.safety_factor,
+        "hub_outer_diameter": request.hub_outer_diameter or 0.0,
+        "shaft_inner_diameter": request.shaft_inner_diameter or 0.0,
+        "required_torque": request.required_torque or 0.0,
+        "pref_ease": prefs.ease,
+        "pref_movement": prefs.movement,
+        "pref_cost": prefs.cost,
+        "pref_vibration": prefs.vibration,
+        "pref_speed": prefs.speed,
+        "pref_bidirectional": prefs.bidirectional,
+        "pref_maintenance": prefs.maintenance,
+        "pref_durability": prefs.durability,
+        "shaft_type": request.shaft_type,
+        "shaft_material": request.shaft_material,
+        "surface_condition": request.surface_condition,
+    }
+
+
 @app.post("/select-connection", response_model=ConnectionResult)
 async def select_connection(request: ShaftConnectionRequest):
     try:
         result = select_shaft_connection(request)
+        ml_prediction = predict_connection(_assemble_ml_features(request))
+        result["ml_recommendation"] = (
+            str(ml_prediction["label"]) if ml_prediction else None
+        )
+        result["ml_probabilities"] = ml_prediction["probs"] if ml_prediction else None
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -1,0 +1,78 @@
+\contentsline {chapter}{Acknowledgments}{V}{chapter*.1}%
+\contentsline {chapter}{Abstract}{VII}{chapter*.2}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Research Objectives}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Contributions}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Structure of the Thesis}{2}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Background}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Motivation: The Shaft--Hub Connection Selection Problem}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Shaft--Hub Connections in Rotating Machinery}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Friction Closure: Interference (Press) Fits}{6}{subsection.2.2.1}%
+\contentsline {paragraph}{Allowable Pressure Considerations}{7}{section*.4}%
+\contentsline {subsection}{\numberline {2.2.2}Form Closure: Keys and Splines}{7}{subsection.2.2.2}%
+\contentsline {paragraph}{Keys}{8}{section*.5}%
+\contentsline {paragraph}{Splines}{8}{section*.6}%
+\contentsline {section}{\numberline {2.3}Relevant Industry Standards}{9}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Materials and Contact Mechanics}{9}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Feasibility Considerations}{10}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Preference-Based Engineering Trade-Offs}{11}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Synthetic Data in Engineering Design}{11}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Machine Learning Concepts for Hybrid Prediction}{12}{section.2.8}%
+\contentsline {subsection}{\numberline {2.8.1}Supervised Classification}{12}{subsection.2.8.1}%
+\contentsline {subsection}{\numberline {2.8.2}Tree-Based Models and Gradient Boosting}{12}{subsection.2.8.2}%
+\contentsline {subsection}{\numberline {2.8.3}Ensemble Learning}{12}{subsection.2.8.3}%
+\contentsline {subsection}{\numberline {2.8.4}Evaluation Metrics and Model Selection}{12}{subsection.2.8.4}%
+\contentsline {section}{\numberline {2.9}Summary}{13}{section.2.9}%
+\contentsline {chapter}{\numberline {3}Methodology}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Material Database and Engineering Constants}{16}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Analytical Selector: Capacity Computations}{16}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Input Validation}{17}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Press-Fit Capacity (Friction Closure)}{17}{subsection.3.2.2}%
+\contentsline {paragraph}{Friction coefficient selection.}{17}{section*.7}%
+\contentsline {paragraph}{Allowable pressure.}{17}{section*.8}%
+\contentsline {paragraph}{Torque capacity.}{18}{section*.9}%
+\contentsline {paragraph}{Manufacturability filter.}{18}{section*.10}%
+\contentsline {subsection}{\numberline {3.2.3}Key Capacity (Form Closure)}{18}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Spline Capacity (Form Closure)}{19}{subsection.3.2.4}%
+\contentsline {section}{\numberline {3.3}Feasibility Filtering and Preference-Based Scoring}{19}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Design Torque and Feasibility}{19}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Connection Performance Profiles}{19}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Scoring Function}{20}{subsection.3.3.3}%
+\contentsline {paragraph}{Margin reward.}{20}{section*.11}%
+\contentsline {paragraph}{Overdesign penalty.}{20}{section*.12}%
+\contentsline {paragraph}{Preference utility.}{20}{section*.13}%
+\contentsline {paragraph}{Connection-specific penalties.}{20}{section*.14}%
+\contentsline {section}{\numberline {3.4}Synthetic Dataset Generation}{21}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Geometry and Condition Sampling}{21}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Torque and Safety Factor Sampling}{21}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Preference Weight Sampling}{22}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Label Generation}{22}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Machine Learning Training and Model Selection}{22}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Feature Engineering}{22}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Model Candidates}{22}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Evaluation and Selection}{23}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Model Persistence}{23}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Deployment: Backend Service and Web Frontend}{23}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Backend Architecture}{23}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Frontend Interface}{24}{subsection.3.6.2}%
+\contentsline {section}{\numberline {3.7}Summary}{24}{section.3.7}%
+\contentsline {chapter}{\numberline {4}Results}{25}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Analytical Model Verification}{25}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Synthetic Dataset Characteristics}{26}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Machine Learning Model Performance}{26}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Web Application Demonstration}{27}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Discussion}{29}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Analytical Model Behavior and Validity}{29}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Effect of Preference-Weighted Scoring}{30}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Synthetic Data and ML Model Integration}{31}{section.5.3}%
+\contentsline {section}{\numberline {5.4}System-Level Considerations and Limitations}{32}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Conclusion}{35}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{35}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Relation to Existing Work}{36}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Limitations and Future Work}{37}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Concluding Remarks}{38}{section.6.4}%
+\contentsline {chapter}{Appendix}{39}{section*.15}%
+\contentsline {chapter}{\numberline {A}Lists}{40}{appendix.A}%
+\contentsline {section}{List of Abbreviations}{40}{section*.16}%
+\contentsline {section}{List of Figures}{41}{appendix*.17}%
+\contentsline {chapter}{References}{42}{appendix*.18}%

@@ -1,0 +1,53 @@
+\begin{thebibliography}{1}
+
+\bibitem{Breiman_2001}
+L.~Breiman, ``Random forests,'' {\em Machine Learning}, vol.~45, no.~1,
+  pp.~5--32, 2001.
+\newblock Introduction of the Random Forest ensemble algorithm for
+  classification and regression.
+
+\bibitem{DIN7190_2017}
+{DIN Deutsches Institut für Normung}, ``Interference fits -- part 1:
+  Calculation and design rules for cylindrical press fits.'' DIN 7190-1, 2017.
+\newblock Defines design methodology for press-fit connections, including
+  friction coefficients and pressure limits.
+
+\bibitem{DIN6885_2021}
+{DIN Deutsches Institut für Normung}, ``Parallel keys and keyways -- part 1:
+  Dimensions and tolerances for parallel keys (form a and b).'' DIN 6885-1,
+  2021.
+\newblock Standard for key dimensions and material conditions, used for keyed
+  shaft connections.
+
+\bibitem{DIN5480_2006}
+{DIN Deutsches Institut für Normung}, ``Involute splines based on reference
+  diameters -- part 1: Generalities.'' DIN 5480-1, 2006.
+\newblock Standard for splined shaft connections, covering geometry and load
+  capacity factors.
+
+\bibitem{Haggenmueller_2025}
+W.~A. Haggenm{\"u}ller, ``Shaft hub connections in mechanical engineering:
+  technologies, comparison and standards,'' Sept. 2025.
+\newblock Technical overview of various shaft--hub connection types and their
+  advantages/disadvantages, referencing DIN standards.
+
+\bibitem{GWJ_eAssistant_DIN7190}
+{GWJ Technology}, ``Interference fits according to {DIN} 7190 (friction
+  coefficients table),'' 2020.
+\newblock Online engineering handbook providing conservative friction
+  coefficient values for shrink fits as per DIN 7190.
+
+\bibitem{FVA_InterferenceFits_2017}
+{FVA Software}, ``Interference fits,'' 2017.
+\newblock Knowledge base explanation of interference fit design per DIN 7190,
+  including safety factors against slip and plasticity.
+
+\bibitem{Picard_2023}
+C.~Picard, J.~Schiffmann, and F.~Ahmed, ``{DATED}: Guidelines for creating
+  synthetic datasets for engineering design applications,'' {\em arXiv preprint
+  arXiv:2305.09018}, 2023.
+\newblock Discusses methodologies for generating synthetic data in engineering
+  design and the importance of diversity and coverage in the design parameter
+  space.
+
+\end{thebibliography}
