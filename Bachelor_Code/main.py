@@ -11,10 +11,13 @@ app = FastAPI(title="Shaft Connection Selector API")
 # CORS middleware to allow React frontend to connect
 # Can be configured via environment variable CORS_ORIGINS (comma-separated)
 import os
-cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:3000")
+# Split by comma and strip whitespace from each origin
+cors_origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[origin.strip() for origin in cors_origins],
+    allow_origins=cors_origins,  # Use environment variable
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
