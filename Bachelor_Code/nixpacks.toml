@@ -1,7 +1,17 @@
 providers = ["python"]
 
+[phases.setup]
+# Create a venv that includes pip
+cmds = [
+  "python -m venv /opt/venv",
+  "/opt/venv/bin/python -m ensurepip",
+  "/opt/venv/bin/python -m pip install --upgrade pip"
+]
+
 [phases.install]
-cmds = ["python -m pip install --upgrade pip", "python -m pip install -r requirements.txt"]
+cmds = [
+  "/opt/venv/bin/pip install -r requirements.txt"
+]
 
 [start]
-cmd = "python -m uvicorn main:app --host 0.0.0.0 --port $PORT"
+cmd = "/opt/venv/bin/uvicorn main:app --host 0.0.0.0 --port $PORT"

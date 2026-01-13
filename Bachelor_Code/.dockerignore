@@ -12,6 +12,7 @@ env/
 .gitignore
 node_modules/
 shaft-connection-selector/
+frontend/
 figures/
 *.csv
 training_*
@@ -19,4 +20,10 @@ catboost_info/
 *.png
 *.pdf
 relevant_pdf/
+*.json
+!models/*.pkl
+!models/*.meta
+Dockerfile.bak
+*.bat
+*.sh
 
