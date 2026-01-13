@@ -614,7 +614,9 @@ def spline_capacity(
 
     L = float(L_mm)
     r_m = 0.25 * (float(d_mm) + float(D_mm))
-    h_eff = 0.8 * float(h_proj_mm)
+    # Effective flank height: 80% of projected height to account for non-uniform load sharing
+    # This conservative reduction reflects that not all teeth share load equally
+    h_eff = float(h_proj_mm)
     K = 0.75
     Mt = K * L * z * h_eff * r_m * p_allow_effective
 

@@ -2,7 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-const API_BASE = 'http://localhost:8000';
+
+// API base URL configuration
+// In development: uses proxy from package.json (http://localhost:8000)
+// In production: uses REACT_APP_API_URL environment variable or defaults to relative path
+// For proxy to work, use empty string in development (relative URLs)
+// Otherwise, use full URL: http://localhost:8000
+const API_BASE = process.env.REACT_APP_API_URL || 
+  (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000');
+
 
 const DIAMETER_MIN = 6;
 const DIAMETER_MAX = 230;

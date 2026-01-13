@@ -1,70 +1,139 @@
-# Getting Started with Create React App
+# Shaft–Hub Connection Selector Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React-based frontend for the Shaft–Hub Connection Selector application.
+
+## Quick Start
+
+### Prerequisites
+
+1. **Backend must be running** on `http://localhost:8000`
+   - Navigate to `../` (parent directory)
+   - Run: `python main.py`
+
+2. **Node.js 14+** installed
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development
+
+```bash
+npm start
+```
+
+The app will open at `http://localhost:3000` and automatically proxy API requests to the backend.
+
+### Production Build
+
+```bash
+npm run build
+```
+
+This creates a `build/` folder with optimized production files.
+
+## Configuration
+
+### API Backend URL
+
+The app automatically uses a proxy in development (configured in `package.json`).
+
+For production, set the `REACT_APP_API_URL` environment variable:
+
+```bash
+# Linux/Mac
+export REACT_APP_API_URL=http://your-backend-url.com
+npm run build
+
+# Windows
+set REACT_APP_API_URL=http://your-backend-url.com
+npm run build
+```
+
+Or create a `.env.production` file:
+```
+REACT_APP_API_URL=http://your-backend-url.com
+```
+
+## Backend Setup
+
+The frontend requires the FastAPI backend to be running. 
+
+### Option 1: Separate Backend (Recommended for Development)
+
+1. **Start Backend** (in parent `Bachelor_Code/` directory):
+```bash
+cd ..
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
+```
+
+2. **Start Frontend** (in this directory):
+```bash
+npm start
+```
+
+The proxy in `package.json` will forward all `/api/*` requests to `http://localhost:8000`.
+
+### Option 2: Backend Serves Frontend (Production)
+
+For production, you can configure the FastAPI backend to serve the React build files. See the backend documentation for details.
+
+## Troubleshooting
+
+### "Cannot GET /materials" or API errors
+
+**Problem**: Backend is not running or not accessible.
+
+**Solution**: 
+1. Ensure backend is running on `http://localhost:8000`
+2. Test backend directly: `curl http://localhost:8000/materials`
+3. Check browser console for CORS errors
+4. Verify proxy configuration in `package.json`
+
+### CORS Errors
+
+**Problem**: Browser blocks requests due to CORS policy.
+
+**Solution**: 
+1. Ensure backend CORS is configured to allow `http://localhost:3000`
+2. Check `main.py` CORS settings
+3. In development, the proxy should handle this automatically
+
+### Environment Variables Not Working
+
+**Problem**: `REACT_APP_API_URL` not being used.
+
+**Solution**:
+- Environment variables must start with `REACT_APP_`
+- Restart the dev server after changing `.env` files
+- Rebuild for production after changing environment variables
+
+## Project Structure
+
+```
+shaft-connection-selector/
+├── public/          # Static files
+├── src/
+│   ├── App.js      # Main component
+│   ├── App.css     # Styles
+│   └── ...
+├── package.json    # Dependencies and scripts
+└── README.md       # This file
+```
 
 ## Available Scripts
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `npm start` - Start development server
+- `npm run build` - Build for production
+- `npm test` - Run tests
+- `npm run eject` - Eject from Create React App (irreversible)
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [React Documentation](https://reactjs.org/)
+- [Create React App Documentation](https://facebook.github.io/create-react-app/docs/getting-started)

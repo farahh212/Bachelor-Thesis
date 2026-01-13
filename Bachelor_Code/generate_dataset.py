@@ -4,6 +4,16 @@ import math
 from pathlib import Path
 from typing import List, Dict
 
+# add imports at top
+import json
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+PLOTS_DIR = Path(__file__).parent / "figures"
+PLOTS_DIR.mkdir(exist_ok=True)
+
+
 import numpy as np
 import pandas as pd
 from fastapi import HTTPException
@@ -168,6 +178,91 @@ def sample_request(rng: np.random.Generator) -> ShaftConnectionRequest:
     )
     return request
 
+def save_dataset_distribution_plots(df: pd.DataFrame, out_dir: Path) -> None:
+    """Generate publication-quality distribution plots for the synthetic dataset."""
+    out_dir.mkdir(exist_ok=True)
+    
+    # Set style for publication-quality plots
+    plt.style.use('seaborn-v0_8-whitegrid')
+    colors = ['#2E86AB', '#A23B72', '#F18F01', '#C73E1D', '#6A994E']
+    
+    # 1) Shaft diameter histogram
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    ax.hist(df["shaft_diameter"].dropna(), bins=20, color=colors[0], edgecolor='black', alpha=0.7)
+    ax.set_xlabel("Shaft diameter [mm]", fontsize=11)
+    ax.set_ylabel("Count", fontsize=11)
+    ax.grid(True, alpha=0.3, linestyle='--')
+    ax.set_title("Distribution of Shaft Diameters", fontsize=12, fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(out_dir / "dataset_diameter_hist.png", dpi=300, bbox_inches='tight')
+    plt.close()
+
+    # 2) Required torque histogram (log scale)
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    torque = df["required_torque"].dropna()
+    ax.hist(torque, bins=30, color=colors[1], edgecolor='black', alpha=0.7)
+    ax.set_yscale("linear")
+    ax.set_xscale("log")
+    ax.set_xlabel("Required torque [N⋅m] (log scale)", fontsize=11)
+    ax.set_ylabel("Count", fontsize=11)
+    ax.grid(True, alpha=0.3, linestyle='--')
+    ax.set_title("Distribution of Required Torque", fontsize=12, fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(out_dir / "dataset_required_torque_hist_logx.png", dpi=300, bbox_inches='tight')
+    plt.close()
+
+    # 3) Class distribution bar chart
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    counts = df["label"].value_counts()
+    # Order: press, key, spline for consistency
+    order = ['press', 'key', 'spline']
+    ordered_counts = [counts.get(label, 0) for label in order if label in counts.index]
+    ordered_labels = [label for label in order if label in counts.index]
+    bars = ax.bar(ordered_labels, ordered_counts, color=[colors[2], colors[3], colors[4]], 
+                  edgecolor='black', alpha=0.7)
+    # Add value labels on bars
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height,
+                f'{int(height)}\n({height/len(df)*100:.1f}%)',
+                ha='center', va='bottom', fontsize=10)
+    ax.set_xlabel("Connection Type", fontsize=11)
+    ax.set_ylabel("Count", fontsize=11)
+    ax.grid(True, alpha=0.3, linestyle='--', axis='y')
+    ax.set_title("Class Distribution in Synthetic Dataset", fontsize=12, fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(out_dir / "dataset_class_distribution.png", dpi=300, bbox_inches='tight')
+    plt.close()
+
+    # 4) Material distribution bar chart (shaft_material)
+    fig, ax = plt.subplots(figsize=(9, 4.5))
+    mcounts = df["shaft_material"].value_counts().head(15)
+    bars = ax.bar(range(len(mcounts)), mcounts.values, color=colors[0], edgecolor='black', alpha=0.7)
+    ax.set_xticks(range(len(mcounts)))
+    ax.set_xticklabels(mcounts.index.astype(str), rotation=45, ha='right', fontsize=9)
+    ax.set_xlabel("Shaft Material", fontsize=11)
+    ax.set_ylabel("Count", fontsize=11)
+    ax.grid(True, alpha=0.3, linestyle='--', axis='y')
+    ax.set_title("Top 15 Material Distribution", fontsize=12, fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(out_dir / "dataset_material_distribution_top15.png", dpi=300, bbox_inches='tight')
+    plt.close()
+
+    # 5) Safety factor histogram
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    ax.hist(df["safety_factor"].dropna(), bins=15, color=colors[2], edgecolor='black', alpha=0.7)
+    ax.set_xlabel("Safety Factor [-]", fontsize=11)
+    ax.set_ylabel("Count", fontsize=11)
+    ax.grid(True, alpha=0.3, linestyle='--')
+    ax.set_title("Distribution of Safety Factors", fontsize=12, fontweight='bold')
+    # Add mean line
+    mean_sf = df["safety_factor"].mean()
+    ax.axvline(mean_sf, color='red', linestyle='--', linewidth=2, label=f'Mean: {mean_sf:.2f}')
+    ax.legend(fontsize=9)
+    plt.tight_layout()
+    plt.savefig(out_dir / "dataset_safety_factor_hist.png", dpi=300, bbox_inches='tight')
+    plt.close()
+
 
 def generate_dataset(
     n_samples: int = 5000,
@@ -229,6 +324,30 @@ def generate_dataset(
     df = pd.DataFrame(rows)
     df.to_csv(OUTPUT_FILE, index=False)
     print(f"Saved {len(df)} rows to {OUTPUT_FILE}")
+
+        # Save distribution figures for thesis (Figure 4.4)
+    save_dataset_distribution_plots(df, PLOTS_DIR)
+
+    # Save a compact stats JSON (good for thesis reproducibility)
+    stats = {
+        "n_rows": int(len(df)),
+        "label_distribution": df["label"].value_counts().to_dict(),
+        "shaft_diameter_mm": {
+            "min": float(df["shaft_diameter"].min()),
+            "max": float(df["shaft_diameter"].max()),
+            "mean": float(df["shaft_diameter"].mean()),
+        },
+        "required_torque_Nm": {
+            "min": float(df["required_torque"].min()),
+            "max": float(df["required_torque"].max()),
+            "mean": float(df["required_torque"].mean()),
+        },
+    }
+    with open(PLOTS_DIR / "dataset_stats.json", "w", encoding="utf-8") as f:
+        json.dump(stats, f, indent=2, ensure_ascii=False)
+
+
+
     return df
 
 

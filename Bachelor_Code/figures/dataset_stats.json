@@ -1,0 +1,18 @@
+{
+  "n_rows": 4993,
+  "label_distribution": {
+    "spline": 2729,
+    "key": 1427,
+    "press": 837
+  },
+  "shaft_diameter_mm": {
+    "min": 6.0,
+    "max": 230.0,
+    "mean": 55.16182655718005
+  },
+  "required_torque_Nm": {
+    "min": 97.0,
+    "max": 13939194.0,
+    "mean": 398154.36170638894
+  }
+}

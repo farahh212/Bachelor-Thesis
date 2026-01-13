@@ -9,9 +9,12 @@ from model_service import predict_connection
 app = FastAPI(title="Shaft Connection Selector API")
 
 # CORS middleware to allow React frontend to connect
+# Can be configured via environment variable CORS_ORIGINS (comma-separated)
+import os
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React default port
+    allow_origins=[origin.strip() for origin in cors_origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -113,10 +116,19 @@ async def select_connection(request: ShaftConnectionRequest):
     try:
         result = select_shaft_connection(request)
         ml_prediction = predict_connection(_assemble_ml_features(request))
-        result["ml_recommendation"] = (
-            str(ml_prediction["label"]) if ml_prediction else None
-        )
-        result["ml_probabilities"] = ml_prediction["probs"] if ml_prediction else None
+        if ml_prediction:
+            # Ensure label is a valid connection type string
+            label = ml_prediction.get("label")
+            if label and isinstance(label, str) and label in ["press", "key", "spline"]:
+                result["ml_recommendation"] = label
+            else:
+                # Fallback: try to convert or use None
+                print(f"Warning: Invalid ML label: {label} (type: {type(label)})")
+                result["ml_recommendation"] = None
+            result["ml_probabilities"] = ml_prediction.get("probs")
+        else:
+            result["ml_recommendation"] = None
+            result["ml_probabilities"] = None
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

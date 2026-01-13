@@ -10,6 +10,11 @@ import joblib
 import numpy as np
 import pandas as pd
 
+import matplotlib
+matplotlib.use("Agg") 
+import matplotlib.pyplot as plt
+
+from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.model_selection import train_test_split
@@ -134,6 +139,98 @@ def _build_models():
             random_state=42,
         ),
     }
+
+def save_feature_importance_plot(pipeline: Pipeline, out_path: Path, top_n: int = 20, model_name: str = "Model") -> bool:
+    """
+    Saves a feature importance bar chart for tree models inside a sklearn Pipeline.
+    Returns True if saved, False if not supported.
+    """
+    if not isinstance(pipeline, Pipeline):
+        return False
+    if "preprocess" not in pipeline.named_steps:
+        return False
+
+    pre = pipeline.named_steps["preprocess"]
+
+    # Get expanded feature names (numeric + one-hot)
+    try:
+        feature_names = pre.get_feature_names_out()
+    except Exception:
+        return False
+
+    # Pick estimator step name
+    if "model" in pipeline.named_steps:
+        est = pipeline.named_steps["model"]
+    else:
+        return False
+
+    # Get importances for supported estimators
+    importances = None
+    if hasattr(est, "feature_importances_"):
+        importances = np.asarray(est.feature_importances_, dtype=float)
+    elif hasattr(est, "get_feature_importance"):
+        # catboost native method (usually not needed if feature_importances_ exists)
+        try:
+            importances = np.asarray(est.get_feature_importance(), dtype=float)
+        except Exception:
+            return False
+    else:
+        return False
+
+    if importances is None or len(importances) != len(feature_names):
+        return False
+
+    # Top N
+    idx = np.argsort(importances)[::-1][:top_n]
+    top_feats = np.array(feature_names)[idx]
+    top_vals = importances[idx]
+
+    # Plot with enhanced styling
+    fig, ax = plt.subplots(figsize=(10, 7))
+    colors = plt.cm.viridis(np.linspace(0.3, 0.9, len(top_feats)))
+    bars = ax.barh(range(len(top_feats))[::-1], top_vals[::-1], color=colors, edgecolor='black', alpha=0.8)
+    
+    # Clean feature names for better readability (remove prefixes from one-hot encoded features)
+    clean_labels = []
+    for feat in top_feats[::-1]:
+        # Remove prefixes like "cat__shaft_type_" or "num__"
+        if "__" in feat:
+            clean_feat = feat.split("__")[-1]
+            # Capitalize and add spaces for readability
+            clean_feat = clean_feat.replace("_", " ").title()
+        else:
+            clean_feat = feat.replace("_", " ").title()
+        clean_labels.append(clean_feat)
+    
+    ax.set_yticks(range(len(top_feats))[::-1])
+    ax.set_yticklabels(clean_labels, fontsize=10)
+    ax.set_xlabel("Feature Importance", fontsize=12, fontweight='bold')
+    ax.set_title(f"Top {top_n} Feature Importances - {model_name}", 
+                 fontsize=13, fontweight='bold', pad=15)
+    ax.grid(True, alpha=0.3, linestyle='--', axis='x')
+    
+    # Add value labels on bars
+    for i, (bar, val) in enumerate(zip(bars, top_vals[::-1])):
+        width = bar.get_width()
+        ax.text(width, bar.get_y() + bar.get_height()/2,
+                f' {width:.4f}',
+                ha='left', va='center', fontsize=9)
+    
+    plt.tight_layout()
+    fig.savefig(out_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    return True
+
+
+def save_cm_heatmap(cm, labels, title, out_path):
+    """Save confusion matrix as a heatmap image."""
+    fig, ax = plt.subplots(figsize=(7, 6))
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+    disp.plot(ax=ax, cmap="viridis", values_format="d", colorbar=True)  # heatmap look
+    ax.set_title(title)
+    plt.tight_layout()
+    fig.savefig(out_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
 
 
 def main():
@@ -277,6 +374,16 @@ def main():
         rec_weighted = recall_score(y_test, y_pred, average="weighted", zero_division=0)
         f1_weighted = f1_score(y_test, y_pred, average="weighted", zero_division=0)
         cm = confusion_matrix(y_test, y_pred)
+
+        cm_path = RESULTS_DIR / f"confusion_matrix_{name.replace(' ', '_')}.png"
+        save_cm_heatmap(
+            cm,
+            labels=le.classes_,
+            title=f"Confusion Matrix - {name}",
+            out_path=cm_path,
+        )
+        logger.info(f"Saved confusion matrix heatmap to {cm_path}")
+
         
         # Per-class metrics
         prec_per_class = precision_score(y_test, y_pred, average=None, zero_division=0)
@@ -361,7 +468,17 @@ def main():
     ensemble_rec_weighted = recall_score(y_test, y_pred, average="weighted", zero_division=0)
     ensemble_f1_weighted = f1_score(y_test, y_pred, average="weighted", zero_division=0)
     ensemble_cm = confusion_matrix(y_test, y_pred)
-    
+
+    cm_path = RESULTS_DIR / "confusion_matrix_Ensemble.png"
+    save_cm_heatmap(
+        ensemble_cm,
+        labels=le.classes_,
+        title="Confusion Matrix - Ensemble",
+        out_path=cm_path,
+    )
+    logger.info(f"Saved confusion matrix heatmap to {cm_path}")
+
+        
     # Per-class metrics for ensemble
     ensemble_prec_per_class = precision_score(y_test, y_pred, average=None, zero_division=0)
     ensemble_rec_per_class = recall_score(y_test, y_pred, average=None, zero_division=0)
@@ -416,6 +533,16 @@ def main():
     logger.info("\n" + "=" * 80)
     logger.info(f"SELECTED BEST MODEL: {best_name} (F1-macro: {best_score:.4f})")
     logger.info("=" * 80)
+
+    # Save feature importance plot for best model
+        # Feature importance (thesis Figure 4.5)
+    fi_path = RESULTS_DIR / f"feature_importance_{best_name.replace(' ', '_')}.png"
+    ok = save_feature_importance_plot(best_model, fi_path, top_n=20, model_name=best_name)
+    if ok:
+        logger.info(f"Saved feature importance plot to {fi_path}")
+    else:
+        logger.warning("Feature importance plot not available for selected model/pipeline.")
+
 
     # Save results
     results["model_results"] = all_model_results
