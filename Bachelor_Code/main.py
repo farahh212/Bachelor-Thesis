@@ -15,9 +15,17 @@ cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:3000")
 # Split by comma and strip whitespace from each origin
 cors_origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
 
+# Add Vercel production and preview URLs
+default_origins = [
+    "https://bachelorthesis.vercel.app",
+    "http://localhost:3000"
+]
+# Merge environment variable origins with defaults (avoid duplicates)
+all_origins = list(set(cors_origins + default_origins))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,  # Use environment variable
+    allow_origins=all_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
