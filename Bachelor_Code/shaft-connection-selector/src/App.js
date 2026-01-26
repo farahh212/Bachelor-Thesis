@@ -261,6 +261,7 @@ function App() {
 
     const loadMaterials = async () => {
       try {
+        console.log(API_BASE)
         const response = await axios.get(`${API_BASE}/materials`);
         if (cancelled) return;
 
