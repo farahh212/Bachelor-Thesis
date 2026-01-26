@@ -1,9 +1,5 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\citation{DIN7190_2017}
-\citation{DIN6885_2021}
-\citation{DIN5480_2006}
-\citation{Haggenmueller_2025}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Background}{5}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -12,44 +8,110 @@
 \newlabel{sec:background_motivation}{{2.1}{5}{Motivation: The Shaft--Hub Connection Selection Problem}{section.2.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}Shaft--Hub Connections in Rotating Machinery}{6}{section.2.2}\protected@file@percent }
 \newlabel{sec:background_shc_types}{{2.2}{6}{Shaft--Hub Connections in Rotating Machinery}{section.2.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Three-dimensional models of different shaft--hub connection types: press fit (PV), multi-part press fit (MPV), knurled press fit (RPV), splined connection (ZWV), and keyed connection (PFV), illustrating the torque transmission mechanisms (friction closure, form closure, or combination)~\blx@tocontentsinit {0}\cite {forsch_ingenieurwes_3d_modelle_2015}.}}{6}{figure.caption.5}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:3d_modelle}{{2.1}{6}{Three-dimensional models of different shaft--hub connection types: press fit (PV), multi-part press fit (MPV), knurled press fit (RPV), splined connection (ZWV), and keyed connection (PFV), illustrating the torque transmission mechanisms (friction closure, form closure, or combination)~\cite {forsch_ingenieurwes_3d_modelle_2015}}{figure.caption.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Friction Closure: Interference (Press) Fits}{6}{subsection.2.2.1}\protected@file@percent }
 \newlabel{sec:press_fits_background}{{2.2.1}{6}{Friction Closure: Interference (Press) Fits}{subsection.2.2.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{Allowable Pressure Considerations}{7}{section*.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Form Closure: Keys and Splines}{7}{subsection.2.2.2}\protected@file@percent }
-\newlabel{sec:keys_splines_background}{{2.2.2}{7}{Form Closure: Keys and Splines}{subsection.2.2.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Keys}{8}{section*.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Splines}{8}{section*.6}\protected@file@percent }
-\citation{DIN7190_2017}
-\citation{GWJ_eAssistant_DIN7190}
-\citation{FVA_InterferenceFits_2017}
-\citation{DIN6885_2021}
-\citation{DIN5480_2006}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Relevant Industry Standards}{9}{section.2.3}\protected@file@percent }
-\newlabel{sec:relevant_standards}{{2.3}{9}{Relevant Industry Standards}{section.2.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Materials and Contact Mechanics}{9}{section.2.4}\protected@file@percent }
-\newlabel{sec:materials_contact_mechanics}{{2.4}{9}{Materials and Contact Mechanics}{section.2.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Feasibility Considerations}{10}{section.2.5}\protected@file@percent }
-\newlabel{sec:background_analytical_models}{{2.5}{10}{Feasibility Considerations}{section.2.5}{}}
-\citation{Picard_2023}
-\@writefile{toc}{\contentsline {section}{\numberline {2.6}Preference-Based Engineering Trade-Offs}{11}{section.2.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.7}Synthetic Data in Engineering Design}{11}{section.2.7}\protected@file@percent }
-\citation{Breiman_2001}
-\@writefile{toc}{\contentsline {section}{\numberline {2.8}Machine Learning Concepts for Hybrid Prediction}{12}{section.2.8}\protected@file@percent }
-\newlabel{sec:background_ml}{{2.8}{12}{Machine Learning Concepts for Hybrid Prediction}{section.2.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.1}Supervised Classification}{12}{subsection.2.8.1}\protected@file@percent }
-\newlabel{subsec:background_supervised}{{2.8.1}{12}{Supervised Classification}{subsection.2.8.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.2}Tree-Based Models and Gradient Boosting}{12}{subsection.2.8.2}\protected@file@percent }
-\newlabel{subsec:background_boosting}{{2.8.2}{12}{Tree-Based Models and Gradient Boosting}{subsection.2.8.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.3}Ensemble Learning}{12}{subsection.2.8.3}\protected@file@percent }
-\newlabel{subsec:background_ensemble}{{2.8.3}{12}{Ensemble Learning}{subsection.2.8.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.4}Evaluation Metrics and Model Selection}{12}{subsection.2.8.4}\protected@file@percent }
-\newlabel{subsec:background_metrics}{{2.8.4}{12}{Evaluation Metrics and Model Selection}{subsection.2.8.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.9}Summary}{13}{section.2.9}\protected@file@percent }
-\newlabel{sec:background_summary}{{2.9}{13}{Summary}{section.2.9}{}}
+\newlabel{eq:press_torque}{{2.2}{7}{Friction Closure: Interference (Press) Fits}{equation.2.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Allowable Pressure Considerations}{7}{section*.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Stress--strain curve from a uniaxial tensile test, showing elastic deformation, yield strength, uniform and non-uniform plastic deformation, ultimate tensile strength, and fracture. The curve illustrates the material behavior that forms the basis for von Mises yield criterion, which compares multiaxial stress states to the uniaxial yield strength~\blx@tocontentsinit {0}\cite {simscale_von_mises}.}}{8}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:stress_strain_curve}{{2.2}{8}{Stress--strain curve from a uniaxial tensile test, showing elastic deformation, yield strength, uniform and non-uniform plastic deformation, ultimate tensile strength, and fracture. The curve illustrates the material behavior that forms the basis for von Mises yield criterion, which compares multiaxial stress states to the uniaxial yield strength~\cite {simscale_von_mises}}{figure.caption.7}{}}
+\newlabel{eq:pressure_limit_hub}{{2.8}{8}{Allowable Pressure Considerations}{equation.2.8}{}}
+\newlabel{eq:pressure_limit_shaft}{{2.9}{8}{Allowable Pressure Considerations}{equation.2.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Biaxial Stress State in Press Fits}{9}{subsection.2.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Types of stresses in cylindrical components: (a) circumferential (hoop) stress, (b) longitudinal stress, and (c) radial stress. In press fits, the dominant stresses are radial and circumferential, creating a biaxial stress state~\blx@tocontentsinit {0}\cite {weldingandndt_stresses_2019}.}}{9}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:types_of_stresses}{{2.3}{9}{Types of stresses in cylindrical components: (a) circumferential (hoop) stress, (b) longitudinal stress, and (c) radial stress. In press fits, the dominant stresses are radial and circumferential, creating a biaxial stress state~\cite {weldingandndt_stresses_2019}}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Illustration of types of circumferential (hoop) stress in curved components. The direction of arrows indicates how forces cause compression and tension within a material~\blx@tocontentsinit {0}\cite {pulstec_compressive_tensile_2023}.}}{10}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:compressive_tensile_stresses}{{2.4}{10}{Illustration of types of circumferential (hoop) stress in curved components. The direction of arrows indicates how forces cause compression and tension within a material~\cite {pulstec_compressive_tensile_2023}}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}The von Mises Yield Criterion}{10}{subsection.2.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Interference and Torque Capacity}{11}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Backlash-Free Operation}{11}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Excellent Concentricity}{11}{section*.12}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Radar chart summarizing qualitative characteristics of a press-fit shaft–hub connection. The chart compares relative strengths and weaknesses across multiple design criteria that are important in practice but difficult to quantify analytically. In the radar chart, values farther from the center indicate better performance, while values closer to the center indicate poorer performance. The filled polygon shows how a cylindrical press fit performs across these criteria. See Table~\ref {tab:press_fit_radar_axes} for explanation of each axis~\blx@tocontentsinit {0}\cite {kittsteiner1990welle}.}}{12}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:press_fit_properties}{{2.5}{12}{Radar chart summarizing qualitative characteristics of a press-fit shaft–hub connection. The chart compares relative strengths and weaknesses across multiple design criteria that are important in practice but difficult to quantify analytically. In the radar chart, values farther from the center indicate better performance, while values closer to the center indicate poorer performance. The filled polygon shows how a cylindrical press fit performs across these criteria. See Table~\ref {tab:press_fit_radar_axes} for explanation of each axis~\cite {kittsteiner1990welle}}{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}Form Closure: Keys and Splines}{12}{subsection.2.2.4}\protected@file@percent }
+\newlabel{sec:keys_splines_background}{{2.2.4}{12}{Form Closure: Keys and Splines}{subsection.2.2.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Keys}{13}{section*.15}\protected@file@percent }
+\newlabel{eq:key_shear}{{2.12}{13}{Keys}{equation.2.12}{}}
+\newlabel{eq:key_bearing}{{2.13}{13}{Keys}{equation.2.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Parallel key and keyway fit according to DIN~6885, showing the shaft–hub connection and load-transmitting contact surfaces~\blx@tocontentsinit {0}\cite {mikipulley_key_crosssection}.}}{13}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:key_fit_din6885}{{2.6}{13}{Parallel key and keyway fit according to DIN~6885, showing the shaft–hub connection and load-transmitting contact surfaces~\cite {mikipulley_key_crosssection}}{figure.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces Exploded view of a keyed shaft--hub connection, highlighting the key, keyseat (shaft keyway), and hub keyway~\blx@tocontentsinit {0}\cite {engineeringchoice_shaft_key}.}}{14}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:key_diagram_exploded}{{2.7}{14}{Exploded view of a keyed shaft--hub connection, highlighting the key, keyseat (shaft keyway), and hub keyway~\cite {engineeringchoice_shaft_key}}{figure.caption.17}{}}
+\newlabel{eq:key_torque}{{2.14}{14}{Keys}{equation.2.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces Radar chart summarizing qualitative characteristics of a keyed shaft–hub connection (DIN 6885). See Table~\ref {tab:key_fit_radar_axes} for explanation of each axis~\blx@tocontentsinit {0}\cite {kittsteiner1990welle}.}}{15}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:key_fit_properties}{{2.8}{15}{Radar chart summarizing qualitative characteristics of a keyed shaft–hub connection (DIN 6885). See Table~\ref {tab:key_fit_radar_axes} for explanation of each axis~\cite {kittsteiner1990welle}}{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {paragraph}{Splines}{15}{section*.20}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.9}{\ignorespaces Simplified spline cross-section indicating outer diameter $D$, inner diameter $d$, and tooth width $b$ used in the analytical formulation~\blx@tocontentsinit {0}\cite {DIN5480_1_2006}.}}{15}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:spline_diagram_dims}{{2.9}{15}{Simplified spline cross-section indicating outer diameter $D$, inner diameter $d$, and tooth width $b$ used in the analytical formulation~\cite {DIN5480_1_2006}}{figure.caption.21}{}}
+\newlabel{eq:spline_projected_area}{{2.16}{16}{Splines}{equation.2.16}{}}
+\newlabel{eq:spline_flank_height}{{2.17}{16}{Splines}{equation.2.17}{}}
+\newlabel{eq:spline_torque}{{2.18}{16}{Splines}{equation.2.18}{}}
+\newlabel{eq:spline_mean_radius}{{2.19}{16}{Splines}{equation.2.19}{}}
+\newlabel{eq:spline_effective_height}{{2.20}{16}{Splines}{equation.2.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.10}{\ignorespaces Radar chart providing a qualitative assessment of a splined shaft--hub connection according to DIN 5480. See Table~\ref {tab:spline_fit_radar_axes} for explanation of each axis~\blx@tocontentsinit {0}\cite {kittsteiner1990welle}.}}{17}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:spline_fit_properties}{{2.10}{17}{Radar chart providing a qualitative assessment of a splined shaft--hub connection according to DIN 5480. See Table~\ref {tab:spline_fit_radar_axes} for explanation of each axis~\cite {kittsteiner1990welle}}{figure.caption.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.5}Comparison of Connection Types}{17}{subsection.2.2.5}\protected@file@percent }
+\newlabel{subsec:connection_comparison}{{2.2.5}{17}{Comparison of Connection Types}{subsection.2.2.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Relevant Industry Standards}{17}{section.2.3}\protected@file@percent }
+\newlabel{sec:relevant_standards}{{2.3}{17}{Relevant Industry Standards}{section.2.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.11}{\ignorespaces Friction coefficients (Haftbeiwerte) for press-fit connections according to DIN~7190, showing ranges for different material pairings and surface conditions~\blx@tocontentsinit {0}\cite {DIN7190_1_2017}.}}{18}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:press_friction_din7190}{{2.11}{18}{Friction coefficients (Haftbeiwerte) for press-fit connections according to DIN~7190, showing ranges for different material pairings and surface conditions~\cite {DIN7190_1_2017}}{figure.caption.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.12}{\ignorespaces Key dimensions and tolerances for parallel keys according to DIN~6885, showing standardized key sizes as a function of shaft diameter~\blx@tocontentsinit {0}\cite {DIN6885_1_2021}.}}{19}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:key_din6885}{{2.12}{19}{Key dimensions and tolerances for parallel keys according to DIN~6885, showing standardized key sizes as a function of shaft diameter~\cite {DIN6885_1_2021}}{figure.caption.26}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.13}{\ignorespaces Spline geometry and dimensions for involute splines based on reference diameters according to DIN~5480~\blx@tocontentsinit {0}\cite {DIN5480_1_2006}.}}{20}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:spline_din5480}{{2.13}{20}{Spline geometry and dimensions for involute splines based on reference diameters according to DIN~5480~\cite {DIN5480_1_2006}}{figure.caption.27}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Materials and Contact Mechanics}{20}{section.2.4}\protected@file@percent }
+\newlabel{sec:materials_contact_mechanics}{{2.4}{20}{Materials and Contact Mechanics}{section.2.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.14}{\ignorespaces Hooke's law relationships for material properties, showing the relationship between stress and strain for normal and shear loading, and the connection between Young's modulus $E$, shear modulus $G$, and Poisson's ratio $\nu $~\blx@tocontentsinit {0}\cite {zwickau_konstruktionslehre_2023}.}}{21}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:hookes_law}{{2.14}{21}{Hooke's law relationships for material properties, showing the relationship between stress and strain for normal and shear loading, and the connection between Young's modulus $E$, shear modulus $G$, and Poisson's ratio $\nu $~\cite {zwickau_konstruktionslehre_2023}}{figure.caption.28}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Feasibility Considerations}{22}{section.2.5}\protected@file@percent }
+\newlabel{sec:background_analytical_models}{{2.5}{22}{Feasibility Considerations}{section.2.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}Preference-Based Engineering Trade-Offs}{22}{section.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}Synthetic Data in Engineering Design}{23}{section.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The Need for Synthetic Data.}{23}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.8}Machine Learning Concepts for Hybrid Prediction}{23}{section.2.8}\protected@file@percent }
+\newlabel{sec:background_ml}{{2.8}{23}{Machine Learning Concepts for Hybrid Prediction}{section.2.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.1}What is Machine Learning?}{23}{subsection.2.8.1}\protected@file@percent }
+\newlabel{subsec:background_ml_intro}{{2.8.1}{23}{What is Machine Learning?}{subsection.2.8.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.2}Supervised Classification}{24}{subsection.2.8.2}\protected@file@percent }
+\newlabel{subsec:background_supervised}{{2.8.2}{24}{Supervised Classification}{subsection.2.8.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Training Process.}{24}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.3}Tree-Based Models and Gradient Boosting}{24}{subsection.2.8.3}\protected@file@percent }
+\newlabel{subsec:background_boosting}{{2.8.3}{24}{Tree-Based Models and Gradient Boosting}{subsection.2.8.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Decision Trees.}{24}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Random Forest and Bagging.}{24}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gradient Boosting.}{24}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gradient-Boosted Tree Frameworks.}{25}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.4}Ensemble Learning}{25}{subsection.2.8.4}\protected@file@percent }
+\newlabel{subsec:background_ensemble}{{2.8.4}{25}{Ensemble Learning}{subsection.2.8.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Ensemble Learning and Model Outputs.}{25}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8.5}Evaluation Metrics and Model Selection}{26}{subsection.2.8.5}\protected@file@percent }
+\newlabel{subsec:background_metrics}{{2.8.5}{26}{Evaluation Metrics and Model Selection}{subsection.2.8.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Confusion Matrix.}{26}{section*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Accuracy, Precision, and Recall.}{26}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F1-Score and Macro-Averaging.}{27}{section*.38}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.15}{\ignorespaces Confusion matrix for the three-class problem, showing how predictions are distributed across true and predicted classes~\blx@tocontentsinit {0}\cite {researchgate_confusion_matrix_2021}.}}{27}{figure.caption.39}\protected@file@percent }
+\newlabel{fig:confusion_matrix}{{2.15}{27}{Confusion matrix for the three-class problem, showing how predictions are distributed across true and predicted classes~\cite {researchgate_confusion_matrix_2021}}{figure.caption.39}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.9}State of the Art in Engineering Design Automation}{27}{section.2.9}\protected@file@percent }
+\newlabel{sec:state_of_the_art}{{2.9}{27}{State of the Art in Engineering Design Automation}{section.2.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.16}{\ignorespaces System architecture of the proposed hybrid analytical--machine learning framework. User inputs are collected in a React frontend and sent to a FastAPI REST API for request validation and response formatting. The backend executes an analytical engine (DIN-based capacity calculations, feasibility filtering, and preference scoring) supported by a material database, alongside an ML pipeline (feature preprocessing and a CatBoost classifier providing predictions and confidence scores). An offline dataset generation module creates a synthetic dataset used to train the ML component. Source: own illustration.}}{29}{figure.caption.40}\protected@file@percent }
+\newlabel{fig:system_architecture}{{2.16}{29}{System architecture of the proposed hybrid analytical--machine learning framework. User inputs are collected in a React frontend and sent to a FastAPI REST API for request validation and response formatting. The backend executes an analytical engine (DIN-based capacity calculations, feasibility filtering, and preference scoring) supported by a material database, alongside an ML pipeline (feature preprocessing and a CatBoost classifier providing predictions and confidence scores). An offline dataset generation module creates a synthetic dataset used to train the ML component. Source: own illustration}{figure.caption.40}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.10}Summary}{30}{section.2.10}\protected@file@percent }
+\newlabel{sec:background_summary}{{2.10}{30}{Summary}{section.2.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Explanation of axes in the press-fit radar chart (Figure~\ref {fig:press_fit_properties})}}{31}{table.caption.14}\protected@file@percent }
+\newlabel{tab:press_fit_radar_axes}{{2.1}{31}{Explanation of axes in the press-fit radar chart (Figure~\ref {fig:press_fit_properties})}{table.caption.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Explanation of axes in the keyed connection radar chart (Figure~\ref {fig:key_fit_properties})}}{32}{table.caption.19}\protected@file@percent }
+\newlabel{tab:key_fit_radar_axes}{{2.2}{32}{Explanation of axes in the keyed connection radar chart (Figure~\ref {fig:key_fit_properties})}{table.caption.19}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.3}{\ignorespaces Explanation of axes in the splined connection radar chart (Figure~\ref {fig:spline_fit_properties})}}{33}{table.caption.23}\protected@file@percent }
+\newlabel{tab:spline_fit_radar_axes}{{2.3}{33}{Explanation of axes in the splined connection radar chart (Figure~\ref {fig:spline_fit_properties})}{table.caption.23}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.4}{\ignorespaces Comparison of shaft--hub connection types}}{34}{table.caption.24}\protected@file@percent }
+\newlabel{tab:connection_comparison}{{2.4}{34}{Comparison of shaft--hub connection types}{table.caption.24}{}}
 \@setckpt{sections/background}{
-\setcounter{page}{14}
-\setcounter{equation}{12}
-\setcounter{enumi}{2}
+\setcounter{page}{35}
+\setcounter{equation}{26}
+\setcounter{enumi}{3}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
 \setcounter{enumiv}{0}
@@ -57,16 +119,19 @@
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
 \setcounter{chapter}{2}
-\setcounter{section}{9}
+\setcounter{section}{10}
 \setcounter{subsection}{0}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{0}
-\setcounter{table}{0}
+\setcounter{figure}{16}
+\setcounter{table}{4}
 \setcounter{parentequation}{0}
-\setcounter{float@type}{8}
-\setcounter{caption@flags}{0}
+\setcounter{tcbbreakpart}{0}
+\setcounter{tcblayer}{0}
+\setcounter{tcolorbox@number}{0}
+\setcounter{float@type}{32}
+\setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
 \setcounter{KVtest}{0}
 \setcounter{subfigure}{0}
@@ -78,13 +143,129 @@
 \setcounter{@pps}{0}
 \setcounter{@ppsavesec}{0}
 \setcounter{@ppsaveapp}{0}
-\setcounter{section@level}{1}
-\setcounter{Item}{2}
-\setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{22}
 \setcounter{ALC@unique}{0}
 \setcounter{ALC@line}{0}
 \setcounter{ALC@rem}{0}
 \setcounter{ALC@depth}{0}
 \setcounter{algorithm}{0}
+\setcounter{lstnumber}{1}
+\setcounter{tabx@nest}{0}
+\setcounter{listtotal}{0}
+\setcounter{listcount}{0}
+\setcounter{liststart}{0}
+\setcounter{liststop}{0}
+\setcounter{citecount}{0}
+\setcounter{citetotal}{0}
+\setcounter{multicitecount}{0}
+\setcounter{multicitetotal}{0}
+\setcounter{instcount}{69}
+\setcounter{maxnames}{2}
+\setcounter{minnames}{1}
+\setcounter{maxitems}{3}
+\setcounter{minitems}{1}
+\setcounter{citecounter}{0}
+\setcounter{maxcitecounter}{0}
+\setcounter{savedcitecounter}{0}
+\setcounter{uniquelist}{0}
+\setcounter{uniquename}{0}
+\setcounter{refsection}{0}
+\setcounter{refsegment}{0}
+\setcounter{maxextratitle}{0}
+\setcounter{maxextratitleyear}{0}
+\setcounter{maxextraname}{0}
+\setcounter{maxextradate}{0}
+\setcounter{maxextraalpha}{0}
+\setcounter{abbrvpenalty}{50}
+\setcounter{highnamepenalty}{50}
+\setcounter{lownamepenalty}{25}
+\setcounter{maxparens}{3}
+\setcounter{parenlevel}{0}
+\setcounter{blx@maxsection}{0}
+\setcounter{mincomprange}{10}
+\setcounter{maxcomprange}{100000}
+\setcounter{mincompwidth}{1}
+\setcounter{afterword}{0}
+\setcounter{savedafterword}{0}
+\setcounter{annotator}{0}
+\setcounter{savedannotator}{0}
+\setcounter{author}{0}
+\setcounter{savedauthor}{0}
+\setcounter{bookauthor}{0}
+\setcounter{savedbookauthor}{0}
+\setcounter{commentator}{0}
+\setcounter{savedcommentator}{0}
+\setcounter{editor}{0}
+\setcounter{savededitor}{0}
+\setcounter{editora}{0}
+\setcounter{savededitora}{0}
+\setcounter{editorb}{0}
+\setcounter{savededitorb}{0}
+\setcounter{editorc}{0}
+\setcounter{savededitorc}{0}
+\setcounter{foreword}{0}
+\setcounter{savedforeword}{0}
+\setcounter{holder}{0}
+\setcounter{savedholder}{0}
+\setcounter{introduction}{0}
+\setcounter{savedintroduction}{0}
+\setcounter{namea}{0}
+\setcounter{savednamea}{0}
+\setcounter{nameb}{0}
+\setcounter{savednameb}{0}
+\setcounter{namec}{0}
+\setcounter{savednamec}{0}
+\setcounter{translator}{0}
+\setcounter{savedtranslator}{0}
+\setcounter{shortauthor}{0}
+\setcounter{savedshortauthor}{0}
+\setcounter{shorteditor}{0}
+\setcounter{savedshorteditor}{0}
+\setcounter{labelname}{0}
+\setcounter{savedlabelname}{0}
+\setcounter{institution}{0}
+\setcounter{savedinstitution}{0}
+\setcounter{lista}{0}
+\setcounter{savedlista}{0}
+\setcounter{listb}{0}
+\setcounter{savedlistb}{0}
+\setcounter{listc}{0}
+\setcounter{savedlistc}{0}
+\setcounter{listd}{0}
+\setcounter{savedlistd}{0}
+\setcounter{liste}{0}
+\setcounter{savedliste}{0}
+\setcounter{listf}{0}
+\setcounter{savedlistf}{0}
+\setcounter{location}{0}
+\setcounter{savedlocation}{0}
+\setcounter{organization}{0}
+\setcounter{savedorganization}{0}
+\setcounter{origlocation}{0}
+\setcounter{savedoriglocation}{0}
+\setcounter{origpublisher}{0}
+\setcounter{savedorigpublisher}{0}
+\setcounter{publisher}{0}
+\setcounter{savedpublisher}{0}
+\setcounter{language}{0}
+\setcounter{savedlanguage}{0}
+\setcounter{origlanguage}{0}
+\setcounter{savedoriglanguage}{0}
+\setcounter{pageref}{0}
+\setcounter{savedpageref}{0}
+\setcounter{textcitecount}{0}
+\setcounter{textcitetotal}{0}
+\setcounter{textcitemaxnames}{0}
+\setcounter{biburlbigbreakpenalty}{100}
+\setcounter{biburlbreakpenalty}{200}
+\setcounter{biburlnumpenalty}{0}
+\setcounter{biburlucpenalty}{0}
+\setcounter{biburllcpenalty}{0}
+\setcounter{smartand}{1}
+\setcounter{bbx:relatedcount}{0}
+\setcounter{bbx:relatedtotal}{0}
+\setcounter{section@level}{1}
+\setcounter{Item}{5}
+\setcounter{Hfootnote}{0}
+\setcounter{bookmark@seq@number}{30}
+\setcounter{lstlisting}{0}
 }

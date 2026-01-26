@@ -10,12 +10,17 @@ venv/
 *.egg-info/
 dist/
 build/
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
 
 # IDE
 .idea/
@@ -23,10 +28,13 @@ yarn-error.log*
 *.swp
 *.swo
 *~
+*.sublime-project
+*.sublime-workspace
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Environment variables
 .env
@@ -35,4 +43,63 @@ Thumbs.db
 
 # Logs
 *.log
+*.log.*
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.bcf
+*.run.xml
+
+# PDFs (thesis-related, keep source but ignore compiled)
+# Uncomment if you want to ignore PDFs:
+# *.pdf
+
+# Model training artifacts
+catboost_info/
+*.tsv
+training_log_*.log
+training_results_*.json
+
+# Dataset files (optional - uncomment if dataset should not be in repo)
+# synthetic_SHC_dataset.csv
+
+# Compiled files
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# React build
+Bachelor_Code/shaft-connection-selector/build/
+Bachelor_Code/shaft-connection-selector/.env.local
+Bachelor_Code/shaft-connection-selector/.env.development.local
+Bachelor_Code/shaft-connection-selector/.env.test.local
+Bachelor_Code/shaft-connection-selector/.env.production.local
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
 

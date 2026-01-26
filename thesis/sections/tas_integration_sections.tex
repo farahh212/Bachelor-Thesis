@@ -1,0 +1,191 @@
+% ============================================================================
+% TAS SCHAFER INTEGRATION SECTIONS
+% Add these sections to your thesis as indicated below
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% SECTION 1: Add to Background (Chapter 2)
+% Location: After section on press fits, keys, and splines
+% ----------------------------------------------------------------------------
+
+\subsection{Commercial Shaft--Hub Connection Solutions}
+\label{subsec:commercial_solutions}
+
+While this thesis focuses on three fundamental connection types (press fits, 
+keys, and splines) based on DIN standards, commercial solutions exist that 
+extend these concepts to achieve higher torque capacities or additional 
+functionality. TAS Schafer, a leading manufacturer of shaft--hub connections, 
+offers two product categories that combine interference fits with clamping 
+elements: \emph{shrink discs} and \emph{locking assemblies}.
+
+\textbf{Shrink Discs} utilize an interference fit base enhanced by radial 
+clamping elements (typically screws) that apply additional pressure at a 
+working diameter $d_w$ smaller than the shaft diameter $d$. This hybrid 
+approach combines the benefits of interference fits (friction-based torque 
+transmission) with the adjustability and higher capacity of clamping 
+mechanisms. The torque capacity $M_t$ of a shrink disc is the sum of two 
+contributions:
+\begin{equation}
+M_{t,\text{shrink disc}} = M_{t,\text{interference}} + M_{t,\text{clamping}},
+\end{equation}
+where $M_{t,\text{interference}}$ follows the standard press-fit relationship 
+and $M_{t,\text{clamping}}$ depends on the number of clamping elements $Z$, 
+assembly torque $M_A$, and clamping geometry parameters.
+
+\textbf{Locking Assemblies} employ a pure clamping mechanism without 
+interference fits, providing both torque transmission and axial force capacity 
+$F_{ax}$ through controlled clamping element pressure. Unlike shrink discs, 
+locking assemblies do not rely on interference fits, making them suitable for 
+applications requiring disassembly or adjustment.
+
+These commercial solutions represent an extension of the fundamental 
+connection types considered in this thesis. While they offer advantages 
+in specific applications (higher capacity, adjustability, axial force 
+transmission), their integration into the current framework would require:
+\begin{itemize}
+    \item Proprietary analytical models (not standardized in DIN standards)
+    \item Additional geometric parameters (clamping elements $Z$, working 
+          diameter $d_w$, assembly torque $M_A$)
+    \item Extended feature engineering (handling missing catalog data such 
+          as user preferences and explicit material specifications)
+    \item Significant pipeline modifications (analytical models, dataset 
+          generation, ML model retraining)
+\end{itemize}
+
+For the scope of this thesis, the focus remains on the three fundamental 
+types (press fits, keys, splines) that form the basis of most shaft--hub 
+connections and are fully standardized in DIN~7190, DIN~6885, and DIN~5480. 
+The framework's architecture, however, supports extension to additional 
+connection types, as discussed in Section~\ref{sec:future_work}.
+
+% ----------------------------------------------------------------------------
+% SECTION 2: Add to Discussion (Chapter 5)
+% Location: In limitations/extensibility discussion
+% ----------------------------------------------------------------------------
+
+\paragraph{Extensibility to Additional Connection Types.}
+The developed framework demonstrates a clear pathway for extending to 
+additional connection types beyond the three fundamental types considered. 
+The methodology of encoding analytical models into synthetic data generation 
+and training ML classifiers is directly applicable to other connection types, 
+such as commercial shrink discs or locking assemblies.
+
+The key requirements for such extensions are:
+\begin{enumerate}
+    \item \textbf{Analytical Model Development:} Implement analytical models 
+          for the new connection type(s), accounting for their specific 
+          physics (e.g., clamping element contributions, working diameter 
+          effects, axial force capacity).
+    
+    \item \textbf{Parameter Sampling Strategies:} Develop sampling strategies 
+          aligned with the new type's design space, maintaining DIN-compliant 
+          or manufacturer-specified parameter ranges.
+    
+    \item \textbf{Feature Engineering:} Extend the feature set to include 
+          new parameters (e.g., clamping elements, assembly torque) and handle 
+          missing features in catalog data through defaults or estimates.
+    
+    \item \textbf{Synthetic Data Generation:} Generate synthetic training 
+          data using the new analytical models, following the same automated 
+          pipeline approach used for the three fundamental types.
+    
+    \item \textbf{Model Retraining:} Retrain the ML classifier with extended 
+          classes and features, ensuring no degradation in performance on 
+          the original connection types.
+\end{enumerate}
+
+While this thesis focuses on three fundamental types, the framework's 
+modular architecture supports such extensions, as demonstrated by the 
+separation of analytical models, dataset generation, and ML training 
+components. The hybrid analytical--ML approach ensures that new connection 
+types can be integrated while maintaining mechanical consistency and 
+interpretability.
+
+% ----------------------------------------------------------------------------
+% SECTION 3: Add to Future Work (Chapter 6)
+% Location: Extend existing future work section
+% ----------------------------------------------------------------------------
+
+\paragraph{Extension to Commercial Connection Types.}
+The current framework considers three fundamental connection types based 
+on DIN standards. A natural extension would integrate commercial solutions 
+such as TAS Schafer shrink discs and locking assemblies, which combine 
+interference fits with clamping elements to achieve higher torque capacities.
+
+\textbf{Integration Requirements:}
+
+\begin{enumerate}
+    \item \textbf{Analytical Model Development:} Implement analytical models 
+          for shrink disc and locking assembly torque capacity, accounting 
+          for clamping element contributions and working diameter effects. 
+          This requires studying proprietary equations from manufacturer 
+          documentation and validating against catalog data. The shrink disc 
+          model must combine interference fit and clamping contributions, 
+          while the locking assembly model must handle pure clamping 
+          mechanisms and axial force capacity.
+    
+    \item \textbf{Feature Engineering:} Extend the feature set to include 
+          clamping-specific parameters (number of clamping elements $Z$, 
+          assembly torque $M_A$, working diameter $d_w$) and handle missing 
+          features in catalog data (user preferences, explicit materials) 
+          through defaults or estimates. The feature set would expand from 
+          18 to approximately 28--30 features.
+    
+    \item \textbf{Synthetic Data Generation:} Generate synthetic training 
+          data for TAS types using the new analytical models, maintaining 
+          the same DIN-compliant sampling approach used for the three 
+          fundamental types. This would generate approximately 2,000--3,000 
+          synthetic shrink disc samples and 1,000--1,500 synthetic locking 
+          assembly samples to balance the dataset.
+    
+    \item \textbf{Model Extension:} Retrain the ML classifier to handle 
+          five classes (press, key, spline, shrink disc, locking assembly) 
+          with extended features, ensuring no degradation in performance on 
+          the original three classes. This requires careful handling of 
+          class imbalance, as TAS types would represent approximately 50\% 
+          of the combined dataset.
+    
+    \item \textbf{System Integration:} Extend the web application to support 
+          TAS-specific input fields (clamping elements, assembly torque, 
+          working diameter) and display recommendations for all five connection 
+          types, with appropriate UI toggles for enabling TAS types.
+\end{enumerate}
+
+\textbf{Estimated Effort:} 8--11 weeks of development time, including 
+analytical model implementation (2--3 weeks), dataset generation and feature 
+engineering (2--3 weeks), model retraining (1 week), system integration 
+(2 weeks), and testing/validation (1 week).
+
+\textbf{Challenges:}
+\begin{itemize}
+    \item Proprietary equations require reverse-engineering from catalog 
+          data and manufacturer documentation, as they are not standardized 
+          in DIN standards.
+    
+    \item Different physics for each type: shrink discs combine interference 
+          fits with clamping, while locking assemblies use pure clamping 
+          mechanisms, requiring separate analytical models.
+    
+    \item Class imbalance: TAS types would represent approximately 50\% of 
+          the combined dataset, potentially affecting model performance on 
+          the original three classes.
+    
+    \item Feature incompatibility: Catalog data lacks user preferences and 
+          explicit material specifications, requiring feature engineering with 
+          defaults or estimates.
+    
+    \item Validation complexity: Proprietary models must be validated against 
+          manufacturer catalog data, which may have simplified or proprietary 
+          assumptions not fully documented.
+\end{itemize}
+
+This extension would demonstrate the framework's extensibility and provide 
+a more comprehensive solution covering both standardized (DIN-based) and 
+commercial connection types, while maintaining the hybrid analytical--ML 
+approach that ensures mechanical consistency and interpretability.
+
+% ============================================================================
+% END OF TAS INTEGRATION SECTIONS
+% ============================================================================
+
+

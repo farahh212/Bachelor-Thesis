@@ -3,7 +3,11 @@
 \usepackage[headings]{fullpage}
 \usepackage{amsmath}
 \usepackage{setspace}
-
+\usepackage{graphicx} % for \rotatebox
+\usepackage{booktabs}
+\usepackage{placeins}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
 
 % \usepackage[top=1.5cm,right=1.5cm,bottom=1.5cm,left=1.5cm]{geometry}
 % \usepackage{fancyhdr}
@@ -17,20 +21,22 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{appendix}
-\usepackage[pdfborder={0 0 0}, colorlinks=true, linkcolor=black, citecolor=blue]{hyperref}
 \usepackage[printonlyused]{acronym}
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{ifpdf}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
 % \setlength{\parindent}{0pt}
 
-\newcommand{\submissionDay}{15}
+\newcommand{\submissionDay}{21}
 \newcommand{\submissionMonth}{January}
 \newcommand{\submissionYear}{2026}
 \newcommand{\submissionDate}{\submissionDay~\submissionMonth,~\submissionYear}
 \newcommand{\typeOfThesis}{Bachelor Thesis}
 
-\newcommand{\titleOfThesisOne}{Hybrid Analytical–Machine Learning Framework for Intelligent Shaft–Hub Connection Selection using Synthetically Generated Data}
+\newcommand{\titleOfThesisOne}{Further development of an AI-Supported Algorithm to choose a suitable Shaft-Hub-Connection}
 
 \newcommand{\authorOfThesis}{Farah Hany}
 \newcommand{\supervisorOne}{Prof. Dr.-Ing. Michael Lätzer}
@@ -78,7 +84,38 @@
 % Reduce spacing before/after lists
 \setlist[itemize]{topsep=2pt, partopsep=0pt, itemsep=2pt, parsep=2pt}
 
+% Bibliography with biblatex for DOI display
+% IMPORTANT: Compile with: pdflatex → biber → pdflatex → pdflatex
+\usepackage[backend=biber, style=ieee, doi=true, url=true, isbn=false]{biblatex}
+\addbibresource{references.bib}
+
+% Hyperref should be loaded after biblatex
+\usepackage[pdfborder={0 0 0}, colorlinks=true, linkcolor=black, citecolor=blue]{hyperref}
+\usepackage{url}  % For proper URL formatting
+
+% Listings configuration for code formatting
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    frameround=tttt,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false
+}
+
 \begin{document}
+\raggedbottom
+
 % \overfullrule=5pt
 \pagestyle{plain}
 \pagenumbering{Roman}
@@ -86,6 +123,8 @@
 \include{title_page}
 
 \include{acknowledgments}
+
+\include{ai_usage}
 
 \include{abstract}
 \tableofcontents
@@ -109,9 +148,7 @@
 \include{sections/conclusion}
 \include{appendix}
 
-\bibliographystyle{ieeetr}
-% \bibliographystyle{plain}
-\bibliography{references}
-\addcontentsline{toc}{chapter}{References}
+% Print bibliography using biblatex
+\printbibliography[heading=bibintoc, title={References}]
 
 \end{document}

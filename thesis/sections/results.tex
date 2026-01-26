@@ -1,54 +1,396 @@
 \chapter{Results}
 \label{ch:results}
 
-This chapter presents the results of the developed hybrid analytical–machine learning framework for shaft–hub connection selection. The results are organized into four sections: analytical model verification, synthetic dataset characteristics, machine learning model performance, and a demonstration of the integrated web application.
+This chapter presents the results of the developed hybrid analytical–machine learning framework for shaft–hub connection selection. The results are organized into six sections: requirements validation mapping test results to methodology requirements, analytical model verification, synthetic dataset characteristics, machine learning model performance including error analysis and statistical significance testing, and a demonstration of the integrated web application.
 
 % ---------------------------------------------------------------------------
 \section{Analytical Model Verification}
 \label{sec:analytical_verification}
 
-The analytical calculation module was first verified against known cases and engineering intuition. For example, using a standard case: a steel shaft (diameter $30~\text{mm}$) and cast iron hub with a required torque of $500~\text{N}\cdot\text{m}$. The analytical model computed that a single parallel key ($8~\text{mm}$ wide) was marginally feasible (95\% of shear capacity used, slight overload in bearing pressure), a press fit with $30~\text{mm}$ bore would require approximately $50~\text{MPa}$ interface pressure (achievable with moderate interference of approximately $15~\mu\text{m}$, within limits), and a spline with module 4 (approximately 8 teeth) had ample capacity (approximately $1500~\text{N}\cdot\text{m}$). The model thus marked the key as feasible but highly stressed, and the press fit and spline as feasible with safety margins. With no preferences applied, it selected the press fit as the recommendation (safely meets $500~\text{N}\cdot\text{m}$ with minimal overdesign). The press fit pressure was cross-checked against DIN~7190 hand calculations and found to be in close agreement (within a few percent)~\cite{DIN7190_2017}.
+To validate the analytical model's accuracy, three standardized test cases were evaluated against ground truth values computed using DIN standards (DIN~7190 for press fits, DIN~6885 for keys, and DIN~5480 for splines). The test configuration used a $45~\text{mm}$ solid shaft with $50~\text{mm}$ hub length, Steel E360 material for thr shaft and Steel 16MnCr5 for the hub, required torque of $870~\text{N}\cdot\text{m}$ ($870{,}000~\text{N}\cdot\text{mm}$), and a safety factor of 2.0. Table~\ref{tab:test_case_inputs} summarizes the common input parameters, while Tables~\ref{tab:test_press_fit},~\ref{tab:test_key}, and~\ref{tab:test_spline} present detailed comparisons for each connection type, including geometrical and material data, analytical results, and predicted torque capacities from the program.
 
-In another example, a larger shaft ($80~\text{mm}$) with very high torque ($20~\text{kN}\cdot\text{m}$) resulted in the key option failing outright (beyond any reasonable key stress), the press fit being feasible only with an extreme interference ($>0.05~\text{mm}$, failing the practicality check), and the spline (e.g., a DIN~5480 spline of $80~\text{mm}$ reference diameter) easily handling the load. As expected, the analytical selector returned ``Spline'' as the only viable choice. These examples build confidence that the physics-based rules are correctly implemented and align with standard design practice.
+\begin{table}[ht]
+\centering
+\caption{Common input parameters for standardized test cases}
+\label{tab:test_case_inputs}
+\begin{tabular}{lc}
+\toprule
+Parameter & Value \\
+\midrule
+Shaft diameter $d$ & $45~\text{mm}$ \\
+Hub length $L$ & $50~\text{mm}$ \\
+Shaft material & Steel E360 \\
+Hub material & Steel 16MnCr5 \\
+Required torque $M_{\text{req}}$ & $870~\text{N}\cdot\text{m}$ ($870{,}000~\text{N}\cdot\text{mm}$) \\
+Safety factor $S_R$ & 2.0 \\
+Shaft type & Solid \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-The analytical module also reveals how each connection would perform: for example, it outputs that in the $80~\text{mm}$ case, a press fit would require a pressure of $200~\text{MPa}$, which exceeds material yield, hence is infeasible. Such outputs underscore why certain options are eliminated, reinforcing that the system's decisions are grounded in engineering reality.
+\subsubsection{Press Fit Test Case}
+\label{subsubsec:test_press_fit}
+
+The press fit test case used a hub outer diameter of $70~\text{mm}$ and a friction coefficient $\mu = 0.2$. Table~\ref{tab:test_press_fit} presents the geometrical and material parameters, analytical results, and predicted torque capacity from the program. The model correctly computed the required interface pressure ($p_{\text{erf}} = 54.7~\text{MPa}$) and allowable pressure ($p_{\text{zul}} = 124.2~\text{MPa}$), both matching DIN~7190 ground truth values within $0.1\%$. The torque capacity from allowable pressure ($M_{t,\text{zul}} = 3{,}951~\text{N}\cdot\text{m}$) exceeds the required torque, indicating mechanical feasibility. However, the interference check correctly identified that the working interference $U_w = 0.0316~\text{mm}$ exceeds the practical limit of $0.020~\text{mm}$ for this diameter range, rendering the press fit infeasible from a manufacturability perspective. This demonstrates the model's ability to enforce practical design constraints beyond pure mechanical capacity.
+
+\begin{table}[ht]
+\centering
+\caption{Press fit test case: geometrical/material data, analytical results, and predicted torque. Ground truth values from~\cite{Result_SHC2_2024}.}
+\label{tab:test_press_fit}
+\begin{tabular}{lc}
+\toprule
+Parameter & Value \\
+\midrule
+\multicolumn{2}{l}{\textbf{Geometrical and Material Data}} \\
+\midrule
+Shaft diameter $d$ & $45~\text{mm}$ \\
+Hub outer diameter $D$ & $70~\text{mm}$ \\
+Hub length $L$ & $50~\text{mm}$ \\
+Shaft material & Steel E360 \\
+Hub material & Steel 16MnCr5 \\
+Friction coefficient $\mu$ & $0.2$ \\
+Required torque $M_{\text{req}}$ & $870~\text{N}\cdot\text{m}$ \\
+Safety factor $S_R$ & $2.0$ \\
+\midrule
+\multicolumn{2}{l}{\textbf{Analytical Results}} \\
+\midrule
+Diameter ratio $Q_A$ & $0.643$ \\
+Required pressure $p_{\text{erf}}$ & $54.7~\text{MPa}$ \\
+Allowable pressure $p_{\text{zul}}$ & $124.2~\text{MPa}$ \\
+Elastic interference $U_e$ & $0.0412~\text{mm}$ \\
+Working interference $U_w$ & $0.0316~\text{mm}$ \\
+Interference limit & $0.020~\text{mm}$ \\
+\midrule
+\multicolumn{2}{l}{\textbf{Predicted Torque from Program}} \\
+\midrule
+Torque capacity $M_{t,\text{zul}}$ & $3{,}951~\text{N}\cdot\text{m}$ \\
+Feasibility (mechanical) & Yes \\
+Feasibility (practical) & No ($U_w > 0.020~\text{mm}$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Key Test Case}
+\label{subsubsec:test_key}
+
+The key test case used standard DIN~6885 key dimensions: width $b = 14~\text{mm}$ and height $h = 9~\text{mm}$ for a $45~\text{mm}$ shaft diameter. Table~\ref{tab:test_key} presents the geometrical and material parameters, analytical results, and predicted torque capacity from the program. The model correctly identified the key dimensions and computed a torque capacity of $945~\text{N}\cdot\text{m}$ ($945{,}000~\text{N}\cdot\text{mm}$), which matches the DIN~6885 ground truth value of $944~\text{N}\cdot\text{m}$ within $0.1\%$. However, when the safety factor $S_R = 2.0$ is applied, the corresponding design torque is $M_{\text{design}} = 1{,}740~\text{N}\cdot\text{m}$, which exceeds the key capacity. In the analytical selector, this key configuration is therefore marked as \emph{mechanically infeasible} for the standardized test case, even though the underlying torque formula itself agrees closely with the DIN reference.
+
+\begin{table}[ht]
+\centering
+\caption{Key test case: geometrical/material data, analytical results, and predicted torque. Ground truth values from~\cite{Result_SHC2_2024}.}
+\label{tab:test_key}
+\begin{tabular}{lc}
+\toprule
+Parameter & Value \\
+\midrule
+\multicolumn{2}{l}{\textbf{Geometrical and Material Data}} \\
+\midrule
+Shaft diameter $d$ & $45~\text{mm}$ \\
+Key width $b$ & $14~\text{mm}$ \\
+Key height $h$ & $9~\text{mm}$ \\
+Key length $L$ & $50~\text{mm}$ \\
+Shaft material & Steel E360 \\
+Hub material & Steel 16MnCr5 \\
+Required torque $M_{\text{req}}$ & $870~\text{N}\cdot\text{m}$ \\
+Safety factor $S_R$ & $2.0$ \\
+\midrule
+\multicolumn{2}{l}{\textbf{Analytical Results}} \\
+\midrule
+Allowable shear stress $\tau_{\text{zul}}$ & $60~\text{MPa}$ \\
+Allowable bearing pressure $p_{\text{zul}}$ & $333~\text{MPa}$ \\
+\midrule
+\multicolumn{2}{l}{\textbf{Predicted Torque from Program}} \\
+\midrule
+Torque capacity $M_{t,\text{zul}}$ & $945~\text{N}\cdot\text{m}$ \\
+Ground truth (DIN~6885) & $944~\text{N}\cdot\text{m}$ \\
+Deviation & $+0.1\%$ \\
+Utilization w.r.t.\ design torque $M_{\text{design}} = 1{,}740~\text{N}\cdot\text{m}$ & $54.3\%$ \\
+Feasibility & No ($M_{t,\text{zul}} < M_{\text{design}}$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Spline Test Case}
+\label{subsubsec:test_spline}
+
+The spline test case used overridden geometry parameters: minor diameter $d = 42~\text{mm}$, major diameter $D = 48~\text{mm}$, and tooth count $z = 8$. Table~\ref{tab:test_spline} presents the geometrical and material parameters, analytical results, and predicted torque capacity from the program. The model correctly computed the mean radius ($r_m = 22.5~\text{mm}$), projected flank height ($h_{\text{proj}} = 3.0~\text{mm}$), and allowable bearing pressure ($p_{\text{zul}} = 319.5~\text{MPa}$), all matching DIN~5480 ground truth values. The torque capacity of $6{,}470~\text{N}\cdot\text{m}$ ($6{,}470{,}000~\text{N}\cdot\text{mm}$) matches the ground truth value of $6{,}460~\text{N}\cdot\text{m}$ within $0.15\%$. The spline provides substantial capacity margin ($644\%$ above the required torque), demonstrating its suitability for high-torque applications.
+
+\begin{table}[ht]
+\centering
+\caption{Spline test case: geometrical/material data, analytical results, and predicted torque. Ground truth values from~\cite{Result_SHC2_2024}.}
+\label{tab:test_spline}
+\begin{tabular}{lc}
+\toprule
+Parameter & Value \\
+\midrule
+\multicolumn{2}{l}{\textbf{Geometrical and Material Data}} \\
+\midrule
+Minor diameter $d$ & $42~\text{mm}$ \\
+Major diameter $D$ & $48~\text{mm}$ \\
+Tooth count $z$ & $8$ \\
+Hub length $L$ & $50~\text{mm}$ \\
+Shaft material & Steel E360 \\
+Hub material & Steel 16MnCr5 \\
+Required torque $M_{\text{req}}$ & $870~\text{N}\cdot\text{m}$ \\
+Safety factor $S_R$ & $2.0$ \\
+\midrule
+\multicolumn{2}{l}{\textbf{Analytical Results}} \\
+\midrule
+Mean radius $r_m$ & $22.5~\text{mm}$ \\
+Projected flank height $h_{\text{proj}}$ & $3.0~\text{mm}$ \\
+Effective flank height $h_{\text{eff}}$ & $3.0~\text{mm}$ \\
+Load distribution factor $K$ & $0.75$ \\
+Allowable bearing pressure $p_{\text{zul}}$ & $319.5~\text{MPa}$ \\
+\midrule
+\multicolumn{2}{l}{\textbf{Predicted Torque from Program}} \\
+\midrule
+Torque capacity $M_{t,\text{zul}}$ & $6{,}470~\text{N}\cdot\text{m}$ \\
+Ground truth (DIN~5480) & $6{,}460~\text{N}\cdot\text{m}$ \\
+Deviation & $+0.15\%$ \\
+Safety margin & $644\%$ \\
+Feasibility & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These standardized test cases demonstrate that the analytical model achieves excellent agreement with DIN standard calculations, with discrepancies typically below $0.2\%$ for torque capacities and pressure values. The model correctly enforces both mechanical feasibility (torque capacity) and practical constraints (interference limits for press fits), validating its implementation against established engineering standards.
+
+Figure~\ref{fig:torque_comparison} presents a comparison of the torque capacities from the analytical model relative to the design torque (required torque $\times$ safety factor = $870~\text{N}\cdot\text{m} \times 2.0 = 1{,}740~\text{N}\cdot\text{m}$), normalized to show the design torque as $100\%$. This visualization clearly demonstrates feasibility: connections with capacity above $100\%$ are feasible, while those below $100\%$ are infeasible. For the key connection, the torque capacity ($945~\text{N}\cdot\text{m}$) represents only $54.3\%$ of the design torque, confirming that the key is mechanically infeasible for this test case. In contrast, the spline connection provides a torque capacity ($6{,}470~\text{N}\cdot\text{m}$) representing $371.8\%$ of the design torque, indicating substantial capacity margin and clear feasibility. The press fit case is not included in this comparison as it was deemed infeasible due to interference limits, though the mechanical torque capacity ($3{,}951~\text{N}\cdot\text{m}$) was correctly calculated and would have been feasible ($227\%$ of design torque) if not for the manufacturability constraint.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/torque_comparison_chart.png}
+\caption{Comparison of torque capacities from the analytical model relative to design torque (required torque $\times$ safety factor = $1{,}740~\text{N}\cdot\text{m}$, normalized to $100\%$). The key connection ($945~\text{N}\cdot\text{m}$, $54.3\%$) falls below the feasibility threshold, while the spline connection ($6{,}470~\text{N}\cdot\text{m}$, $371.8\%$) provides substantial capacity margin. Connections with capacity above $100\%$ are mechanically feasible. Source: own results.}
+\label{fig:torque_comparison}
+\end{figure}
+
+For the same test configuration, the CatBoost classifier predicted \textbf{Spline} with $75.6\%$ confidence, assigning $19.1\%$ to Press fit and $5.2\%$ to Key. This aligns with analytical results: under the applied safety factor $S_R = 2.0$ and interference limits, only the spline remains mechanically feasible (press fit is rejected by the interference check and the key by insufficient torque capacity), with spline providing a $644\%$ capacity margin. The high confidence reflects the model's learned understanding that splines are preferred when they are the only connection type that fully satisfies both strength and manufacturability constraints for high-torque applications. Figure~\ref{fig:ml_test_result} shows the ML prediction output from the deployed web application.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/frontend_screenshots/ML_test_result.png}
+\caption{ML model prediction output for the standardized test case configuration (shaft diameter $45~\text{mm}$, hub length $50~\text{mm}$, required torque $870~\text{N}\cdot\text{m}$, safety factor $2.0$, all preferences set to $0.5$). Source: own results.}
+\label{fig:ml_test_result}
+\end{figure}
 
 % ---------------------------------------------------------------------------
 \section{Synthetic Dataset Characteristics}
 \label{sec:dataset_characteristics}
 
-After generating the synthetic dataset (approximately 15{,}000 samples), its composition was analyzed to ensure it captured a broad spectrum of scenarios~\cite{Picard_2023}. The distribution of diameters was uniform within the chosen range (with slight clustering around standard sizes such as 20, 30, and $50~\text{mm}$ due to stratified sampling). Torque requirements spanned from a few $\text{N}\cdot\text{m}$ up to approximately $50~\text{kN}\cdot\text{m}$ in a roughly proportional manner with diameter.
+The synthetic dataset generation process produced 4{,}993 samples after filtering infeasible configurations~\cite{Picard_2023}. Diameters spanned $6$--$230~\text{mm}$ (mean: $55.3~\text{mm}$, std: $35.5~\text{mm}$), reflecting concentration in common engineering ranges (20--60~mm) while including both small and large diameter cases (Figure~\ref{fig:dataset_diameter}). Torque requirements ranged from $103~\text{N}\cdot\text{m}$ to $13.6~\text{MN}\cdot\text{m}$ (mean: $403~\text{kN}\cdot\text{m}$), covering both conservative and demanding applications (Figure~\ref{fig:dataset_torque}).
 
-The resulting label distribution was approximately: 30\% press fit, 40\% key, and 30\% spline (depending on the exact sampling settings, but fairly balanced). This distribution is sensible: at small diameters and low torques, press fits dominate (keys are too weak at very small sizes); at intermediate sizes, keys often prevail as a cost-effective solution; at large sizes or very high torques, splines become necessary.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/dataset_diameter_hist.png}
+\caption{Distribution of shaft diameters in the synthetic dataset. The histogram shows concentration in common engineering ranges (20--60~mm) while including both small and large diameter cases. Source: own results.}
+\label{fig:dataset_diameter}
+\end{figure}
 
-The dataset also included many ``boundary'' cases where two connection types were feasible---these are important for the ML model to learn the subtle boundary conditions. For cases with diameters in the range of $20$--$40~\text{mm}$ and moderate torque, the label was sometimes press fit, sometimes key, and sometimes spline, depending on preferences and exact torque. This indicates that the data reflects realistic trade-offs rather than a trivial diameter-to-label mapping.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/dataset_required_torque_hist_logx.png}
+\caption{Distribution of required torque values in the synthetic dataset (log scale). The wide range from $10^2$ to $10^7$~N$\cdot$m reflects diverse application requirements. Source: own results.}
+\label{fig:dataset_torque}
+\end{figure}
 
-The effect of preferences was also examined: for a subset of samples with fixed physical parameters and varied preferences, the label sometimes switched when preferences crossed certain thresholds. For example, with all else equal, a press fit versus key decision could hinge on whether ``maintenance ease'' was weighted above a certain level, favoring the key. This validates that the preference scoring was effective in influencing the outcome and that the dataset captures those influences. Overall, the synthetic dataset appeared diverse and representative of the design space intended to be explored, supporting the training of a robust ML model.
+The label distribution was: 54.7\% spline (2{,}729 samples), 28.6\% key (1{,}427 samples), and 16.8\% press fit (837 samples). This distribution reflects the analytical selector's behavior: splines often provide the highest capacity and are selected when torque demands are high or when preferences favor their advantages (durability, bidirectional capability, axial movement). Keys represent a cost-effective middle ground, while press fits are selected when they offer sufficient capacity with favorable preference alignment, particularly in scenarios with high vibration resistance or high-speed requirements. Figure~\ref{fig:dataset_class_dist} visualizes this class distribution.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/dataset_class_distribution.png}
+\caption{Class distribution in the synthetic dataset. The imbalance reflects the analytical selector's behavior: splines are selected more frequently due to their high capacity and versatility, while press fits are selected in specific scenarios with favorable preference alignment. Source: own results.}
+\label{fig:dataset_class_dist}
+\end{figure}
+
+The dataset included 3{,}964 samples with solid shafts and 1{,}029 with hollow shafts. For solid shafts, the inner diameter was set to zero (or not applicable), while for hollow shafts, the inner diameter had non-zero values ranging up to $128~\text{mm}$. Surface conditions were balanced: 50.8\% dry and 49.2\% oiled. Material distribution across 12 material types was approximately uniform, with each material appearing in roughly 300--360 samples, as shown in Figure~\ref{fig:dataset_material}. Safety factors ranged from 1.0 to 2.0, with a mean of 1.59 and standard deviation of 0.16, reflecting realistic engineering practice. The safety factor distribution is illustrated in Figure~\ref{fig:dataset_safety_factor}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/dataset_material_distribution_top15.png}
+\caption{Distribution of the top 15 most common materials in the synthetic dataset. The approximately uniform distribution across materials ensures balanced representation for ML training. Source: own results.}
+\label{fig:dataset_material}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/dataset_safety_factor_hist.png}
+\caption{Distribution of safety factors in the synthetic dataset. The mean value of 1.59 reflects realistic engineering practice, with adjustments based on bending loads, surface conditions, and user preferences. Source: own results.}
+\label{fig:dataset_safety_factor}
+\end{figure}
+
+The dataset included many ``boundary'' cases where two connection types were feasible, enabling the ML model to learn subtle decision boundaries. For cases with diameters in the range of $20$--$40~\text{mm}$ and moderate torque, the label varied (press fit, key, or spline) depending on preferences and exact torque, indicating realistic trade-offs rather than trivial diameter-to-label mapping. Preference analysis confirmed that labels switched when preferences crossed thresholds, validating that the preference scoring effectively influenced outcomes. Overall, the synthetic dataset was diverse and representative of the intended design space, supporting robust ML training.
+
+% ---------------------------------------------------------------------------
+\section{Requirements Validation}
+\label{sec:requirements_validation}
+
+This section maps test results to the requirements established in the methodology chapter (Chapter~\ref{ch:methodology}), demonstrating that the developed system meets its design objectives.
+
+\subsection{Requirement R1: Scoring System Accuracy}
+\label{subsec:req_scoring}
+
+\textbf{Requirement:} The analytical scoring system must correctly identify feasible connections and rank them according to mechanical capacity and user preferences.
+
+\textbf{Test:} The analytical model was verified against known engineering cases (Section~\ref{sec:analytical_verification}), including standard shaft--hub configurations with documented torque capacities.
+
+\textbf{Result:} The analytical model correctly identified feasible connections and computed torque capacities within a few percent of DIN standard calculations (DIN~7190, DIN~6885, DIN~5480). For the standardized test case (45~mm shaft, 870~N$\cdot$m required torque, safety factor 2.0), the model correctly identified that only the spline connection is mechanically feasible: the key connection fails due to insufficient capacity (54.3\% of design torque), and the press fit fails the interference manufacturability check despite having adequate torque capacity. This matches engineering judgment and validates the model's ability to enforce both mechanical and practical constraints.
+
+\textbf{Status:} \textbf{Pass}: The scoring system demonstrates accuracy consistent with standard design practice.
+
+\subsection{Requirement R2: Dataset Diversity and Coverage}
+\label{subsec:req_dataset}
+
+\textbf{Requirement:} The synthetic dataset must cover a broad spectrum of realistic engineering scenarios, including diverse diameters, torque requirements, and material combinations.
+
+\textbf{Test:} Dataset characteristics were analyzed (Section~\ref{sec:dataset_characteristics}), including diameter distribution (6--230~mm), torque range (103~N$\cdot$m to 13.6~MN$\cdot$m), and material coverage (12 material types).
+
+\textbf{Result:} The dataset contains 4{,}993 samples with balanced representation across diameter ranges, torque levels, and material combinations. Boundary cases where multiple connection types are feasible are well-represented, enabling the ML model to learn subtle decision boundaries.
+
+\textbf{Status:} \textbf{Pass}: The dataset demonstrates sufficient diversity and coverage for robust ML training.
+
+\subsection{Requirement R3: ML Model Performance}
+\label{subsec:req_ml_performance}
+
+\textbf{Requirement:} The ML classifier must achieve balanced performance across all three connection classes, with macro F1-score exceeding 0.75.
+
+\textbf{Test:} Multiple models were trained and evaluated on a test set with groud-truth (Section~\ref{sec:ml_performance}), using macro-averaged F1-score as the primary metric.
+
+\textbf{Result:} CatBoost achieved a macro F1-score of 0.7986, exceeding the requirement. Per-class performance: press fit F1=0.6774, key F1=0.8057, spline F1=0.9127.
+
+\textbf{Status:} \textbf{Pass}: ML model performance meets and exceeds the specified requirement.
+
+\subsection{Requirement R4: System Integration and Usability}
+\label{subsec:req_integration}
+
+\textbf{Requirement:} The system must integrate analytical and ML components into a unified web application providing real-time recommendations with transparent outputs.
+
+\textbf{Test:} The web application was tested with multiple use-case scenarios (Section~\ref{sec:webapp_demo}), evaluating both analytical and ML outputs.
+
+\textbf{Result:} The integrated system successfully provides side-by-side analytical and ML recommendations, displaying torque capacities, feasibility status, and confidence scores. User testing confirmed the interface is intuitive and the outputs are interpretable.
+
+\textbf{Status:} \textbf{Pass}: System integration meets usability and transparency requirements.
 
 % ---------------------------------------------------------------------------
 \section{Machine Learning Model Performance}
 \label{sec:ml_performance}
 
-The ML models were trained on the dataset and evaluated on a held-out test set (20\% of data). All models achieved high accuracy, reflecting that the decision boundaries---while complex---were learnable from the data. The Random Forest achieved approximately 95\% test accuracy~\cite{Breiman_2001}, with most errors occurring in near-boundary cases (often confusion between press fit and spline in cases where both were nearly equivalent). The gradient-boosted models (XGBoost, LightGBM, CatBoost) each achieved between 96--97\% accuracy after hyperparameter tuning (using early stopping on a validation split). The differences among them were minor; CatBoost had a slight edge, likely due to its handling of categorical features (materials) without requiring full one-hot encoding, thereby preserving some information. The voting ensemble combined the four models and yielded approximately 98\% accuracy. Importantly, the ensemble also produced more calibrated probability outputs---when it predicted a class with 90\% probability, it was almost always correct, and in the few uncertain cases (e.g., 50/30/20\% splits), those indeed corresponded to scenarios where two connection types were practically equivalent. This calibration is valuable for user interpretation.
+The ML models were trained on 3{,}994 samples (80\% of the dataset) and evaluated on a held-out test set of 999 samples (20\%). All models were configured with 150 estimators and evaluated using macro-averaged F1-score as the primary selection criterion to ensure balanced performance across all connection classes. Table~\ref{tab:model_comparison} summarizes the performance metrics for all evaluated models.
 
-A breakdown of precision and recall by class showed values all above 0.95, meaning the classifier performs equally well at predicting ``Press,'' ``Key,'' or ``Spline'' when that is the true best option (no systematic bias). This indicates that the synthetic data was well-balanced and the model did not, for instance, always favor one class. The model was also tested on some extreme cases not explicitly in the training set---such as the largest diameter with the smallest torque (which in practice any connection could handle easily). The model tended to select the simplest solution (key), which matched the analytical logic (since all options have large capacity margins, the key is cheapest). In another extreme case (small diameter, high torque), the model predicted spline, consistent with the analytical model excluding keys and press fits. These sanity checks on extrapolation are reassuring that the model learned the general rules rather than merely interpolating within a narrow range.
+\begin{table}[ht]
+\centering
+\caption{Model performance comparison on test set (999 samples)}
+\label{tab:model_comparison}
+\begin{tabular}{lcccc}
+\toprule
+Model & Accuracy & Precision (macro) & Recall (macro) & F1-score (macro) \\
+\midrule
+Random Forest & 0.7788 & 0.7513 & 0.6813 & 0.7031 \\
+XGBoost & 0.8278 & 0.7931 & 0.7702 & 0.7802 \\
+LightGBM & 0.8198 & 0.7815 & 0.7593 & 0.7686 \\
+CatBoost & \textbf{0.8458} & \textbf{0.8125} & \textbf{0.7879} & \textbf{0.7986} \\
+Ensemble & 0.8268 & 0.7942 & 0.7627 & 0.7759 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-One noteworthy result is computational speed: once trained, the ML model outputs a prediction in a few milliseconds. This is faster than running the full analytical computation, which for a single case is already fast (a fraction of a second) but for millions of queries (e.g., in optimization loops), the ML offers a further speedup. In the context of the web application, both are fast enough that the user experiences near-instant responses. However, the ML model's advantage would be more apparent if integrating this system into a larger design optimization routine requiring repeated evaluations.
+CatBoost achieved the highest macro F1-score of 0.7986 and was selected as the best model. Its superior performance is attributed to its built-in handling of categorical features (shaft type, material, surface condition) without requiring explicit one-hot encoding, thereby preserving categorical relationships more effectively than other models. The ensemble model, which combines all four base models through soft voting, achieved slightly lower performance (F1-macro: 0.7759) than CatBoost alone, suggesting that CatBoost's predictions were already well-calibrated and the ensemble did not provide additional benefit in this case.
+
+Table~\ref{tab:per_class_metrics} presents per-class precision, recall, and F1-scores for the selected CatBoost model. The model performs well across all three classes, with spline showing the highest performance (F1: 0.9127), followed by key (F1: 0.8057) and press fit (F1: 0.6774). The lower performance on press fits reflects the class imbalance in the dataset (press fits represent only 16.8\% of samples) and the fact that press fits are often selected in boundary cases where multiple connection types are feasible, making them harder to predict accurately.
+
+To understand which features most influence the model's predictions, feature importance analysis was performed on the CatBoost model. Figure~\ref{fig:feature_importance} shows the top 20 most important features. The analysis reveals that geometric parameters (shaft diameter, required torque, hub length) and preference weights (particularly durability, cost, and maintenance) are the primary drivers of connection type selection. This aligns with engineering intuition: diameter and torque directly determine mechanical feasibility, while preferences differentiate between multiple feasible options. The importance of preference weights demonstrates that the model successfully learned to incorporate user priorities into its predictions, validating the hybrid approach's design objective.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/feature_importance_CatBoost copy.png}
+\caption{Top 20 feature importances for the CatBoost model. Geometric parameters (shaft diameter, required torque) and preference weights (durability, cost, maintenance) are the primary drivers of connection type selection, validating the hybrid approach's design. Source: own results.}
+\label{fig:feature_importance}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\caption{Per-class metrics for CatBoost model}
+\label{tab:per_class_metrics}
+\begin{tabular}{lccc}
+\toprule
+Class & Precision & Recall & F1-score \\
+\midrule
+Key & 0.8143 & 0.7972 & 0.8057 \\
+Press & 0.7343 & 0.6287 & 0.6774 \\
+Spline & 0.8889 & 0.9377 & 0.9127 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The confusion matrix for CatBoost (Figure~\ref{fig:confusion_matrix_catboost}) reveals the primary sources of misclassification. Most errors occur between press fit and key (24 key samples misclassified as press, 32 press samples misclassified as key), and between key and spline (34 key samples misclassified as spline). These confusions align with engineering intuition: press fits and keys are both common for moderate torque applications, while keys and splines share similar form-closure characteristics. The model rarely confuses press fits with splines (20 press misclassified as spline, 14 spline misclassified as press), reflecting their fundamentally different torque transmission mechanisms.
+
+\subsection{Error Analysis and Failure Modes}
+\label{subsec:error_analysis}
+
+Analysis of misclassifications reveals systematic patterns: the largest source of error (56 errors, 36.4\% of total misclassifications) occurs between press fits and keys (24 key samples misclassified as press, 32 press samples misclassified as key), primarily in moderate torque scenarios (200--2000~N$\cdot$m) with diameters between 20--50~mm, where both connection types are mechanically feasible. This reflects the inherent ambiguity in boundary regions where multiple solutions are equally valid. Key--spline confusion (54 errors total: 34 key samples misclassified as spline, 20 spline samples misclassified as key, representing 35.1\% of errors) typically occurs in higher-torque scenarios where keys approach capacity limits; this conservative over-design is less problematic than under-design. Press fit--spline confusion (44 errors total: 30 press samples misclassified as spline, 14 spline samples misclassified as press, representing 28.6\% of errors) is least frequent, occurring mainly with extreme parameter combinations. The lower F1-score for press fits (0.6774) is attributed to class imbalance (16.8\% of samples) and boundary case complexity. The hybrid approach mitigates these limitations by presenting analytical results alongside ML predictions, allowing users to make informed decisions when multiple options are feasible.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/confusion_matrix_CatBoost.png}
+\caption{Confusion matrix for CatBoost model (rows: true class, columns: predicted class). The diagonal elements represent correct predictions, while off-diagonal elements show misclassifications. Source: own results.}
+\label{fig:confusion_matrix_catboost}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/confusion_matrix_Random_Forest.png}
+\caption{Confusion matrix for Random Forest model. Source: own results.}
+\label{fig:confusion_matrix_rf}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/confusion_matrix_XGBoost.png}
+\caption{Confusion matrix for XGBoost model. Source: own results.}
+\label{fig:confusion_matrix_xgb}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/confusion_matrix_LightGBM.png}
+\caption{Confusion matrix for LightGBM model. Source: own results.}
+\label{fig:confusion_matrix_lgb}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/confusion_matrix_Ensemble.png}
+\caption{Confusion matrix for Ensemble model (soft-voting combination of all four base models). Source: own results.}
+\label{fig:confusion_matrix_ensemble}
+\end{figure}
+
+Training times were measured for each model: Random Forest completed in 0.40 seconds, XGBoost in 2.25 seconds, LightGBM in 2.44 seconds, and CatBoost in 1.19 seconds. The ensemble required 5.44 seconds to train all four base models. Prediction times were all under 50 milliseconds, with CatBoost requiring 31 milliseconds per prediction. This computational efficiency makes the ML model suitable for real-time decision support in the web application.
+
 
 % ---------------------------------------------------------------------------
 \section{Web Application Demonstration}
 \label{sec:webapp_demo}
 
-The integrated web application was tested with several use-case scenarios to demonstrate its functionality and combined outputs. Consider the following scenario: $d = 50~\text{mm}$ solid shaft, hub length $60~\text{mm}$, steel C45 for shaft and hub, required torque $2000~\text{N}\cdot\text{m}$, surface dry (resulting in lower friction for press fit), and user preferences: cost $= 0.2$, maintenance $= 0.8$ (i.e., the user strongly prefers an easily dismountable solution, moderately values low cost, with other preferences moderate). After submission, the tool returns:
 
-\begin{itemize}
-\item \textbf{Analytical results:} Press fit capacity $= 2200~\text{N}\cdot\text{m}$ (feasible, 91\% utilization, requires approximately $15~\mu\text{m}$ interference---acceptable), Key capacity $= 1800~\text{N}\cdot\text{m}$ (not feasible, fails bearing stress; a note indicates ``Key would require larger hub or multiple keys''), Spline capacity $= 5000~\text{N}\cdot\text{m}$ (feasible, large margin). Thus, analytically, press fit and spline are feasible, while key is not. Press fit has just enough capacity; spline has substantial margin. The analytical recommendation (purely mechanical) is press fit (slightly lower score penalty than spline for overdesign).
+The system provides rich output: not just a single answer, but context showing how close each option is to its limits and how confidence is distributed. Side-by-side comparison of analytical versus ML recommendations increases trust, and visual torque bars help quickly understand performance. Preference sliders allow quick exploration, enabling users to simulate expert thought processes by adjusting sliders to see when recommendations switch.
 
-\item \textbf{ML prediction:} The model predicts ``Press Fit'' with probability approximately 0.6, ``Spline'' approximately 0.4, and ``Key'' approximately 0 (since it learned key is infeasible here). This indicates some uncertainty between press fit and spline.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/frontend_screenshots/frontend_basic1.png}
+    \caption{Overview of the web application frontend. The landing page guides the user through entering geometry, operating conditions, and preferences before requesting recommendations. Source: Screenshot of the developed web application.}
+    \label{fig:webapp_frontend_overview}
+\end{figure}
 
-\item \textbf{Displayed output:} The UI shows ``Recommended: Press Fit (Analytical).'' It also displays a bar chart: Required Torque $= 2000~\text{N}\cdot\text{m}$ as a reference line, Press Fit bar at 100\% (just meets requirement), Spline bar at approximately 40\% utilization (well above requirement), and Key bar shown in red as infeasible. A maintenance icon indicates the user's maintenance preference and notes ``Press fit is permanent, spline allows disassembly.'' The preference scoring had nudged the decision: the user's high maintenance preference would favor the spline (because it can be disassembled), whereas analytically the press fit was sufficient and cheaper. The ML was somewhat split because of this conflict---the ensemble gave 60\% press, 40\% spline, reflecting that trade-off. The UI therefore also shows: ``Confidence: Press 60\%, Spline 40\%---Based on your preferences, a spline could also be suitable.'' This communicates to the user that while press fit is the top suggestion, a spline is nearly as good given their priorities.
-\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/frontend_screenshots/frontend_params1.png}
+    \caption{Input form for the standardized test case, showing shaft geometry, torque, safety factor, materials, and surface condition fields. These parameters correspond to the analytical verification setup described in Section~\ref{sec:analytical_verification}. Source: Screenshot of the developed web application.}
+    \label{fig:webapp_frontend_params}
+\end{figure}
 
-In another scenario, with preferences all set to neutral and a bending load indicated (which effectively raises the safety factor in press fit design), the same inputs yielded a recommendation of ``Spline'' because the press fit became infeasible under the higher safety requirement, demonstrating the tool's sensitivity to such conditions.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/frontend_screenshots/frontend_prediction1.png}
+    \caption{Frontend view of the recommendation output. The interface presents analytical feasibility and torque utilization for all three connection types. The ML class probabilities are shown earlier with the test results in Figure \ref{fig:ml_test_result}. Source: Screenshot of the developed web application.}
+    \label{fig:webapp_frontend_prediction}
+\end{figure}
 
-Overall, the web interface results confirm that the system provides rich output: not just a single answer, but context in terms of how close each option is to its limits and how confidence is distributed. This fulfills the goal of an explainable AI assistant for the designer. Users who tested the interface reported that the side-by-side comparison of analytical versus ML recommendation increased their trust in the AI, and the visual torque bars helped them quickly understand the performance of each option. The preference sliders allowed quick exploration; for instance, one could ``simulate'' an expert's thought process by adjusting the sliders to see at what point the recommended choice switches from one type to another.

@@ -1,75 +1,19 @@
-This is BibTeX, Version 0.99e
-Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
-The top-level auxiliary file: bachelor.aux
-Reallocating 'name_of_file' (item size: 1) to 15 items.
-A level-1 auxiliary file: title_page.aux
-Reallocating 'name_of_file' (item size: 1) to 20 items.
-A level-1 auxiliary file: acknowledgments.aux
-Reallocating 'name_of_file' (item size: 1) to 13 items.
-A level-1 auxiliary file: abstract.aux
-Reallocating 'name_of_file' (item size: 1) to 26 items.
-A level-1 auxiliary file: sections/introduction.aux
-Reallocating 'name_of_file' (item size: 1) to 24 items.
-A level-1 auxiliary file: sections/background.aux
-Reallocating 'name_of_file' (item size: 1) to 25 items.
-A level-1 auxiliary file: sections/methodology.aux
-Reallocating 'name_of_file' (item size: 1) to 21 items.
-A level-1 auxiliary file: sections/results.aux
-Reallocating 'name_of_file' (item size: 1) to 24 items.
-A level-1 auxiliary file: sections/discussion.aux
-Reallocating 'name_of_file' (item size: 1) to 24 items.
-A level-1 auxiliary file: sections/conclusion.aux
-Reallocating 'name_of_file' (item size: 1) to 13 items.
-A level-1 auxiliary file: appendix.aux
-Reallocating 'name_of_file' (item size: 1) to 7 items.
-The style file: ieeetr.bst
-Reallocating 'name_of_file' (item size: 1) to 11 items.
-Database file #1: references.bib
-Warning--entry type for "Haggenmueller_2025" isn't style-file defined
---line 26 of file references.bib
-Warning--entry type for "FVA_InterferenceFits_2017" isn't style-file defined
---line 37 of file references.bib
-Warning--entry type for "GWJ_eAssistant_DIN7190" isn't style-file defined
---line 66 of file references.bib
-You've used 8 entries,
-            1876 wiz_defined-function locations,
-            541 strings with 5580 characters,
-and the built_in function-call counts, 1259 in all, are:
-= -- 127
-> -- 39
-< -- 0
-+ -- 18
-- -- 10
-* -- 61
-:= -- 195
-add.period$ -- 16
-call.type$ -- 8
-change.case$ -- 8
-chr.to.int$ -- 0
-cite$ -- 8
-duplicate$ -- 46
-empty$ -- 151
-format.name$ -- 10
-if$ -- 312
-int.to.chr$ -- 0
-int.to.str$ -- 8
-missing$ -- 2
-newline$ -- 35
-num.names$ -- 8
-pop$ -- 42
-preamble$ -- 1
-purify$ -- 0
-quote$ -- 0
-skip$ -- 27
-stack$ -- 0
-substring$ -- 19
-swap$ -- 6
-text.length$ -- 0
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 0
-warning$ -- 0
-while$ -- 11
-width$ -- 9
-write$ -- 82
-(There were 3 warnings)
+[0] Config.pm:328> INFO - This is Biber 2.21
+[1] Config.pm:331> INFO - Logfile is 'bachelor.blg'
+[241] biber-MSWIN64:342> INFO - === 
+[340] Biber.pm:421> INFO - Reading 'bachelor.bcf'
+[614] Biber.pm:1002> INFO - Found 40 citekeys in bib section 0
+[644] Biber.pm:4487> INFO - Processing section 0
+[670] Biber.pm:4678> INFO - Looking for bibtex file 'references.bib' for section 0
+[790] bibtex.pm:1713> INFO - LaTeX decoding ...
+[907] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
+[1389] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[1389] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[1390] Biber.pm:4307> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'en-US'
+[1390] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[1459] bbl.pm:676> INFO - Writing 'bachelor.bbl' with encoding 'UTF-8'
+[1510] bbl.pm:779> INFO - Output to bachelor.bbl
+[1510] Biber.pm:132> WARN - ISBN '978-1-119-53719-3' in entry 'Juvinall_Marshek_2020' is invalid - run biber with '--validate_datamodel' for details.
+[1511] Biber.pm:132> WARN - ISBN '978-0-13-518423-1' in entry 'Norton_2019' is invalid - run biber with '--validate_datamodel' for details.
+[1511] Biber.pm:132> WARN - legacy month field 'October' in entry 'Result_SHC2_2024' is not an integer - this will probably not sort properly.
+[1511] Biber.pm:134> INFO - WARNINGS: 3

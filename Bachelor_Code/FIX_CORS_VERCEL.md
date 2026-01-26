@@ -120,3 +120,4 @@ curl -H "Origin: https://your-app.vercel.app" \
 
 **The code is already fixed** - you just need to set the environment variable in Railway!
 
+

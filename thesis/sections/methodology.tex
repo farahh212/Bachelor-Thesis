@@ -18,8 +18,7 @@ The methodology proceeds through four stages, each building on the previous:
     that fail to meet the factored design torque are rejected; press fits
     undergo an additional manufacturability check to exclude impractical
     interference values. Feasible candidates are ranked using a preference-weighted
-    scoring function that combines capacity margin, application-specific
-    performance profiles, and user-supplied weights.
+    scoring function that combines capacity margin and user preferences.
 
     \item \textbf{Synthetic dataset generation.} Geometry, torque demand,
     materials, surface conditions, and preference weights are sampled within
@@ -30,7 +29,7 @@ The methodology proceeds through four stages, each building on the previous:
     \item \textbf{Machine learning training.} Multiple tree-based classifiers
     are trained on the synthetic dataset. Models are compared using macro
     F1-score to ensure balanced performance across all connection classes, and
-    the best-performing pipeline is persisted with full preprocessing metadata.
+    the best-performing model is persisted with full preprocessing metadata.
 
     \item \textbf{Deployment.} The analytical selector and trained classifier
     are integrated into a FastAPI backend. A React-based frontend collects user
@@ -78,9 +77,9 @@ stores three application allowables:
 
 For connections involving two different materials (e.g., a steel shaft in a
 bronze hub), the effective allowable is taken as the minimum of both components:
-\[
-p_{\text{allow,eff}} = \min\bigl(p_{\text{allow,shaft}},\, p_{\text{allow,hub}}\bigr).
-\]
+\begin{equation}
+p_{\text{allow,eff}} = \min\bigl(p_{\text{allow,shaft}},\, p_{\text{allow,hub}}\bigr). \label{eq:effective_allowable}
+\end{equation}
 This conservative rule ensures that neither component exceeds its local stress
 limits.
 
@@ -88,8 +87,8 @@ limits.
 \section{Analytical Selector: Capacity Computations}
 \label{sec:analytical_selector}
 
-The analytical selector evaluates three connection types---press fits, keyed
-joints, and splines---by computing their torque capacities from first principles.
+The analytical selector evaluates three connection types: press fits, keyed
+joints, and splines, by computing their torque capacities from first principles.
 Each capacity model draws on the material database and standardized geometry
 tables to produce physically meaningful results.
 
@@ -121,15 +120,15 @@ resulting torque capacity.
 
 \paragraph{Friction coefficient selection.}
 The friction factor $\mu$ (termed \emph{Haftbeiwert} in DIN~7190-1) represents
-the achievable tangential traction at the interface~\cite{DIN7190_2017,GWJ_eAssistant_DIN7190}.
+the achievable tangential traction at the interface~\cite{DIN7190_1_2017,GWJ_eAssistant_DIN7190}.
 The system stores conservative ranges keyed by material-category pairs and
 surface condition (\texttt{dry} or \texttt{oiled}). For example, steel--steel
 dry fits use $\mu \in [0.14, 0.20]$, while steel--cast iron oiled fits use
 $\mu = 0.10$. Given a request, $\mu$ is sampled uniformly from the applicable
 range:
-\[
-\mu \sim \mathcal{U}\bigl(\mu_{\min},\, \mu_{\max}\bigr),
-\]
+\begin{equation}
+\mu \sim \mathcal{U}\bigl(\mu_{\min},\, \mu_{\max}\bigr), \label{eq:friction_sampling}
+\end{equation}
 introducing controlled variability that later enriches the synthetic dataset.
 A user override is supported but clamped to $[0.05, 0.25]$ to prevent
 unrealistic friction assumptions.
@@ -137,58 +136,58 @@ unrealistic friction assumptions.
 \paragraph{Allowable pressure.}
 The permissible interface pressure $p_{\text{zul}}$ depends on material
 strength, ductility, and geometric ratios. Defining
-\[
-Q_A = \frac{d}{D}, \qquad Q_I = \frac{d_i}{d} \quad (\text{zero for solid shafts}),
-\]
+\begin{equation}
+Q_A = \frac{d}{D}, \qquad Q_I = \frac{d_i}{d} \quad (\text{zero for solid shafts}), \label{eq:geometric_ratios}
+\end{equation}
 the allowable stress for each component is:
-\[
+\begin{equation}
 \sigma_{\text{zul}} =
 \begin{cases}
 \sigma_y / S_F, & \text{if ductile}, \\
 \sigma_{uts} / S_B, & \text{if brittle}.
-\end{cases}
-\]
+\end{cases} \label{eq:allowable_stress}
+\end{equation}
 The hub and shaft pressure limits are then:
 \begin{align}
-p_{\text{hub}} &= \frac{1 - Q_A^2}{\sqrt{3}}\,\sigma_{\text{zul,hub}}, \\
-p_{\text{shaft}} &= \frac{2}{\sqrt{3}}\,\sigma_{\text{zul,shaft}}\,(1 - Q_I^2),
+p_{\text{hub}} &= \frac{1 - Q_A^2}{\sqrt{3}}\,\sigma_{\text{zul,hub}}, \label{eq:pressure_limit_hub_method} \\
+p_{\text{shaft}} &= \frac{2}{\sqrt{3}}\,\sigma_{\text{zul,shaft}}\,(1 - Q_I^2), \label{eq:pressure_limit_shaft_method}
 \end{align}
 with the governing limit $p_{\text{zul}} = \min(p_{\text{hub}},\, p_{\text{shaft}})$.
 
 \paragraph{Torque capacity.}
 Using the allowable pressure, the press-fit torque capacity is:
-\[
-M_{t,\text{press}} = \frac{\pi}{2}\,\mu\,p_{\text{zul}}\,L\,d^2.
-\]
+\begin{equation}
+M_{t,\text{press}} = \frac{\pi}{2}\,\mu\,p_{\text{zul}}\,L\,d^2. \label{eq:press_torque_capacity}
+\end{equation}
 
 \paragraph{Manufacturability filter.}
 A press fit can be torque-feasible but impractical if it requires excessive
 interference. The selector therefore evaluates an interference plausibility
 check. First, the required interface pressure for a given torque with safety
 factor $S_R$ is:
-\[
-p_{\text{req}} = \frac{2\,M_{\text{req}}\,S_R}{\pi\,\mu\,d^2\,L}.
-\]
+\begin{equation}
+p_{\text{req}} = \frac{2\,M_{\text{req}}\,S_R}{\pi\,\mu\,d^2\,L}. \label{eq:required_pressure}
+\end{equation}
 The elastic interference $U_e$ is computed from combined compliance:
-\[
+\begin{equation}
 U_e = p_{\text{req}}\,d \left[
 \frac{1+\nu_I}{E_I(1-Q_I^2)} + \frac{1+\nu_A}{E_A(1-Q_A^2)}
-\right],
-\]
+\right], \label{eq:elastic_interference}
+\end{equation}
 where subscripts $I$ and $A$ denote shaft and hub respectively. Surface
 roughness reduces effective interference through a smoothing loss:
-\[
-G = 0.4\,\frac{Rz_{\text{shaft}} + Rz_{\text{hub}}}{1000},
-\]
+\begin{equation}
+G = 0.4\,\frac{Rz_{\text{shaft}} + Rz_{\text{hub}}}{1000}, \label{eq:roughness_loss}
+\end{equation}
 with roughness values in $\mu$m and $G$ in mm. The working interference is
 $U_w = U_e - G$, subject to the limits:
-\[
+\begin{equation}
 U_w \le
 \begin{cases}
 0.02~\text{mm}, & d \le 50~\text{mm}, \\
 0.05~\text{mm}, & d > 50~\text{mm}.
-\end{cases}
-\]
+\end{cases} \label{eq:interference_limits}
+\end{equation}
 If $U_w \le 0$ (roughness consumes interference) or $U_w$ exceeds the limit,
 the press-fit candidate is rejected regardless of its torque capacity.
 
@@ -197,16 +196,16 @@ the press-fit candidate is rejected regardless of its torque capacity.
 
 Keys transmit torque through shear and bearing at the key--keyway interface.
 Geometry is determined from a standardized lookup table mapping shaft diameter
-$d$ to key width $b$ and height $h$ per DIN~6885~\cite{DIN6885_2021}. Two failure modes govern
+$d$ to key width $b$ and height $h$ per DIN~6885~\cite{DIN6885_1_2021}. Two failure modes govern
 capacity:
 \begin{align}
-T_\tau &= \tau_{\text{allow}}\,b\,L\,\frac{d}{2} \quad \text{(shear)}, \\
-T_p &= p_{\text{allow,eff}}\,\frac{h}{2}\,L\,\frac{d}{2} \quad \text{(bearing)},
+T_\tau &= \tau_{\text{allow}}\,b\,L\,\frac{d}{2} \quad \text{(shear)}, \label{eq:key_shear_capacity} \\
+T_p &= p_{\text{allow,eff}}\,\frac{h}{2}\,L\,\frac{d}{2} \quad \text{(bearing)}, \label{eq:key_bearing_capacity}
 \end{align}
 with the key torque capacity:
-\[
-M_{t,\text{key}} = \min(T_\tau,\, T_p).
-\]
+\begin{equation}
+M_{t,\text{key}} = \min(T_\tau,\, T_p). \label{eq:key_torque_capacity}
+\end{equation}
 The shear allowable $\tau_{\text{allow}}$ comes from the shaft material (the
 key is typically made from the same or weaker stock), while
 $p_{\text{allow,eff}}$ uses the weaker of shaft/hub bearing allowables.
@@ -216,18 +215,42 @@ $p_{\text{allow,eff}}$ uses the weaker of shaft/hub bearing allowables.
 
 Spline geometry is determined from a lookup table for diameters up to 112~mm,
 providing major diameter $D$, tooth count $z$, and width $B$. Beyond this range,
-a DIN~5480-like heuristic~\cite{DIN5480_2006} selects a module $m$ from a standard series,
-estimates $z \approx d/m$, and computes the major diameter from a projected
-tooth height. User overrides for $D$ and $z$ are supported and validated.
+a DIN~5480-like heuristic~\cite{DIN5480_1_2006} is used to generate reasonable default geometry.
+First, a \emph{module} $m$ is chosen from a standard series (e.g.\ $m = 2, 2.5, 3,\ldots$). The
+module plays the same role as in gear design: it is a length scale that sets the
+tooth size; choosing from a standard series ensures that the resulting spline is
+compatible with commercially available tools and profiles. For a given shaft
+diameter $d$, the pitch-circle circumference is approximately $\pi d$, and the
+circular pitch is $\pi m$, so the number of teeth is roughly
+\[
+z \approx \frac{\pi d}{\pi m} = \frac{d}{m}.
+\]
+This relationship $z \approx d/m$ is therefore a simple geometric consequence of
+``how many tooth pitches fit around the circumference'' for a chosen module.
+To complete the geometry, the heuristic assigns a projected tooth height
+$h_{\text{proj}}$ proportional to the module, for example
+\begin{equation}
+h_{\text{proj}} \approx 1.25\,m,
+\end{equation}
+which is consistent with typical DIN~5480 proportions for involute splines.
+Using the definition $h_{\text{proj}} = 0.5\,(D - d)$, the major diameter is then
+computed as
+\begin{equation}
+D = d + 2\,h_{\text{proj}} = d + 2 \cdot 1.25\,m. \label{eq:spline_major_diameter_heuristic}
+\end{equation}
+This provides a simple, scalable rule for estimating $D$ from $d$ and $m$ when
+tabulated values are not available. User overrides for
+$D$ and $z$ are supported and validated when more precise catalogue values are
+available.
 
 Capacity is computed via an effective flank model:
-\[
-r_m = \frac{d + D}{4}, \qquad h_{\text{eff}} = 0.8\,h_{\text{proj}},
-\]
+\begin{equation}
+r_m = \frac{d + D}{4}, \qquad h_{\text{eff}} = 0.8\,h_{\text{proj}}, \label{eq:spline_effective_params}
+\end{equation}
 where $h_{\text{proj}} = 0.5(D - d)$. The spline torque capacity is:
-\[
-M_{t,\text{spline}} = K\,L\,z\,h_{\text{eff}}\,r_m\,p_{\text{allow,eff}},
-\]
+\begin{equation}
+M_{t,\text{spline}} = K\,L\,z\,h_{\text{eff}}\,r_m\,p_{\text{allow,eff}}, \label{eq:spline_torque_capacity}
+\end{equation}
 with $K = 0.75$ representing load-sharing losses and practical non-uniformities.
 
 % ---------------------------------------------------------------------------
@@ -242,13 +265,13 @@ feasible options using a preference-weighted scoring model.
 \label{subsec:design_torque}
 
 The design torque incorporates the user-specified safety factor:
-\[
-M_{\text{design}} = M_{\text{req}} \cdot S.
-\]
+\begin{equation}
+M_{\text{design}} = M_{\text{req}} \cdot S. \label{eq:design_torque}
+\end{equation}
 A candidate is feasible if its capacity meets or exceeds the design torque:
 $M_t \ge M_{\text{design}}$. Press fits additionally require that the
 interference plausibility check passes. If no candidate is feasible, the
-selector returns \texttt{none} with an explicit reason---for example,
+selector returns \texttt{none} with an explicit reason, for example,
 ``press-fit torque OK but rejected by interference check.''
 
 \subsection{Connection Performance Profiles}
@@ -267,52 +290,109 @@ application dimensions:
     \item durability/fatigue life.
 \end{itemize}
 
-For instance, press fits score high on vibration resistance (0.85) and
-high-speed suitability (0.90) but low on assembly ease (0.20); splines excel
-at axial movement (0.95) and bidirectional torque (0.90) but are expensive to
-manufacture (0.20). These profiles encode domain expertise and remain constant
-across all requests.
+\paragraph{Profile Values.}
+Table~\ref{tab:connection_profiles} summarizes the normalized profile values (0.0--1.0)
+assigned to each connection type for the eight application dimensions.
+
+
+\begin{table}[H]
+\centering
+\caption{Normalized performance profiles for shaft--hub connections across eight application dimensions (0.0 = very poor, 1.0 = excellent). These values are author-defined heuristic estimates based on engineering design guidelines and expert judgment, representing relative performance characteristics of each connection type.}
+\label{tab:connection_profiles}
+\begin{tabular}{lcccccccc}
+\toprule
+Connection type &
+\rotatebox{90}{Assembly} &
+\rotatebox{90}{Axial move.} &
+\rotatebox{90}{Cost} &
+\rotatebox{90}{Bidirectional} &
+\rotatebox{90}{Vibration} &
+\rotatebox{90}{High-speed} &
+\rotatebox{90}{Maint.} &
+\rotatebox{90}{Durability} \\
+\midrule
+Press fit & 0.20 & 0.10 & 0.70 & 0.80 & 0.85 & 0.90 & 0.25 & 0.75 \\
+Key       & 0.75 & 0.30 & 0.50 & 0.70 & 0.45 & 0.55 & 0.80 & 0.40 \\
+Spline    & 0.40 & 0.95 & 0.20 & 0.90 & 0.70 & 0.75 & 0.30 & 0.85 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\paragraph{Profile Assignment Rationale.}
+The profile values encode domain knowledge about how each connection type performs across
+different application requirements. \textbf{Press fits} score very high on vibration resistance
+and high-speed suitability due to excellent concentricity and the absence of backlash, but
+very low on assembly/disassembly ease and maintenance because they are essentially permanent
+connections. \textbf{Keys} provide a balanced, low-cost solution with good assembly/disassembly
+and maintenance behaviour, but lower vibration resistance and durability because keyways
+introduce backlash and stress concentrations. \textbf{Splines} offer excellent axial movement,
+bidirectional torque transmission, and high durability through load sharing across many teeth,
+but they are expensive to manufacture and more demanding to maintain. These profiles remain
+constant across all requests and were calibrated qualitatively using design guides and expert
+judgment, so that the scoring function can reflect typical engineering trade-offs even when
+explicit preference weights are moderate.
 
 \subsection{Scoring Function}
 \label{subsec:scoring_function}
 
-Users specify preference weights for each dimension (0.0--1.0 in 0.1 increments).
-The scoring function combines several terms:
+The scoring function transforms mechanical capacity and user preferences into a
+single numerical score that enables ranking of feasible connection candidates~\cite{Saaty_1980,Chen_Chen_Fu_Li_Sun_2021}.
+The function is designed to balance multiple competing objectives: mechanical
+safety margins, economic efficiency, and alignment with user priorities.
 
-\paragraph{Margin reward.}
-A diminishing reward for capacity surplus, capped at 35\% margin:
-\[
-s_{\text{margin}} = w_{\text{margin}} \cdot \min\left(1,\, \frac{M_t - M_{\text{design}}}{0.35\,M_{\text{design}}}\right).
-\]
+Users specify preference weights for each dimension (0.0--1.0 in 0.1 increments),
+where 0.0 indicates the dimension is unimportant and 1.0 indicates it is
+critical. The scoring function combines four primary terms:
 
-\paragraph{Overdesign penalty.}
-A bounded penalty for excessive capacity beyond the useful margin:
-\[
-s_{\text{overkill}} = -w_{\text{overkill}} \cdot \min\left(0.5,\, \frac{M_t - M_{\text{design}}}{M_{\text{design}}} - 0.35\right)^+.
-\]
+\paragraph{Margin Reward Term.}
+A connection providing capacity surplus above design torque is preferable, offering a safety buffer. However, the value of additional margin diminishes as capacity increases. The margin reward is:
+\begin{equation}
+s_{\text{margin}} = w_{\text{margin}} \cdot \min\left(1,\, \frac{M_t - M_{\text{design}}}{0.35\,M_{\text{design}}}\right), \label{eq:margin_reward}
+\end{equation}
+where $M_t$ is torque capacity and $M_{\text{design}}$ is design torque. This term rewards connections with positive margin up to a cap of 35\% above design torque. When margin is less than or equal to 35\%, the reward scales linearly from 0 (at zero margin) to $w_{\text{margin}} = 0.10$ (at 35\% margin). When margin exceeds 35\%, the reward saturates at $0.10$ and does not increase further. The cap at 35\% (0.35) reflects engineering practice for static shaft design: utilization levels of roughly 60--80\% of material strength are generally regarded as both safe and economical~\cite{Budynas_Nisbett_2020}. A 35\% torque margin corresponds to operating in this recommended range while still providing reserve against uncertainties in loads, material scatter, and modelling assumptions.
 
-\paragraph{Preference utility.}
-User weights are normalized and combined with the connection profile:
-\[
-s_{\text{prefs}} = w_{\text{prefs}} \cdot \frac{\sum_i u_i \cdot p_i}{\sum_i u_i},
-\]
-where $u_i$ are user weights and $p_i$ are profile scores.
+\paragraph{Overdesign Penalty Term.}
+Excessive overdesign is penalized to avoid selecting unnecessarily large or complex connections when simpler alternatives are adequate. The penalty is:
+\begin{equation}
+s_{\text{overkill}} = -w_{\text{overkill}} \cdot \min\left(0.5,\, \frac{M_t - M_{\text{design}}}{M_{\text{design}}} - 0.35\right)^+, \label{eq:overdesign_penalty}
+\end{equation}
+where $(\cdot)^+$ denotes the positive part (i.e., $\max(0, \cdot)$). This term works in conjunction with the margin reward: when margin is less than or equal to 35\%, the expression $(M_t - M_{\text{design}})/M_{\text{design}} - 0.35$ is negative or zero, so $(\cdot)^+ = 0$ and the penalty is zero. When margin exceeds 35\%, the penalty activates and scales with the excess margin above 35\%, bounded at 0.5 to prevent extreme penalties. The weight $w_{\text{overkill}} = 0.10$ balances the penalty against other terms. Together, these two terms encode the engineering judgment that margins up to 35\% are desirable (rewarded), while margins beyond 35\% are treated as over-dimensioned in design guides such as~\cite{kittsteiner1990welle}, where engineers are encouraged to reduce size or choose a simpler connection instead of keeping excessive reserve.
 
-\paragraph{Connection-specific penalties.}
-Press fits receive a hub stiffness penalty when $Q_A = d/D$ exceeds 0.5
-(thin-walled hubs). Splines receive a practicality penalty when their key
-advantages (movement, bidirectional, durability) are not valued by the user.
+\paragraph{Preference Utility Term.}
+This term quantifies how well a connection type aligns with user priorities across the eight application dimensions:
+\begin{equation}
+s_{\text{prefs}} = w_{\text{prefs}} \cdot \frac{\sum_{i=1}^{8} u_i \cdot p_i}{\sum_{i=1}^{8} u_i}, \label{eq:preference_utility}
+\end{equation}
+where $u_i$ are user preference weights and $p_i$ are connection profile scores. The denominator normalizes by the sum of user weights, ensuring utility remains bounded between 0.0 and 1.0. If all weights are zero, the denominator defaults to 1.0 and the system falls back to mechanical criteria alone. The weight $w_{\text{prefs}} = 0.70$ is the largest component, reflecting that user preferences are the primary differentiator when multiple connections are mechanically feasible.
+
+\paragraph{Connection-Specific Penalty Terms.}
+Two additional penalty terms address connection-specific practical considerations: (1) \textbf{Hub stiffness penalty (press fits):} When $Q_A = d/D > 0.5$, thin-walled hubs are susceptible to deformation during assembly. The penalty is $s_{\text{hub\_stiffness}} = w_{\text{hub\_stiffness}} \cdot (f_{\text{hub}} - 1.0)$, where $f_{\text{hub}}$ decreases from 1.0 to 0.1 as $Q_A$ increases from 0.5 to 0.8, with $w_{\text{hub\_stiffness}} = 0.10$. (2) \textbf{Spline practicality penalty:} If the user does not value spline advantages (axial movement, bidirectional capability, durability), a simpler connection is more appropriate. The penalty is $s_{\text{spline\_practicality}} = -0.2 \cdot \max(0,\, 1.0 - (u_{\text{movement}} + u_{\text{bidirectional}} + u_{\text{durability}})/3)$, reaching -0.2 when none are valued and zero when all are at maximum.
+
+\paragraph{Composite Score Calculation.}
+The final score for each feasible candidate is the sum of all terms:
+\begin{equation}
+s_{\text{total}} = s_{\text{margin}} + s_{\text{overkill}} + s_{\text{prefs}} + s_{\text{hub\_stiffness}} + s_{\text{spline\_practicality}}. \label{eq:composite_score}
+\end{equation}
 
 The feasible candidate with the highest composite score becomes the analytical
-recommendation. All intermediate values (capacities, scores, interference
-diagnostics) are retained for transparency.
+recommendation. To prevent extreme negative scores from connection-specific
+penalties from completely eliminating otherwise reasonable candidates, the final
+score is clamped to a minimum of -0.15. This ensures that even penalized
+connections remain in consideration if they are the only feasible option or if
+user preferences strongly favor them despite the penalties.
+
+All intermediate values (capacities, individual score terms, interference
+diagnostics) are retained in the response for transparency, allowing users to
+understand why a particular connection was recommended and how close alternative
+options were to being selected.
 
 % ---------------------------------------------------------------------------
 \section{Synthetic Dataset Generation}
 \label{sec:synthetic_generation}
 
 Because no labeled dataset exists for shaft--hub connection selection, the
-analytical selector serves as an automated labeling oracle. A synthetic dataset
+analytical selector serves as an automated labeling oracle~\cite{Picard_2023,Wang_Zhang_Liu_2020}. A synthetic dataset
 is generated by sampling realistic input configurations and recording the
 analytical recommendation as the ground-truth label.
 
@@ -341,26 +421,27 @@ engineering practice:
 \subsection{Torque and Safety Factor Sampling}
 \label{subsec:torque_sf_sampling}
 
+Torque sampling is designed to generate realistic design scenarios that reflect engineering practice. Rather than sampling torque values directly, the approach uses a diameter-dependent reference torque based on the polar section modulus of the shaft, which scales naturally with shaft size.
+
+\paragraph{Torque Reference Calculation.}
 Torque is sampled relative to a diameter-dependent reference based on the
 polar section modulus:
-\[
-M_{\text{ref}} = 0.05 \cdot c \cdot \frac{\pi\,d^3}{16} \cdot f_{\text{taper}},
-\]
-where $c$ is a torque coefficient and $f_{\text{taper}}$ reduces demand for
-larger diameters ($f_{\text{taper}} = 0.9$ for $d > 40$~mm, 0.8 for $d > 70$~mm).
-A multiplicative factor in $[0.3, 1.4]$ generates cases ranging from
-conservative to demanding.
+\begin{equation}
+M_{\text{ref}} = 0.05 \cdot c \cdot \frac{\pi\,d^3}{16} \cdot f_{\text{taper}}, \label{eq:torque_reference}
+\end{equation}
+where $c$ is a torque coefficient (typically in the range 1.0--2.0) and $f_{\text{taper}}$ is a taper factor that reduces torque demand for larger diameters to reflect practical design trends where larger shafts often operate at lower relative stress levels. The factor $f_{\text{taper}}$ takes values of 0.9 for $d > 40$~mm and 0.8 for $d > 70$~mm, with $f_{\text{taper}} = 1.0$ for smaller diameters. The polar section modulus term $\pi d^3/16$ represents the torsional resistance of a solid circular shaft, providing a physically meaningful scaling relationship~\cite{Budynas_Nisbett_2020,Juvinall_Marshek_2020}. The coefficient 0.05 is a scaling factor calibrated to generate reference torques that align with typical engineering practice for shaft--hub connections across the diameter range of interest. A multiplicative factor sampled uniformly from $[0.3, 1.4]$ is then applied to $M_{\text{ref}}$ to generate actual torque requirements, creating cases ranging from conservative (30\% of reference) to demanding (140\% of reference).
 
-Safety factors are sampled around a baseline of 1.5 with adjustments for:
+\paragraph{Safety Factor Sampling.}
+Safety factors are sampled around a baseline of 1.5, which represents a typical safety margin for static design scenarios in mechanical engineering~\cite{Budynas_Nisbett_2020}. The baseline is adjusted based on several factors that influence design conservatism:
 \begin{itemize}
-    \item bending present: $+0.10$,
-    \item dry surface condition: $+0.05$,
-    \item friction override: $-0.05$,
-    \item torque factor exceeding reference: $+0.20 \cdot (\text{factor} - 1)$,
-    \item durability preference: $+0.20 \cdot (p_{\text{dur}} - 0.5)$,
-    \item cost preference: $-0.15 \cdot (p_{\text{cost}} - 0.5)$.
+    \item \textbf{Bending present:} $+0.10$ to account for combined loading effects that increase failure risk.
+    \item \textbf{Dry surface condition:} $+0.05$ to reflect reduced friction reliability compared to oiled surfaces.
+    \item \textbf{Friction override:} $-0.05$ when user explicitly specifies friction, indicating confidence in the value.
+    \item \textbf{Torque factor exceeding reference:} $+0.20 \cdot (\text{factor} - 1)$ to increase safety margin for demanding torque requirements.
+    \item \textbf{Durability preference:} $+0.20 \cdot (p_{\text{dur}} - 0.5)$ to increase safety when durability is prioritized.
+    \item \textbf{Cost preference:} $-0.15 \cdot (p_{\text{cost}} - 0.5)$ to reduce safety margin when cost optimization is prioritized.
 \end{itemize}
-Results are clamped to $[1.0, 2.0]$ and rounded to one decimal place.
+These adjustments reflect engineering judgment about factors that influence design conservatism. The resulting safety factor is clamped to $[1.0, 2.0]$ to remain within reasonable bounds and rounded to one decimal place for practical use. This approach ensures that the synthetic dataset includes a realistic distribution of safety factors that correlate with design conditions and user priorities.
 
 \subsection{Preference Weight Sampling}
 \label{subsec:pref_sampling}
@@ -373,9 +454,11 @@ value from $\{0.0, 0.1, \ldots, 1.0\}$, matching the frontend slider resolution.
 
 For each sampled configuration, the analytical selector is invoked. Samples
 yielding \texttt{none} (infeasible) are discarded by default to avoid
-introducing an ambiguous class. The resulting dataset contains approximately
-5{,}000 rows with columns for all geometry, torque, safety factor, surface
-condition, preferences, and the analytical label.
+introducing an ambiguous class. The resulting dataset contains 4{,}993 rows
+with columns for all geometry, torque, safety factor, surface condition,
+preferences, and the analytical label. The dataset exhibits a natural class
+distribution: 54.7\% spline, 28.6\% key, and 16.8\% press fit, reflecting the
+analytical selector's behavior across the sampled parameter space.
 
 % ---------------------------------------------------------------------------
 \section{Machine Learning Training and Model Selection}
@@ -398,31 +481,17 @@ The feature set comprises:
           surface condition.
 \end{itemize}
 
-A column-wise preprocessor applies standard scaling to numerical features and
-one-hot encoding (with unknown-category handling) to categorical features.
+A column-wise preprocessor applies standard scaling to numerical features and one-hot encoding to categorical features. 
+
+Standard scaling transforms numerical features to have zero mean and unit variance, ensuring features with different units contribute equally. One-hot encoding converts categorical variables into binary vectors, allowing the model to learn distinct patterns for each category.
+
 Target labels (\texttt{press}, \texttt{key}, \texttt{spline}) are integer-encoded
-with the mapping preserved for inference.
+with the mapping preserved for inference (e.g., press = 0, key = 1, spline = 2), allowing the model to output class predictions that can be mapped back to their original names.
 
 \subsection{Model Selection Rationale}
 \label{subsec:model_rationale}
 
-Tree-based classifiers are selected for several reasons. First, the feature
-space is heterogeneous, mixing continuous variables (diameter, torque) with
-discrete categorical variables (material, shaft type). Tree-based methods
-naturally handle mixed data types without requiring extensive feature
-engineering. Second, mechanical feasibility regions often exhibit nonlinear
-decision boundaries---for example, a small diameter change can shift the optimal
-connection type, and preference weight interactions create complex trade-offs.
-Tree ensembles capture these interactions through hierarchical splits. Third,
-tree-based models provide feature importance scores that aid interpretability,
-allowing identification of which design parameters most influence the selection.
-
-Neural networks were not considered because the dataset size (approximately
-5{,}000 samples) is relatively small, and tree-based methods typically
-outperform neural networks on tabular data of this scale~\cite{grinsztajn2022tree}.
-Linear models (logistic regression, SVM) were excluded because they cannot
-capture the complex interactions between geometry, materials, and preferences
-that govern connection selection.
+Tree-based classifiers were selected for this problem because they naturally handle mixed data types (continuous and categorical), capture nonlinear decision boundaries arising from mechanical feasibility constraints and preference interactions, and provide feature importance scores for interpretability. Alternative approaches were considered: a pure analytical approach lacks scalability and probabilistic outputs; a pure ML approach cannot guarantee mechanical feasibility; linear models cannot capture complex interactions; and neural networks are less effective on tabular data of this scale~\cite{grinsztajn2022tree}. The hybrid approach combines analytical feasibility checks with ML prediction, ensuring physical consistency while enabling scalability.
 
 \subsection{Model Candidates}
 \label{subsec:model_candidates}
@@ -430,13 +499,17 @@ that govern connection selection.
 Four gradient-boosted and ensemble tree models are evaluated:
 \begin{itemize}
     \item \textbf{Random Forest:} bagged decision trees providing robust
-          predictions through variance reduction.
+          predictions through variance reduction~\cite{Breiman_2001}, configured with 150 estimators
+          and default scikit-learn parameters.
     \item \textbf{XGBoost:} gradient boosting with regularization, known for
-          strong performance on structured data.
+          strong performance on structured data~\cite{Chen_Guestrin_2016}, configured with 150 estimators
+          and multi-class logistic objective.
     \item \textbf{LightGBM:} gradient boosting optimized for speed and memory
-          efficiency using leaf-wise growth.
+          efficiency using leaf-wise growth~\cite{Ke_Wang_Meng_Ye_Zhu_Fan_2017}, configured with 150 estimators,
+          learning rate 0.1, and 31 leaves.
     \item \textbf{CatBoost:} gradient boosting with built-in categorical
-          handling and reduced overfitting through ordered boosting.
+          handling and reduced overfitting through ordered boosting~\cite{Prokhorenkova_Gusev_Vorobev_Dorogush_Gulin_2018}, configured
+          with 150 estimators and automatic categorical feature detection.
 \end{itemize}
 All models use 150 estimators and are wrapped in identical preprocessing pipelines
 to ensure fair comparison. A soft-voting ensemble averaging predicted class
@@ -447,30 +520,33 @@ simple method to stabilize predictions when individual models disagree.
 \label{subsec:evaluation_metrics}
 
 Data is split 80/20 with stratification by class to preserve the distribution of
-connection types in both training and test sets. Multiple metrics are computed:
-accuracy, macro-averaged precision, recall, and F1-score, plus the confusion
-matrix for per-class analysis.
+connection types in both training and test sets, resulting in 3{,}994 training
+samples and 999 test samples. Multiple metrics are computed: accuracy,
+macro-averaged precision, recall, and F1-score, plus the confusion matrix for
+per-class analysis.
 
 Macro F1-score is chosen as the primary selection criterion for two reasons.
 First, it weights all classes equally by computing the F1-score for each
 connection type independently, then averaging. This prevents models from
 achieving high overall accuracy by excelling only on the most frequent class
-while failing on minority classes. Second, F1-score balances precision and
-recall, which is important when all three connection types (press, key, spline)
-are equally valid solutions depending on application context---misclassifying a
-spline as a key is as problematic as misclassifying a key as a press.
+(spline, 54.7\% of samples) while failing on minority classes (press fit, 16.8\%
+of samples). Second, F1-score balances precision and recall, which is
+important when all three connection types (press, key, spline) are equally
+valid solutions depending on application context, misclassifying a spline as a
+key is as problematic as misclassifying a key as a press.
 
 Accuracy alone would be insufficient because it can be misleading in multi-class
-problems with potentially imbalanced class distributions. Micro-averaged F1
-would be equivalent to accuracy in this setting and suffers from the same
-limitation. The confusion matrix provides additional diagnostic information
-about which classes are most frequently confused, informing potential
-improvements to the feature set or model architecture.
+problems with imbalanced class distributions. Micro-averaged F1 would be
+equivalent to accuracy in this setting and suffers from the same limitation.
+The confusion matrix provides additional diagnostic information about which
+classes are most frequently confused, informing potential improvements to the
+feature set or model architecture.
 
 The best-performing pipeline (individual model or ensemble) according to macro
-F1-score is selected and persisted for deployment. A detailed comparison of
-model performance, including per-class metrics and confusion matrices, is
-presented in Chapter~\ref{ch:results}.
+F1-score is selected and persisted for deployment. In the final evaluation,
+CatBoost achieved the highest macro F1-score of 0.7986 and was selected as the
+production model. A detailed comparison of model performance, including
+per-class metrics and confusion matrices, is presented in Chapter~\ref{ch:results}.
 
 \subsection{Model Persistence}
 \label{subsec:model_persistence}
@@ -506,7 +582,6 @@ The backend exposes a REST API built with FastAPI. On each request, the service:
           plus diagnostic fields (friction used, hub stiffness factor,
           interference results).
 \end{enumerate}
-The response schema mirrors the dataset columns, reducing training--serving skew.
 
 \subsection{Frontend Interface}
 \label{subsec:frontend_interface}
@@ -528,6 +603,26 @@ probabilistic recommendations are available through the trained classifier.
 Disagreements between the two sources can prompt users to examine edge cases
 more carefully.
 
+\subsection{Deployment and Availability}
+\label{subsec:deployment_availability}
+
+The complete system has been deployed as a web application and is publicly
+accessible. The source code, including the analytical engine, machine learning
+training pipeline, and web application components, is available in a public
+GitHub repository. The deployed application can be accessed online, enabling
+users to interact with the system without local installation.
+
+\begin{itemize}
+    \item \textbf{Deployed Application:} \url{https://bachelorthesis.vercel.app/}
+    \item \textbf{Source Code Repository:} \url{https://github.com/farahh212/Bachelor-Thesis.git}
+\end{itemize}
+
+The repository contains the complete implementation, including the FastAPI
+backend, React frontend, trained machine learning models, dataset generation
+scripts, and documentation. This open-source availability supports reproducibility
+and enables further development or adaptation of the framework for other
+engineering design domains.
+
 % ---------------------------------------------------------------------------
 \section{Summary}
 \label{sec:method_summary}
@@ -535,8 +630,8 @@ more carefully.
 This chapter presented the hybrid methodology underlying the shaft--hub
 connection selector. A material database and DIN-based geometry tables provide
 the foundation for capacity calculations covering press fits, keys, and splines.
-The analytical selector applies feasibility filters---including a
-manufacturability check for press-fit interference---and ranks feasible
+The analytical selector applies feasibility filters, including a
+manufacturability check for press-fit interference, and ranks feasible
 candidates using preference-weighted scoring. This deterministic engine then
 labels a synthetic dataset generated by sampling realistic input distributions.
 Supervised classifiers are trained on the synthetic data, with macro F1-score

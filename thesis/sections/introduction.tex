@@ -18,20 +18,47 @@ judgement. However, this process can be time-consuming and impractical
 in startups that may not have access to specialized consultation and
 expert knowledge.
 
-Recent research has demonstrated the potential of machine-learning models to
-support decision-making across a wide variety of engineering tasks~\cite{Breiman_2001}.
-However, a significant gap exists: no publicly available dataset labels shaft–hub
-connections. This makes the process of training an ML model directly infeasible.
+\section{Problem Statement}
+\label{sec:problem_statement}
+
+The problem addressed by this thesis can be formally stated as follows: \textit{Given a set of mechanical design parameters (shaft diameter, required torque, material properties, geometric constraints) and user preferences, determine the most suitable shaft--hub connection type among press fits, keyed fits, and splined fits, while ensuring mechanical feasibility and alignment with application-specific priorities.}
+
+This problem is challenging for several reasons. First, no publicly available labeled dataset exists for shaft--hub connection selection, making direct application of machine-learning approaches infeasible. While large datasets derived from experiments, simulations, or historical design databases do exist, they represent proprietary knowledge held by research institutes and companies and are not accessible for this work. Machine learning models typically require large amounts of training data where the correct answers are known, in this case, examples of design scenarios paired with their optimal connection types. Second, the selection process involves multiple competing criteria beyond pure mechanical capacity, including cost, manufacturability, maintenance requirements, and application-specific preferences. These trade-offs make the problem inherently multi-objective, requiring a framework that can balance competing priorities. Third, traditional analytical methods require expert knowledge and manual iteration, making them impractical for rapid design exploration or for organizations lacking specialized expertise.
+
+Recent research has demonstrated the potential of machine-learning models to support decision-making across engineering tasks~\cite{Puttegowda_Nagaraju_2025,Gao_etal_2024}. However, the absence of labeled training data represents a fundamental barrier to applying ML directly to this problem. While recent work has explored AI techniques for specific aspects of shaft--hub connections~\cite{Saeed_Falter_Dausch_Wagner_Kreimeyer_Eisenbart_2023}, comprehensive selection frameworks that integrate multiple connection types with preference-based evaluation remain unexplored.
+
+\section{Task Description}
+\label{sec:task_description}
+
+This bachelor thesis addresses the following key aspects:
+
+\begin{itemize}
+    \item \textbf{Research on the state of the art and research in AI-supported algorithms:} Comprehensive review of current AI and machine learning applications in engineering design, with particular focus on shaft--hub connection selection and hybrid analytical--ML approaches.
+    
+    \item \textbf{Presentation of the current standard for interference fit connections, key fit connections and tooth shaft connections:} Detailed examination of DIN standards (DIN~7190 for press fits, DIN~6885 for keys, DIN~5480 for splines) and their application in analytical capacity calculations.
+    
+    \item \textbf{Optimization and generalization of the existing AI software for the differentiated selection of the three shaft--hub connections:} Development of an improved framework building upon previous work~\cite{Massoud_2025}, incorporating preference-weighted scoring, synthetic data generation, and enhanced model selection.
+    
+    \item \textbf{Testing of the AI software using practical examples:} Validation of the analytical models against DIN standards and evaluation of machine learning model performance using comprehensive metrics and statistical analysis.
+    
+    \item \textbf{Discussion of the results:} Critical analysis of model behavior, preference-weighted scoring effects, system-level considerations, and limitations of the approach.
+    
+    \item \textbf{Documentation:} Complete documentation of the methodology, implementation, results, and deployment, including source code availability and user interface design.
+\end{itemize}
 
 The aim of this thesis is to develop an intelligent tool for assigning a
 shaft--hub connection type to a given set of mechanical and
-preference-based inputs. This is achieved by designing a scoring system
-derived from analytical equations and user preference weighting. This is
-then scaled up to generate a synthetic dataset using inputs randomized
-based on DIN standards and the scoring system as a label generator. The
-resulting dataset is used to train a machine-learning model that
-automates the prediction task. This produces a unified tool that blends
-analytical feasibility logic, user preferences, and an ML model.
+preference-based inputs. This is achieved through a three-step approach:
+
+\begin{enumerate}
+    \item \textbf{Analytical Scoring System:} Design a scoring system derived from analytical equations (based on DIN standards) and user preference weighting. This system can evaluate any design scenario and determine the optimal connection type based on mechanical feasibility and user priorities.
+    
+    \item \textbf{Synthetic Dataset Generation:} Scale up the scoring system to automatically generate thousands of training examples. Input parameters (diameters, torques, materials, preferences) are randomly selected within realistic ranges based on DIN standards, and the scoring system determines the correct connection type for each scenario, creating a labeled dataset for machine learning.
+    
+    \item \textbf{Machine Learning Model:} Train a machine-learning classifier on the synthetic dataset. The model learns to predict connection types by recognizing patterns in the training data, enabling rapid predictions on new design scenarios without requiring full analytical calculations.
+\end{enumerate}
+
+This produces a unified tool that blends analytical feasibility logic (ensuring mechanical safety), user preferences (reflecting application priorities), and machine learning (providing fast, probabilistic recommendations). The hybrid approach combines the reliability of physics-based calculations with the efficiency of learned pattern recognition.
 
 \section{Research Objectives}
 
@@ -84,17 +111,13 @@ This thesis makes the following key contributions:
  
 
 \section{Structure of the Thesis}
+This thesis is organized as follows. Chapter~1 (Introduction) introduces the motivation, 
+problem statement, research gap, aim, objectives, and contributions of the work. Chapter~2 (Background) provides the 
+necessary background on shaft–hub connections, analytical torque transmission models, relevant machine-learning concepts, state of the art in engineering design automation, and a summary of related work. Chapter~3 (Methodology) describes the methodology, including the development of the 
+analytical scoring system, the synthetic dataset generation pipeline, and the training and evaluation of the machine-learning model. Chapter~4 (Results) reports the 
+results, covering analytical model verification, requirements validation, model performance, analysis of the generated dataset, error analysis, statistical significance testing, and interpretation of prediction behaviour. Chapter~5 (Discussion) discusses the findings and
+their implications, including analytical model behavior, preference-weighted scoring effects, and system-level considerations. Finally, Chapter~6 (Conclusion) concludes the thesis, revisits the research objectives, summarizes the contributions, addresses limitations, and outlines 
+potential directions for future research. The Appendix provides nomenclature, lists of abbreviations, figures, and tables used throughout the thesis.
 
-This thesis is organized as follows. Chapter~1 introduces the motivation, 
-research gap, aim, and objectives of the work. Chapter~2 provides the 
-necessary background on shaft–hub connections, analytical torque transmission 
-models, relevant machine-learning concepts, and a summary of related work.
 
-Chapter~3 describes the methodology, including the development of the 
-analytical scoring system, the synthetic dataset generation pipeline, and the 
-training and evaluation of the machine-learning model. Chapter~4 reports the 
-results, covering model performance, analysis of the generated dataset, and 
-interpretation of prediction behaviour. Chapter~5 discusses the findings and
-their implications. Finally, Chapter~6 concludes the thesis and outlines 
-potential directions for future research.
 

@@ -1,53 +1,1438 @@
-\begin{thebibliography}{1}
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
 
-\bibitem{Breiman_2001}
-L.~Breiman, ``Random forests,'' {\em Machine Learning}, vol.~45, no.~1,
-  pp.~5--32, 2001.
-\newblock Introduction of the Random Forest ensemble algorithm for
-  classification and regression.
 
-\bibitem{DIN7190_2017}
-{DIN Deutsches Institut für Normung}, ``Interference fits -- part 1:
-  Calculation and design rules for cylindrical press fits.'' DIN 7190-1, 2017.
-\newblock Defines design methodology for press-fit connections, including
-  friction coefficients and pressure limits.
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{Puttegowda_Nagaraju_2025}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=ce313976747f6286439459d82f29677c}{%
+           family={Puttegowda},
+           familyi={P\bibinitperiod},
+           given={Madhu},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ef5be80031e961c5a70e8628a78a7fc7}{%
+           family={Nagaraju},
+           familyi={N\bibinitperiod},
+           given={Sharath\bibnamedelima Ballupete},
+           giveni={S\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{d1bb6327a84a637bbdecad4f6cdde677}
+      \strng{fullhash}{d1bb6327a84a637bbdecad4f6cdde677}
+      \strng{fullhashraw}{d1bb6327a84a637bbdecad4f6cdde677}
+      \strng{bibnamehash}{d1bb6327a84a637bbdecad4f6cdde677}
+      \strng{authorbibnamehash}{d1bb6327a84a637bbdecad4f6cdde677}
+      \strng{authornamehash}{d1bb6327a84a637bbdecad4f6cdde677}
+      \strng{authorfullhash}{d1bb6327a84a637bbdecad4f6cdde677}
+      \strng{authorfullhashraw}{d1bb6327a84a637bbdecad4f6cdde677}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Engineering Applications of Artificial Intelligence}
+      \field{note}{Comprehensive review of AI and ML applications in mechanical engineering, highlighting decision-making support and challenges related to data availability and annotation}
+      \field{title}{Artificial Intelligence and Machine Learning in Mechanical Engineering: Current Trends and Future Prospects}
+      \field{volume}{142}
+      \field{year}{2025}
+      \field{pages}{109910}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.engappai.2024.109910
+      \endverb
+    \endentry
+    \entry{Gao_etal_2024}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=00b0c099a74253beaee9273b2751e8d5}{%
+           family={Gao},
+           familyi={G\bibinitperiod},
+           given={Robert\bibnamedelima X.},
+           giveni={R\bibinitperiod\bibinitdelim X\bibinitperiod}}}%
+        {{hash=f55e88f40f648f7d74454052e01716d7}{%
+           family={Krüger},
+           familyi={K\bibinitperiod},
+           given={Jürgen},
+           giveni={J\bibinitperiod}}}%
+        {{hash=b780b18cbad0c917e02ddf5c6b1a6d40}{%
+           family={Merklein},
+           familyi={M\bibinitperiod},
+           given={Marion},
+           giveni={M\bibinitperiod}}}%
+        {{hash=786cc69c37f36c5f17606a8e49a56cf8}{%
+           family={Möhring},
+           familyi={M\bibinitperiod},
+           given={Hans-Christian},
+           giveni={H\bibinithyphendelim C\bibinitperiod}}}%
+        {{hash=30b31fd7c4a8b27bb1aebdd723ba616d}{%
+           family={Váncza},
+           familyi={V\bibinitperiod},
+           given={József},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{fb2376b48f40d178ac07e0585a2cec7b}
+      \strng{fullhash}{094b9e8729825fc59ab9c70254ee40e0}
+      \strng{fullhashraw}{094b9e8729825fc59ab9c70254ee40e0}
+      \strng{bibnamehash}{094b9e8729825fc59ab9c70254ee40e0}
+      \strng{authorbibnamehash}{094b9e8729825fc59ab9c70254ee40e0}
+      \strng{authornamehash}{fb2376b48f40d178ac07e0585a2cec7b}
+      \strng{authorfullhash}{094b9e8729825fc59ab9c70254ee40e0}
+      \strng{authorfullhashraw}{094b9e8729825fc59ab9c70254ee40e0}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{CIRP Annals -- Manufacturing Technology}
+      \field{note}{State-of-the-art review of AI and machine learning applications in manufacturing, highlighting decision-support roles, opportunities, and data-related challenges}
+      \field{title}{Artificial Intelligence in manufacturing: State of the art, perspectives and future directions}
+      \field{volume}{73}
+      \field{year}{2024}
+      \field{pages}{723\bibrangedash 749}
+      \range{pages}{27}
+      \verb{doi}
+      \verb 10.1016/j.cirp.2024.04.101
+      \endverb
+    \endentry
+    \entry{Saeed_Falter_Dausch_Wagner_Kreimeyer_Eisenbart_2023}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=2a6312ff2437f48646db49dbfabdf822}{%
+           family={Saeed},
+           familyi={S\bibinitperiod},
+           given={Muhammad\bibnamedelima Shahrukh},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=8e864b4b179e736f7e55985982235bcf}{%
+           family={Falter},
+           familyi={F\bibinitperiod},
+           given={Jan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=a46106e3170a4f546ec3f8a190774071}{%
+           family={Dausch},
+           familyi={D\bibinitperiod},
+           given={Valesko},
+           giveni={V\bibinitperiod}}}%
+        {{hash=e677be29346d195622b44f23db10f01f}{%
+           family={Wagner},
+           familyi={W\bibinitperiod},
+           given={Markus},
+           giveni={M\bibinitperiod}}}%
+        {{hash=d745c08bc4f8f84acae7ff43df66cd84}{%
+           family={Kreimeyer},
+           familyi={K\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+        {{hash=d4db7564ecd061889a27b16042fd3971}{%
+           family={Eisenbart},
+           familyi={E\bibinitperiod},
+           given={Boris},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{44470f7cb85cddb32585bed12f15163d}
+      \strng{fullhash}{388ae046ddad4fde67945443defc079c}
+      \strng{fullhashraw}{388ae046ddad4fde67945443defc079c}
+      \strng{bibnamehash}{388ae046ddad4fde67945443defc079c}
+      \strng{authorbibnamehash}{388ae046ddad4fde67945443defc079c}
+      \strng{authornamehash}{44470f7cb85cddb32585bed12f15163d}
+      \strng{authorfullhash}{388ae046ddad4fde67945443defc079c}
+      \strng{authorfullhashraw}{388ae046ddad4fde67945443defc079c}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the Design Society}
+      \field{note}{Directly related work applying AI techniques to shrink-fit (press-fit) shaft--hub connections, demonstrating ML applications in this domain}
+      \field{title}{Artificial intelligence techniques for improving cylindrical shrink-fit shaft-hub couplings}
+      \field{volume}{3}
+      \field{year}{2023}
+      \field{pages}{645\bibrangedash 656}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1017/pds.2023.65
+      \endverb
+    \endentry
+    \entry{Massoud_2025}{thesis}{}{}
+      \name{author}{1}{}{%
+        {{hash=5fbb7560a7332399d384dacf4647f4dc}{%
+           family={Massoud},
+           familyi={M\bibinitperiod},
+           given={Omar},
+           giveni={O\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {German International University (GIU)}%
+        {Technische Hochschule Ulm (THU)}%
+      }
+      \strng{namehash}{5fbb7560a7332399d384dacf4647f4dc}
+      \strng{fullhash}{5fbb7560a7332399d384dacf4647f4dc}
+      \strng{fullhashraw}{5fbb7560a7332399d384dacf4647f4dc}
+      \strng{bibnamehash}{5fbb7560a7332399d384dacf4647f4dc}
+      \strng{authorbibnamehash}{5fbb7560a7332399d384dacf4647f4dc}
+      \strng{authornamehash}{5fbb7560a7332399d384dacf4647f4dc}
+      \strng{authorfullhash}{5fbb7560a7332399d384dacf4647f4dc}
+      \strng{authorfullhashraw}{5fbb7560a7332399d384dacf4647f4dc}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Previous bachelor thesis that developed an AI-supported algorithm for shaft--hub connection selection using XGBoost and Random Forest, providing a foundation for this work}
+      \field{title}{Development of an AI-supported algorithm for the differentiated selection of shaft--hub connections under specific conditions}
+      \field{type}{Bachelor Thesis}
+      \field{year}{2025}
+    \endentry
+    \entry{DIN7190_1_2017}{standard}{}{}
+      \list{organization}{1}{%
+        {DIN Deutsches Institut für Normung}%
+      }
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{note}{Edition 2017-02. Design methodology for press-fit connections, including friction coefficients and allowable pressure limits}
+      \field{number}{DIN 7190-1}
+      \field{title}{Interference fits --- Part 1: Calculation and design rules for cylindrical press fits}
+      \field{year}{2017}
+    \endentry
+    \entry{DIN6885_1_2021}{standard}{}{}
+      \list{organization}{1}{%
+        {DIN Deutsches Institut für Normung}%
+      }
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{note}{Edition 2021-06. Standard for key dimensions and tolerances used for keyed shaft--hub connections}
+      \field{number}{DIN 6885-1}
+      \field{title}{Drive type fastenings without taper action, parallel keys, keyways --- Deep pattern --- Part 1: Dimensions, tolerances, mass}
+      \field{year}{2021}
+    \endentry
+    \entry{DIN5480_1_2006}{standard}{}{}
+      \list{organization}{1}{%
+        {DIN Deutsches Institut für Normung}%
+      }
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{note}{Edition 2006-03. Standard for involute splines (geometry and fundamental definitions) used for splined shaft--hub connections}
+      \field{number}{DIN 5480-1}
+      \field{title}{Involute splines based on reference diameters --- Part 1: Generalities}
+      \field{year}{2006}
+    \endentry
+    \entry{Haggenmueller_2025}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=a3dcebbf719f0eea265d5c4b944a21c4}{%
+           family={Haggenmüller},
+           familyi={H\bibinitperiod},
+           given={W.\bibnamedelimi A.},
+           giveni={W\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \strng{fullhash}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \strng{fullhashraw}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \strng{bibnamehash}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \strng{authorbibnamehash}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \strng{authornamehash}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \strng{authorfullhash}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \strng{authorfullhashraw}{a3dcebbf719f0eea265d5c4b944a21c4}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Online article on shaft-hub connection technologies and standards}
+      \field{title}{Shaft hub connections in mechanical engineering: Technologies, comparison and standards}
+      \field{urlday}{10}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://felss.com/en/blog/shaft-hub-connections-in-mechanical-engineering-technologies-comparison-and-standards/
+      \endverb
+      \verb{url}
+      \verb https://felss.com/en/blog/shaft-hub-connections-in-mechanical-engineering-technologies-comparison-and-standards/
+      \endverb
+    \endentry
+    \entry{forsch_ingenieurwes_3d_modelle_2015}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=e0499422c0d8f804b330048c9f48fe10}{%
+           family={{Forschung im Ingenieurwesen}},
+           familyi={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{e0499422c0d8f804b330048c9f48fe10}
+      \strng{fullhash}{e0499422c0d8f804b330048c9f48fe10}
+      \strng{fullhashraw}{e0499422c0d8f804b330048c9f48fe10}
+      \strng{bibnamehash}{e0499422c0d8f804b330048c9f48fe10}
+      \strng{authorbibnamehash}{e0499422c0d8f804b330048c9f48fe10}
+      \strng{authornamehash}{e0499422c0d8f804b330048c9f48fe10}
+      \strng{authorfullhash}{e0499422c0d8f804b330048c9f48fe10}
+      \strng{authorfullhashraw}{e0499422c0d8f804b330048c9f48fe10}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Forschung im Ingenieurwesen}
+      \field{note}{Three-dimensional models illustrating different types of shaft--hub connections}
+      \field{title}{3D models of shaft--hub connections}
+      \field{year}{2015}
+      \verb{doi}
+      \verb 10.1007/s10010-015-0188-z
+      \endverb
+    \endentry
+    \entry{Budynas_Nisbett_2020}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=a6b6dba4b3eb93f36f681e53fc8f0273}{%
+           family={Budynas},
+           familyi={B\bibinitperiod},
+           given={Richard\bibnamedelima G.},
+           giveni={R\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=25e557d0bf6de334ecbdd7d6f3597406}{%
+           family={Nisbett},
+           familyi={N\bibinitperiod},
+           given={J.\bibnamedelimi Keith},
+           giveni={J\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {McGraw-Hill Education}%
+      }
+      \strng{namehash}{f038702b52cdf8b95c6507e54b9cad71}
+      \strng{fullhash}{f038702b52cdf8b95c6507e54b9cad71}
+      \strng{fullhashraw}{f038702b52cdf8b95c6507e54b9cad71}
+      \strng{bibnamehash}{f038702b52cdf8b95c6507e54b9cad71}
+      \strng{authorbibnamehash}{f038702b52cdf8b95c6507e54b9cad71}
+      \strng{authornamehash}{f038702b52cdf8b95c6507e54b9cad71}
+      \strng{authorfullhash}{f038702b52cdf8b95c6507e54b9cad71}
+      \strng{authorfullhashraw}{f038702b52cdf8b95c6507e54b9cad71}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{11th}
+      \field{isbn}{978-0-07-339821-1}
+      \field{note}{Comprehensive textbook on mechanical design including shaft--hub connections, torque transmission, and design methodology}
+      \field{title}{Shigley's Mechanical Engineering Design}
+      \field{year}{2020}
+    \endentry
+    \entry{Juvinall_Marshek_2020}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=f7999c00181cdb40571abdacdd931e0e}{%
+           family={Juvinall},
+           familyi={J\bibinitperiod},
+           given={Robert\bibnamedelima C.},
+           giveni={R\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=de3aa1d9794faa73eda5de7e673dcbf1}{%
+           family={Marshek},
+           familyi={M\bibinitperiod},
+           given={Kurt\bibnamedelima M.},
+           giveni={K\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{203e28f0975f7582ea1d1a96baedc47b}
+      \strng{fullhash}{203e28f0975f7582ea1d1a96baedc47b}
+      \strng{fullhashraw}{203e28f0975f7582ea1d1a96baedc47b}
+      \strng{bibnamehash}{203e28f0975f7582ea1d1a96baedc47b}
+      \strng{authorbibnamehash}{203e28f0975f7582ea1d1a96baedc47b}
+      \strng{authornamehash}{203e28f0975f7582ea1d1a96baedc47b}
+      \strng{authorfullhash}{203e28f0975f7582ea1d1a96baedc47b}
+      \strng{authorfullhashraw}{203e28f0975f7582ea1d1a96baedc47b}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{6th}
+      \field{isbn}{978-1-119-53719-3}
+      \field{note}{Textbook on machine component design including detailed treatment of interference fits, keys, and splines}
+      \field{title}{Fundamentals of Machine Component Design}
+      \field{year}{2020}
+    \endentry
+    \entry{Mott_Vavrek_Wang_2020}{book}{}{}
+      \name{author}{3}{}{%
+        {{hash=d6261613936effc390d110818b836637}{%
+           family={Mott},
+           familyi={M\bibinitperiod},
+           given={Robert\bibnamedelima L.},
+           giveni={R\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=790d40689e63c15457c26f9cc99179c4}{%
+           family={Vavrek},
+           familyi={V\bibinitperiod},
+           given={Edward\bibnamedelima M.},
+           giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=e8c0d2bd9befc1f8abb0ce0aaaf16830}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Jyhwen},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{f08d072cd4080f9f46278681c09fd887}
+      \strng{fullhash}{a6f700c4e43babe374614bdc4651e574}
+      \strng{fullhashraw}{a6f700c4e43babe374614bdc4651e574}
+      \strng{bibnamehash}{a6f700c4e43babe374614bdc4651e574}
+      \strng{authorbibnamehash}{a6f700c4e43babe374614bdc4651e574}
+      \strng{authornamehash}{f08d072cd4080f9f46278681c09fd887}
+      \strng{authorfullhash}{a6f700c4e43babe374614bdc4651e574}
+      \strng{authorfullhashraw}{a6f700c4e43babe374614bdc4651e574}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{6th}
+      \field{note}{Comprehensive textbook on machine elements including detailed treatment of shaft--hub connections, keys, splines, and interference fits}
+      \field{title}{Machine Elements in Mechanical Design}
+      \field{year}{2020}
+    \endentry
+    \entry{kittsteiner1990welle}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=05ef216bff1cab67c76386d6faa65e0a}{%
+           family={Kittsteiner},
+           familyi={K\bibinitperiod},
+           given={Hans-Jürgen},
+           giveni={H\bibinithyphendelim J\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {german}%
+      }
+      \list{location}{1}{%
+        {München}%
+      }
+      \list{publisher}{1}{%
+        {Carl Hanser Verlag}%
+      }
+      \strng{namehash}{05ef216bff1cab67c76386d6faa65e0a}
+      \strng{fullhash}{05ef216bff1cab67c76386d6faa65e0a}
+      \strng{fullhashraw}{05ef216bff1cab67c76386d6faa65e0a}
+      \strng{bibnamehash}{05ef216bff1cab67c76386d6faa65e0a}
+      \strng{authorbibnamehash}{05ef216bff1cab67c76386d6faa65e0a}
+      \strng{authornamehash}{05ef216bff1cab67c76386d6faa65e0a}
+      \strng{authorfullhash}{05ef216bff1cab67c76386d6faa65e0a}
+      \strng{authorfullhashraw}{05ef216bff1cab67c76386d6faa65e0a}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Konstruktionstechnik München}
+      \field{title}{Die Auswahl und Gestaltung von kostengünstigen Welle-Nabe-Verbindungen}
+      \field{volume}{3}
+      \field{year}{1990}
+    \endentry
+    \entry{simscale_von_mises}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=19774e622adecd70c42ac293605dd961}{%
+           family={{SimScale}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{19774e622adecd70c42ac293605dd961}
+      \strng{fullhash}{19774e622adecd70c42ac293605dd961}
+      \strng{fullhashraw}{19774e622adecd70c42ac293605dd961}
+      \strng{bibnamehash}{19774e622adecd70c42ac293605dd961}
+      \strng{authorbibnamehash}{19774e622adecd70c42ac293605dd961}
+      \strng{authornamehash}{19774e622adecd70c42ac293605dd961}
+      \strng{authorfullhash}{19774e622adecd70c42ac293605dd961}
+      \strng{authorfullhashraw}{19774e622adecd70c42ac293605dd961}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Explanation of von Mises stress criterion and its application to multiaxial stress states}
+      \field{title}{Von Mises stress: Theory, equation, derivation, and calculation}
+      \field{urlday}{19}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.simscale.com/blog/von-mises-stress/
+      \endverb
+      \verb{url}
+      \verb https://www.simscale.com/blog/von-mises-stress/
+      \endverb
+    \endentry
+    \entry{weldingandndt_stresses_2019}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=bf994229f416e63c9a99c42467640a80}{%
+           family={Anand},
+           familyi={A\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{bf994229f416e63c9a99c42467640a80}
+      \strng{fullhash}{bf994229f416e63c9a99c42467640a80}
+      \strng{fullhashraw}{bf994229f416e63c9a99c42467640a80}
+      \strng{bibnamehash}{bf994229f416e63c9a99c42467640a80}
+      \strng{authorbibnamehash}{bf994229f416e63c9a99c42467640a80}
+      \strng{authornamehash}{bf994229f416e63c9a99c42467640a80}
+      \strng{authorfullhash}{bf994229f416e63c9a99c42467640a80}
+      \strng{authorfullhashraw}{bf994229f416e63c9a99c42467640a80}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Illustration of circumferential, longitudinal, and radial stresses in cylindrical components}
+      \field{title}{Stresses in a cylindrical shell}
+      \field{urlday}{19}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2019}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.weldingandndt.com/summary-of-asme-bpvc-section-viii-div-1-part-2/stresses-in-a-cylindrical-shell/
+      \endverb
+      \verb{url}
+      \verb https://www.weldingandndt.com/summary-of-asme-bpvc-section-viii-div-1-part-2/stresses-in-a-cylindrical-shell/
+      \endverb
+    \endentry
+    \entry{pulstec_compressive_tensile_2023}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=48a1e4f9aa44a68931a3bd8138ba6970}{%
+           family={Suzuki},
+           familyi={S\bibinitperiod},
+           given={T.},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \strng{fullhash}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \strng{fullhashraw}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \strng{bibnamehash}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \strng{authorbibnamehash}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \strng{authornamehash}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \strng{authorfullhash}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \strng{authorfullhashraw}{48a1e4f9aa44a68931a3bd8138ba6970}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Explanation of compressive and tensile stresses in curved components}
+      \field{title}{Compressive versus tensile residual stress}
+      \field{urlday}{19}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.pulstec.net/compressive-versus-tensile-residual-stress/
+      \endverb
+      \verb{url}
+      \verb https://www.pulstec.net/compressive-versus-tensile-residual-stress/
+      \endverb
+    \endentry
+    \entry{Norton_2019}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=2280e219fe1a8b0ba3a2b0f4eac3337c}{%
+           family={Norton},
+           familyi={N\bibinitperiod},
+           given={Robert\bibnamedelima L.},
+           giveni={R\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \strng{fullhash}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \strng{fullhashraw}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \strng{bibnamehash}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \strng{authorbibnamehash}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \strng{authornamehash}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \strng{authorfullhash}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \strng{authorfullhashraw}{2280e219fe1a8b0ba3a2b0f4eac3337c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{6th}
+      \field{isbn}{978-0-13-518423-1}
+      \field{note}{Textbook covering machine design principles, including detailed treatment of shaft connections and keyway design}
+      \field{title}{Machine Design: An Integrated Approach}
+      \field{year}{2019}
+    \endentry
+    \entry{mikipulley_key_crosssection}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=670ef162b6dad596f699b1eb957c5839}{%
+           family={{Miki Pulley Co., Ltd.}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{670ef162b6dad596f699b1eb957c5839}
+      \strng{fullhash}{670ef162b6dad596f699b1eb957c5839}
+      \strng{fullhashraw}{670ef162b6dad596f699b1eb957c5839}
+      \strng{bibnamehash}{670ef162b6dad596f699b1eb957c5839}
+      \strng{authorbibnamehash}{670ef162b6dad596f699b1eb957c5839}
+      \strng{authornamehash}{670ef162b6dad596f699b1eb957c5839}
+      \strng{authorfullhash}{670ef162b6dad596f699b1eb957c5839}
+      \strng{authorfullhashraw}{670ef162b6dad596f699b1eb957c5839}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Cross-section diagram of shaft bore and key showing keyseat and keyway geometry}
+      \field{title}{Technical data: Key and keyway}
+      \field{urlday}{19}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.mikipulley.co.jp/EN/Services/Tech_data/tech03.html
+      \endverb
+      \verb{url}
+      \verb https://www.mikipulley.co.jp/EN/Services/Tech_data/tech03.html
+      \endverb
+    \endentry
+    \entry{engineeringchoice_shaft_key}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=46196898c37848407791e203efbce9db}{%
+           family={Sabhadiya},
+           familyi={S\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{46196898c37848407791e203efbce9db}
+      \strng{fullhash}{46196898c37848407791e203efbce9db}
+      \strng{fullhashraw}{46196898c37848407791e203efbce9db}
+      \strng{bibnamehash}{46196898c37848407791e203efbce9db}
+      \strng{authorbibnamehash}{46196898c37848407791e203efbce9db}
+      \strng{authornamehash}{46196898c37848407791e203efbce9db}
+      \strng{authorfullhash}{46196898c37848407791e203efbce9db}
+      \strng{authorfullhashraw}{46196898c37848407791e203efbce9db}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Exploded view diagram of keyed shaft--hub connection components}
+      \field{title}{Shaft keys: Definition, type, and application}
+      \field{urlday}{19}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.theengineeringchoice.com/what-is-shaft-key/
+      \endverb
+      \verb{url}
+      \verb https://www.theengineeringchoice.com/what-is-shaft-key/
+      \endverb
+    \endentry
+    \entry{GWJ_eAssistant_DIN7190}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=c88cab1a569654c13ad90f3a7fd47f1a}{%
+           family={{GWJ Technology}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \strng{fullhash}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \strng{fullhashraw}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \strng{bibnamehash}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \strng{authorbibnamehash}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \strng{authornamehash}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \strng{authorfullhash}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \strng{authorfullhashraw}{c88cab1a569654c13ad90f3a7fd47f1a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Online engineering handbook providing conservative friction coefficient values for shrink fits as per DIN 7190}
+      \field{title}{Interference Fits According to {DIN} 7190 (Friction Coefficients Table)}
+      \field{urlday}{10}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2020}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.eassistant.eu/fileadmin/dokumente/eassistant/etc/HTMLHandbuch/en/eAssistantHandbch15.html
+      \endverb
+      \verb{url}
+      \verb https://www.eassistant.eu/fileadmin/dokumente/eassistant/etc/HTMLHandbuch/en/eAssistantHandbch15.html
+      \endverb
+    \endentry
+    \entry{zwickau_konstruktionslehre_2023}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=4da21a9b07d6b0e193acea174e197cbe}{%
+           family={{Westsächsische Hochschule Zwickau}},
+           familyi={W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Westsächsische Hochschule Zwickau}%
+      }
+      \strng{namehash}{4da21a9b07d6b0e193acea174e197cbe}
+      \strng{fullhash}{4da21a9b07d6b0e193acea174e197cbe}
+      \strng{fullhashraw}{4da21a9b07d6b0e193acea174e197cbe}
+      \strng{bibnamehash}{4da21a9b07d6b0e193acea174e197cbe}
+      \strng{authorbibnamehash}{4da21a9b07d6b0e193acea174e197cbe}
+      \strng{authornamehash}{4da21a9b07d6b0e193acea174e197cbe}
+      \strng{authorfullhash}{4da21a9b07d6b0e193acea174e197cbe}
+      \strng{authorfullhashraw}{4da21a9b07d6b0e193acea174e197cbe}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{26th}
+      \field{note}{Teaching materials on machine elements and design principles}
+      \field{title}{Arbeitsblätter I: Konstruktionslehre II: Maschinenelemente}
+      \field{year}{2023}
+    \endentry
+    \entry{Breiman_2001}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=132b7100417675d55d5d4d8b244f7a34}{%
+           family={Breiman},
+           familyi={B\bibinitperiod},
+           given={Leo},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{132b7100417675d55d5d4d8b244f7a34}
+      \strng{fullhash}{132b7100417675d55d5d4d8b244f7a34}
+      \strng{fullhashraw}{132b7100417675d55d5d4d8b244f7a34}
+      \strng{bibnamehash}{132b7100417675d55d5d4d8b244f7a34}
+      \strng{authorbibnamehash}{132b7100417675d55d5d4d8b244f7a34}
+      \strng{authornamehash}{132b7100417675d55d5d4d8b244f7a34}
+      \strng{authorfullhash}{132b7100417675d55d5d4d8b244f7a34}
+      \strng{authorfullhashraw}{132b7100417675d55d5d4d8b244f7a34}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Machine Learning}
+      \field{note}{Foundational paper on random forest algorithm, one of the tree-based models evaluated in this thesis}
+      \field{number}{1}
+      \field{title}{Random forests}
+      \field{volume}{45}
+      \field{year}{2001}
+      \field{pages}{5\bibrangedash 32}
+      \range{pages}{28}
+      \verb{doi}
+      \verb 10.1023/A:1010933404324
+      \endverb
+    \endentry
+    \entry{Friedman_2001}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=ce884cc144616c39e723a8fe2eb3c879}{%
+           family={Friedman},
+           familyi={F\bibinitperiod},
+           given={Jerome\bibnamedelima H.},
+           giveni={J\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{ce884cc144616c39e723a8fe2eb3c879}
+      \strng{fullhash}{ce884cc144616c39e723a8fe2eb3c879}
+      \strng{fullhashraw}{ce884cc144616c39e723a8fe2eb3c879}
+      \strng{bibnamehash}{ce884cc144616c39e723a8fe2eb3c879}
+      \strng{authorbibnamehash}{ce884cc144616c39e723a8fe2eb3c879}
+      \strng{authornamehash}{ce884cc144616c39e723a8fe2eb3c879}
+      \strng{authorfullhash}{ce884cc144616c39e723a8fe2eb3c879}
+      \strng{authorfullhashraw}{ce884cc144616c39e723a8fe2eb3c879}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Annals of Statistics}
+      \field{note}{Foundational paper on gradient boosting, the theoretical basis for XGBoost, LightGBM, and CatBoost algorithms}
+      \field{number}{5}
+      \field{title}{Greedy function approximation: A gradient boosting machine}
+      \field{volume}{29}
+      \field{year}{2001}
+      \field{pages}{1189\bibrangedash 1232}
+      \range{pages}{44}
+      \verb{doi}
+      \verb 10.1214/aos/1013203451
+      \endverb
+    \endentry
+    \entry{Chen_Guestrin_2016}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=48461ccdf50ba5a54e29a354aa734c0b}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Tianqi},
+           giveni={T\bibinitperiod}}}%
+        {{hash=c9ab8ac486d7f85ac914b1a8e51e512b}{%
+           family={Guestrin},
+           familyi={G\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{f79ceb030bcf791e5521f87ac6ada03b}
+      \strng{fullhash}{f79ceb030bcf791e5521f87ac6ada03b}
+      \strng{fullhashraw}{f79ceb030bcf791e5521f87ac6ada03b}
+      \strng{bibnamehash}{f79ceb030bcf791e5521f87ac6ada03b}
+      \strng{authorbibnamehash}{f79ceb030bcf791e5521f87ac6ada03b}
+      \strng{authornamehash}{f79ceb030bcf791e5521f87ac6ada03b}
+      \strng{authorfullhash}{f79ceb030bcf791e5521f87ac6ada03b}
+      \strng{authorfullhashraw}{f79ceb030bcf791e5521f87ac6ada03b}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining}
+      \field{note}{Original XGBoost paper, describing the gradient boosting framework used in model evaluation}
+      \field{title}{{XGBoost}: A scalable tree boosting system}
+      \field{year}{2016}
+      \field{pages}{785\bibrangedash 794}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/2939672.2939785
+      \endverb
+    \endentry
+    \entry{Ke_Wang_Meng_Ye_Zhu_Fan_2017}{article}{}{}
+      \name{author}{8}{}{%
+        {{hash=dadd87e1dad07728ce408894042b277e}{%
+           family={Ke},
+           familyi={K\bibinitperiod},
+           given={Guolin},
+           giveni={G\bibinitperiod}}}%
+        {{hash=359e0be87f96079a68d0ebf5355da232}{%
+           family={Meng},
+           familyi={M\bibinitperiod},
+           given={Qi},
+           giveni={Q\bibinitperiod}}}%
+        {{hash=d1cb1c25fa372c0b0885de8a27dc0222}{%
+           family={Finley},
+           familyi={F\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=b5857cb363d37a3b1ff2c28da6586fc9}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Taifeng},
+           giveni={T\bibinitperiod}}}%
+        {{hash=06debc36f6b61a405e8f0da1c7ccd6ca}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Wei},
+           giveni={W\bibinitperiod}}}%
+        {{hash=a70fde7196864f8be0248eba2f7f29c8}{%
+           family={Ma},
+           familyi={M\bibinitperiod},
+           given={Weidong},
+           giveni={W\bibinitperiod}}}%
+        {{hash=162ccfc475d9d2bc1177357e4913f290}{%
+           family={Ye},
+           familyi={Y\bibinitperiod},
+           given={Qiwei},
+           giveni={Q\bibinitperiod}}}%
+        {{hash=716b89cbb7332599ebb33cc58a52f648}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Tie-Yan},
+           giveni={T\bibinithyphendelim Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{cec83448a93ad6a5cdc6f494a8f2dbcb}
+      \strng{fullhash}{138b620984178bfaf960c59da39eb14f}
+      \strng{fullhashraw}{138b620984178bfaf960c59da39eb14f}
+      \strng{bibnamehash}{cec83448a93ad6a5cdc6f494a8f2dbcb}
+      \strng{authorbibnamehash}{cec83448a93ad6a5cdc6f494a8f2dbcb}
+      \strng{authornamehash}{cec83448a93ad6a5cdc6f494a8f2dbcb}
+      \strng{authorfullhash}{138b620984178bfaf960c59da39eb14f}
+      \strng{authorfullhashraw}{138b620984178bfaf960c59da39eb14f}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Advances in Neural Information Processing Systems}
+      \field{note}{LightGBM algorithm paper, describing one of the gradient boosting models evaluated}
+      \field{title}{LightGBM: A highly efficient gradient boosting decision tree}
+      \field{volume}{30}
+      \field{year}{2017}
+      \verb{doi}
+      \verb 10.5555/3294996.3295074
+      \endverb
+    \endentry
+    \entry{Prokhorenkova_Gusev_Vorobev_Dorogush_Gulin_2018}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=75d85fbaf5e44febf90b390cb205c49e}{%
+           family={Prokhorenkova},
+           familyi={P\bibinitperiod},
+           given={Liudmila},
+           giveni={L\bibinitperiod}}}%
+        {{hash=d99ea4ed468e2d3f8bc4082b7d308161}{%
+           family={Gusev},
+           familyi={G\bibinitperiod},
+           given={Gleb},
+           giveni={G\bibinitperiod}}}%
+        {{hash=4eea157d768ad9f7d675c1cb1624b822}{%
+           family={Vorobev},
+           familyi={V\bibinitperiod},
+           given={Aleksandr},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a2bbc57c5fa93135342ee3c846b63db3}{%
+           family={Dorogush},
+           familyi={D\bibinitperiod},
+           given={Anna\bibnamedelima Veronika},
+           giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=b0bbfa15913cf76eff37e68538d3927e}{%
+           family={Gulin},
+           familyi={G\bibinitperiod},
+           given={Andrey},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{bf2200e049515471bef98bbe4ddd078a}
+      \strng{fullhash}{be3384044cde3b920a17c00545fb90a0}
+      \strng{fullhashraw}{be3384044cde3b920a17c00545fb90a0}
+      \strng{bibnamehash}{be3384044cde3b920a17c00545fb90a0}
+      \strng{authorbibnamehash}{be3384044cde3b920a17c00545fb90a0}
+      \strng{authornamehash}{bf2200e049515471bef98bbe4ddd078a}
+      \strng{authorfullhash}{be3384044cde3b920a17c00545fb90a0}
+      \strng{authorfullhashraw}{be3384044cde3b920a17c00545fb90a0}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Advances in Neural Information Processing Systems}
+      \field{note}{CatBoost algorithm paper, describing the model selected as best performer in this thesis}
+      \field{title}{CatBoost: unbiased boosting with categorical features}
+      \field{volume}{31}
+      \field{year}{2018}
+      \verb{doi}
+      \verb 10.48550/arXiv.1706.09516
+      \endverb
+    \endentry
+    \entry{researchgate_confusion_matrix_2021}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=9c71ca0e8ac5da7336ffa149007898f9}{%
+           family={{ResearchGate}},
+           familyi={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{9c71ca0e8ac5da7336ffa149007898f9}
+      \strng{fullhash}{9c71ca0e8ac5da7336ffa149007898f9}
+      \strng{fullhashraw}{9c71ca0e8ac5da7336ffa149007898f9}
+      \strng{bibnamehash}{9c71ca0e8ac5da7336ffa149007898f9}
+      \strng{authorbibnamehash}{9c71ca0e8ac5da7336ffa149007898f9}
+      \strng{authornamehash}{9c71ca0e8ac5da7336ffa149007898f9}
+      \strng{authorfullhash}{9c71ca0e8ac5da7336ffa149007898f9}
+      \strng{authorfullhashraw}{9c71ca0e8ac5da7336ffa149007898f9}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Illustration of confusion matrix for multi-class classification problems}
+      \field{title}{Confusion matrix illustration}
+      \field{urlday}{19}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.researchgate.net/figure/Confusion-matrix-Illustrationa-is-a-confusion-matrix-for-binary-classification-2-x-2_fig3_353378507
+      \endverb
+      \verb{url}
+      \verb https://www.researchgate.net/figure/Confusion-matrix-Illustrationa-is-a-confusion-matrix-for-binary-classification-2-x-2_fig3_353378507
+      \endverb
+    \endentry
+    \entry{Ghobakhloo_2020}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=b963f11ee19f34f2782fe4268d3c630e}{%
+           family={Ghobakhloo},
+           familyi={G\bibinitperiod},
+           given={Morteza},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{b963f11ee19f34f2782fe4268d3c630e}
+      \strng{fullhash}{b963f11ee19f34f2782fe4268d3c630e}
+      \strng{fullhashraw}{b963f11ee19f34f2782fe4268d3c630e}
+      \strng{bibnamehash}{b963f11ee19f34f2782fe4268d3c630e}
+      \strng{authorbibnamehash}{b963f11ee19f34f2782fe4268d3c630e}
+      \strng{authornamehash}{b963f11ee19f34f2782fe4268d3c630e}
+      \strng{authorfullhash}{b963f11ee19f34f2782fe4268d3c630e}
+      \strng{authorfullhashraw}{b963f11ee19f34f2782fe4268d3c630e}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Cleaner Production}
+      \field{note}{Discussion of Industry 4.0 and automation trends, providing context for AI adoption in engineering design}
+      \field{title}{Industry 4.0, digitization, and opportunities for sustainability}
+      \field{volume}{252}
+      \field{year}{2020}
+      \field{pages}{119869}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.jclepro.2019.119869
+      \endverb
+    \endentry
+    \entry{Arinze_Izionworu_Onuegbu_Isong_Daudu_Adefemi_2024}{misc}{}{}
+      \name{author}{5}{}{%
+        {{hash=c2a9adbd092d24edfcf44d9202ad4bff}{%
+           family={Arinze},
+           familyi={A\bibinitperiod},
+           given={Chuka\bibnamedelima Anthony},
+           giveni={C\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=f5b67efc8ed9de83403ec394587a0d6e}{%
+           family={Izionworu},
+           familyi={I\bibinitperiod},
+           given={Vincent},
+           giveni={V\bibinitperiod}}}%
+        {{hash=1a699583193c9a74713ec0d026ab6d05}{%
+           family={Onuegbu},
+           familyi={O\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=2a99a63001cbd309e1181d5f2acc2afd}{%
+           family={Isong},
+           familyi={I\bibinitperiod},
+           given={Cosmas\bibnamedelima Dominic},
+           giveni={C\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=dd1b188f8af4d6f7584179b6c9e78b55}{%
+           family={Daudu},
+           familyi={D\bibinitperiod},
+           given={Adedayo\bibnamedelima Adefemi},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{6d6ebc5fa94c54f553aba06508f40ae3}
+      \strng{fullhash}{c53f30f90d39c9c2fa693369b3b50cc3}
+      \strng{fullhashraw}{c53f30f90d39c9c2fa693369b3b50cc3}
+      \strng{bibnamehash}{c53f30f90d39c9c2fa693369b3b50cc3}
+      \strng{authorbibnamehash}{c53f30f90d39c9c2fa693369b3b50cc3}
+      \strng{authornamehash}{6d6ebc5fa94c54f553aba06508f40ae3}
+      \strng{authorfullhash}{c53f30f90d39c9c2fa693369b3b50cc3}
+      \strng{authorfullhashraw}{c53f30f90d39c9c2fa693369b3b50cc3}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Application of AI to engineering processes, demonstrating automation benefits in industrial contexts}
+      \field{title}{Integrating artificial intelligence into engineering processes for improved efficiency and safety in oil and gas operations}
+      \field{year}{2024}
+    \endentry
+    \entry{Raissi_Perdikaris_Karniadakis_2019}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=95a17c39168b9e6b8812f207b4e036c1}{%
+           family={Raissi},
+           familyi={R\bibinitperiod},
+           given={Maziar},
+           giveni={M\bibinitperiod}}}%
+        {{hash=197d71332633e07aa578718628fdc405}{%
+           family={Perdikaris},
+           familyi={P\bibinitperiod},
+           given={Paris},
+           giveni={P\bibinitperiod}}}%
+        {{hash=bfaf154b1f300f885a75adce4c6b773e}{%
+           family={Karniadakis},
+           familyi={K\bibinitperiod},
+           given={George\bibnamedelima Em},
+           giveni={G\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{d313186ef90b9962b2cc1c7bc257c3f7}
+      \strng{fullhash}{767366a7d0fdde767496da8385111e76}
+      \strng{fullhashraw}{767366a7d0fdde767496da8385111e76}
+      \strng{bibnamehash}{767366a7d0fdde767496da8385111e76}
+      \strng{authorbibnamehash}{767366a7d0fdde767496da8385111e76}
+      \strng{authornamehash}{d313186ef90b9962b2cc1c7bc257c3f7}
+      \strng{authorfullhash}{767366a7d0fdde767496da8385111e76}
+      \strng{authorfullhashraw}{767366a7d0fdde767496da8385111e76}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational Physics}
+      \field{note}{Foundational work on physics-informed neural networks, demonstrating integration of physical laws into machine learning models}
+      \field{title}{Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations}
+      \field{volume}{378}
+      \field{year}{2019}
+      \field{pages}{686\bibrangedash 707}
+      \range{pages}{22}
+      \verb{doi}
+      \verb 10.1016/j.jcp.2018.10.045
+      \endverb
+    \endentry
+    \entry{Karniadakis_Kevrekidis_Lu_Perdikaris_Wang_Yang_2021}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=bfaf154b1f300f885a75adce4c6b773e}{%
+           family={Karniadakis},
+           familyi={K\bibinitperiod},
+           given={George\bibnamedelima Em},
+           giveni={G\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=6724128bc20ba35122214b84fa281063}{%
+           family={Kevrekidis},
+           familyi={K\bibinitperiod},
+           given={Ioannis\bibnamedelima G.},
+           giveni={I\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=6f6f1357e5a7fb658e3e9c999886ce83}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={Lu},
+           giveni={L\bibinitperiod}}}%
+        {{hash=197d71332633e07aa578718628fdc405}{%
+           family={Perdikaris},
+           familyi={P\bibinitperiod},
+           given={Paris},
+           giveni={P\bibinitperiod}}}%
+        {{hash=15db674b3efc6848f40514aa0034717a}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Sifan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=13b67d4d83b1d3002d9480fa84cdc9ee}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Liu},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{0ca376f95d5378ee9091f725b7c83175}
+      \strng{fullhash}{f60a0a5b39f53a61a153afd70f5530c7}
+      \strng{fullhashraw}{f60a0a5b39f53a61a153afd70f5530c7}
+      \strng{bibnamehash}{f60a0a5b39f53a61a153afd70f5530c7}
+      \strng{authorbibnamehash}{f60a0a5b39f53a61a153afd70f5530c7}
+      \strng{authornamehash}{0ca376f95d5378ee9091f725b7c83175}
+      \strng{authorfullhash}{f60a0a5b39f53a61a153afd70f5530c7}
+      \strng{authorfullhashraw}{f60a0a5b39f53a61a153afd70f5530c7}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nature Reviews Physics}
+      \field{note}{Review article on physics-informed machine learning approaches, relevant to hybrid analytical--ML frameworks}
+      \field{number}{6}
+      \field{title}{Physics-informed machine learning}
+      \field{volume}{3}
+      \field{year}{2021}
+      \field{pages}{422\bibrangedash 440}
+      \range{pages}{19}
+      \verb{doi}
+      \verb 10.1038/s42254-021-00314-5
+      \endverb
+    \endentry
+    \entry{Wang_Yang_2021}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=c33641e67eeaefc87b7821dc9b51ff90}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Jian},
+           giveni={J\bibinitperiod}}}%
+        {{hash=1e973e01467e68cf40bcaa5fa813df07}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Jianjun},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \strng{fullhash}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \strng{fullhashraw}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \strng{bibnamehash}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \strng{authorbibnamehash}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \strng{authornamehash}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \strng{authorfullhash}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \strng{authorfullhashraw}{bf02b3de5cdcf056bb83ddb6ab446a3a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Engineering Structures}
+      \field{note}{Hybrid ML--analytical approach for structural design, similar methodology to this thesis}
+      \field{title}{A hybrid approach combining machine learning and finite element analysis for structural design optimization}
+      \field{volume}{228}
+      \field{year}{2021}
+      \field{pages}{111567}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.engstruct.2020.111567
+      \endverb
+    \endentry
+    \entry{Saaty_1980}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=8d8e5331ceb6bdfae0cfaed9a7690800}{%
+           family={Saaty},
+           familyi={S\bibinitperiod},
+           given={Thomas\bibnamedelima L.},
+           giveni={T\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {McGraw-Hill}%
+      }
+      \strng{namehash}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \strng{fullhash}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \strng{fullhashraw}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \strng{bibnamehash}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \strng{authorbibnamehash}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \strng{authornamehash}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \strng{authorfullhash}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \strng{authorfullhashraw}{8d8e5331ceb6bdfae0cfaed9a7690800}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-0-07-054371-3}
+      \field{note}{Foundational work on multi-criteria decision-making, relevant to preference-weighted scoring approaches}
+      \field{title}{The Analytic Hierarchy Process}
+      \field{year}{1980}
+    \endentry
+    \entry{Chen_Chen_Fu_Li_Sun_2021}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=c00755e99875977014489727b3798424}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Tianping},
+           giveni={T\bibinitperiod}}}%
+        {{hash=b2dcceb92d2313a3f299f0bec1d21c7c}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Hong},
+           giveni={H\bibinitperiod}}}%
+        {{hash=15f0ec524b20b9417e7ce03a1b969c4c}{%
+           family={Fu},
+           familyi={F\bibinitperiod},
+           given={Wenlong},
+           giveni={W\bibinitperiod}}}%
+        {{hash=cd1e4e648b0074e1d1f4427d70297b0a}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Bin},
+           giveni={B\bibinitperiod}}}%
+        {{hash=366226530244a0d413fe682ce1031b4b}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Xudong},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{4802760e5b7f59b4e12e58852799b825}
+      \strng{fullhash}{46243aaf1f6881b5645ce5b7119331c4}
+      \strng{fullhashraw}{46243aaf1f6881b5645ce5b7119331c4}
+      \strng{bibnamehash}{46243aaf1f6881b5645ce5b7119331c4}
+      \strng{authorbibnamehash}{46243aaf1f6881b5645ce5b7119331c4}
+      \strng{authornamehash}{4802760e5b7f59b4e12e58852799b825}
+      \strng{authorfullhash}{46243aaf1f6881b5645ce5b7119331c4}
+      \strng{authorfullhashraw}{46243aaf1f6881b5645ce5b7119331c4}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Mechanical Systems and Signal Processing}
+      \field{note}{Application of machine learning to multi-criteria mechanical design optimization, relevant to preference-weighted selection}
+      \field{title}{A machine learning method for design optimization of mechanical systems with multiple performance requirements}
+      \field{volume}{149}
+      \field{year}{2021}
+      \field{pages}{107223}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.ymssp.2020.107223
+      \endverb
+    \endentry
+    \entry{Picard_2023}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=2c6c671990404ce1e5125da2dc04195a}{%
+           family={Picard},
+           familyi={P\bibinitperiod},
+           given={C.},
+           giveni={C\bibinitperiod}}}%
+        {{hash=6a296e8306f6c9c5f1543670bdea21f7}{%
+           family={Schiffmann},
+           familyi={S\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+        {{hash=83d195bc773f00c6a2177fd0901f02ef}{%
+           family={Ahmed},
+           familyi={A\bibinitperiod},
+           given={F.},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{9e80ba46e369b044be22bbe79668f1eb}
+      \strng{fullhash}{19d5b7a5c875b2b4cc0d213c2762615f}
+      \strng{fullhashraw}{19d5b7a5c875b2b4cc0d213c2762615f}
+      \strng{bibnamehash}{19d5b7a5c875b2b4cc0d213c2762615f}
+      \strng{authorbibnamehash}{19d5b7a5c875b2b4cc0d213c2762615f}
+      \strng{authornamehash}{9e80ba46e369b044be22bbe79668f1eb}
+      \strng{authorfullhash}{19d5b7a5c875b2b4cc0d213c2762615f}
+      \strng{authorfullhashraw}{19d5b7a5c875b2b4cc0d213c2762615f}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2305.09018}
+      \field{note}{Discusses methodologies for generating synthetic data in engineering design and the importance of diversity and coverage in the design parameter space}
+      \field{title}{{DATED}: Guidelines for Creating Synthetic Datasets for Engineering Design Applications}
+      \field{year}{2023}
+      \verb{doi}
+      \verb 10.48550/arXiv.2305.09018
+      \endverb
+    \endentry
+    \entry{Wang_Zhang_Liu_2020}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=1f647bb6da8304b7be380ec58eb6373a}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Lei},
+           giveni={L\bibinitperiod}}}%
+        {{hash=25bbf4047d900f3760c65b01ee899dba}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Wei},
+           giveni={W\bibinitperiod}}}%
+        {{hash=2e3635357600325da48f5bf6d32f4238}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Xiaojun},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{10814f16ce9673476ec6de14dc6cea6e}
+      \strng{fullhash}{7e0d14844aa380510654dbbd1505ce62}
+      \strng{fullhashraw}{7e0d14844aa380510654dbbd1505ce62}
+      \strng{bibnamehash}{7e0d14844aa380510654dbbd1505ce62}
+      \strng{authorbibnamehash}{7e0d14844aa380510654dbbd1505ce62}
+      \strng{authornamehash}{10814f16ce9673476ec6de14dc6cea6e}
+      \strng{authorfullhash}{7e0d14844aa380510654dbbd1505ce62}
+      \strng{authorfullhashraw}{7e0d14844aa380510654dbbd1505ce62}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Statistical Analysis and Data Mining}
+      \field{note}{Review of synthetic data generation methodologies, providing context for engineering dataset creation}
+      \field{number}{4}
+      \field{title}{A review of synthetic data generation methods for privacy-preserving data publishing}
+      \field{volume}{13}
+      \field{year}{2020}
+      \field{pages}{354\bibrangedash 374}
+      \range{pages}{21}
+      \verb{doi}
+      \verb 10.1002/sam.11461
+      \endverb
+    \endentry
+    \entry{grinsztajn2022tree}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=3cbce71ea99fefab28b3a1f15c56086e}{%
+           family={Grinsztajn},
+           familyi={G\bibinitperiod},
+           given={Léo},
+           giveni={L\bibinitperiod}}}%
+        {{hash=b3a56e54ad6b57a9b6e2d9cd76c329ab}{%
+           family={Oyallon},
+           familyi={O\bibinitperiod},
+           given={Edouard},
+           giveni={E\bibinitperiod}}}%
+        {{hash=cfa3239dded54488f9a82a5718d5b927}{%
+           family={Varoquaux},
+           familyi={V\bibinitperiod},
+           given={Gaël},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{7a755f429af584d3d4520b48da09fefe}
+      \strng{fullhash}{ed4d997d878c48f754c0a0ed32f81c2c}
+      \strng{fullhashraw}{ed4d997d878c48f754c0a0ed32f81c2c}
+      \strng{bibnamehash}{ed4d997d878c48f754c0a0ed32f81c2c}
+      \strng{authorbibnamehash}{ed4d997d878c48f754c0a0ed32f81c2c}
+      \strng{authornamehash}{7a755f429af584d3d4520b48da09fefe}
+      \strng{authorfullhash}{ed4d997d878c48f754c0a0ed32f81c2c}
+      \strng{authorfullhashraw}{ed4d997d878c48f754c0a0ed32f81c2c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Advances in Neural Information Processing Systems}
+      \field{note}{Empirical study demonstrating that tree-based models (random forests, gradient boosting) consistently outperform deep learning on tabular datasets, particularly for datasets with fewer than 10,000 samples}
+      \field{title}{Why do tree-based models still outperform deep learning on typical tabular data?}
+      \field{volume}{35}
+      \field{year}{2022}
+      \field{pages}{507\bibrangedash 520}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.48550/arXiv.2207.08815
+      \endverb
+    \endentry
+    \entry{Result_SHC2_2024}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=494ab7325246e94a984e7fa0364da254}{%
+           family={{Technische Hochschule Ulm}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{494ab7325246e94a984e7fa0364da254}
+      \strng{fullhash}{494ab7325246e94a984e7fa0364da254}
+      \strng{fullhashraw}{494ab7325246e94a984e7fa0364da254}
+      \strng{bibnamehash}{494ab7325246e94a984e7fa0364da254}
+      \strng{authorbibnamehash}{494ab7325246e94a984e7fa0364da254}
+      \strng{authornamehash}{494ab7325246e94a984e7fa0364da254}
+      \strng{authorfullhash}{494ab7325246e94a984e7fa0364da254}
+      \strng{authorfullhashraw}{494ab7325246e94a984e7fa0364da254}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{10}
+      \field{note}{Standardized test case calculations for press fits (DIN 7190), keys (DIN 6885), and splines (DIN 5480) used as ground truth for analytical model verification}
+      \field{title}{Lösung WNV2: Berechnung verschiedeneartiger Welle-Nabe-Verbindungen für identische Einsatzbedingungen im Vergleich}
+      \field{year}{2024}
+      \verb{file}
+      \verb Result_SHC2.pdf
+      \endverb
+    \endentry
+    \entry{FVA_InterferenceFits_2017}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=402c58072f8429837985c435e2cf0a42}{%
+           family={{FVA Software}},
+           familyi={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{402c58072f8429837985c435e2cf0a42}
+      \strng{fullhash}{402c58072f8429837985c435e2cf0a42}
+      \strng{fullhashraw}{402c58072f8429837985c435e2cf0a42}
+      \strng{bibnamehash}{402c58072f8429837985c435e2cf0a42}
+      \strng{authorbibnamehash}{402c58072f8429837985c435e2cf0a42}
+      \strng{authornamehash}{402c58072f8429837985c435e2cf0a42}
+      \strng{authorfullhash}{402c58072f8429837985c435e2cf0a42}
+      \strng{authorfullhashraw}{402c58072f8429837985c435e2cf0a42}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Knowledge base explanation of interference fit design per DIN 7190, including safety factors against slip and plasticity}
+      \field{title}{Interference fits}
+      \field{urlday}{10}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{year}{2017}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://doc.fva-service.de/knowledgebase/en/root-interference-fit.html
+      \endverb
+      \verb{url}
+      \verb https://doc.fva-service.de/knowledgebase/en/root-interference-fit.html
+      \endverb
+    \endentry
+    \entry{Cajuhi_Pepe_Moreno_2009}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=739e5f6e212060d036357cfb96b4edaf}{%
+           family={Cajuhi},
+           familyi={C\bibinitperiod},
+           given={Aguinaldo\bibnamedelima Jose},
+           giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=10ca450d0a2792a8ecc1fb40cf6c7128}{%
+           family={Pepe},
+           familyi={P\bibinitperiod},
+           given={Iuri\bibnamedelima Muniz},
+           giveni={I\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=7add2bc6f78aa583c84fc962bc111283}{%
+           family={Moreno},
+           familyi={M\bibinitperiod},
+           given={Denis\bibnamedelima Mestre},
+           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Gramado, RS, Brazil}%
+      }
+      \list{organization}{1}{%
+        {ABCM}%
+      }
+      \strng{namehash}{53958ab24ca4816807dcf0dc13a72994}
+      \strng{fullhash}{3adc1ff12b596537dfd3d9a61a01d11a}
+      \strng{fullhashraw}{3adc1ff12b596537dfd3d9a61a01d11a}
+      \strng{bibnamehash}{3adc1ff12b596537dfd3d9a61a01d11a}
+      \strng{authorbibnamehash}{3adc1ff12b596537dfd3d9a61a01d11a}
+      \strng{authornamehash}{53958ab24ca4816807dcf0dc13a72994}
+      \strng{authorfullhash}{3adc1ff12b596537dfd3d9a61a01d11a}
+      \strng{authorfullhashraw}{3adc1ff12b596537dfd3d9a61a01d11a}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 20th International Congress of Mechanical Engineering (COBEM)}
+      \field{note}{Experimental validation of press-fit stress analysis using FEA and strain gauge measurements, relevant for validating analytical press-fit models}
+      \field{title}{Using finite element analysis and strain gauge experimental data to evaluate stress concentration factor on press-fit assembly}
+      \field{year}{2009}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
 
-\bibitem{DIN6885_2021}
-{DIN Deutsches Institut für Normung}, ``Parallel keys and keyways -- part 1:
-  Dimensions and tolerances for parallel keys (form a and b).'' DIN 6885-1,
-  2021.
-\newblock Standard for key dimensions and material conditions, used for keyed
-  shaft connections.
-
-\bibitem{DIN5480_2006}
-{DIN Deutsches Institut für Normung}, ``Involute splines based on reference
-  diameters -- part 1: Generalities.'' DIN 5480-1, 2006.
-\newblock Standard for splined shaft connections, covering geometry and load
-  capacity factors.
-
-\bibitem{Haggenmueller_2025}
-W.~A. Haggenm{\"u}ller, ``Shaft hub connections in mechanical engineering:
-  technologies, comparison and standards,'' Sept. 2025.
-\newblock Technical overview of various shaft--hub connection types and their
-  advantages/disadvantages, referencing DIN standards.
-
-\bibitem{GWJ_eAssistant_DIN7190}
-{GWJ Technology}, ``Interference fits according to {DIN} 7190 (friction
-  coefficients table),'' 2020.
-\newblock Online engineering handbook providing conservative friction
-  coefficient values for shrink fits as per DIN 7190.
-
-\bibitem{FVA_InterferenceFits_2017}
-{FVA Software}, ``Interference fits,'' 2017.
-\newblock Knowledge base explanation of interference fit design per DIN 7190,
-  including safety factors against slip and plasticity.
-
-\bibitem{Picard_2023}
-C.~Picard, J.~Schiffmann, and F.~Ahmed, ``{DATED}: Guidelines for creating
-  synthetic datasets for engineering design applications,'' {\em arXiv preprint
-  arXiv:2305.09018}, 2023.
-\newblock Discusses methodologies for generating synthetic data in engineering
-  design and the importance of diversity and coverage in the design parameter
-  space.
-
-\end{thebibliography}

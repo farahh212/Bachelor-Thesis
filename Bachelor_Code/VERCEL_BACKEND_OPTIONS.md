@@ -145,3 +145,4 @@ heroku config:set CORS_ORIGINS=https://your-frontend.vercel.app,http://localhost
 
 Both work perfectly with Vercel frontend!
 
+

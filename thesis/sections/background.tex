@@ -1,41 +1,17 @@
 \chapter{Background}
 \label{ch:background}
 
-This chapter establishes the theoretical and conceptual background needed to understand the methodology and framework developed in this thesis for shaft–hub connection selection. It covers the mechanical principles involved in torque transmission, the types of shaft–hub connections considered in this thesis along with their key properties, and the role of DIN/ISO standards in feasibility assessment~\cite{DIN7190_2017,DIN6885_2021,DIN5480_2006}. Since this thesis begins with physics-based calculations and integrates machine learning (ML), essential ML concepts, evaluation metrics, and the motivation for synthetic dataset generation are also presented.
+This chapter establishes the theoretical and conceptual background needed to understand the methodology and framework developed in this thesis for shaft–hub connection selection. It covers the mechanical principles involved in torque transmission, the types of shaft–hub connections considered in this thesis along with their key properties, and the role of DIN/ISO standards in feasibility assessment~\cite{DIN7190_1_2017,DIN6885_1_2021,DIN5480_1_2006}. Since this thesis begins with physics-based calculations and integrates machine learning (ML), essential ML concepts, evaluation metrics, and the motivation for synthetic dataset generation are also presented.
 
 % ---------------------------------------------------------------------------
 \section{Motivation: The Shaft--Hub Connection Selection Problem}
 \label{sec:background_motivation}
 
-Shaft–hub connections are essential machine elements that form the mechanical interface between a rotating shaft and a hub, allowing torque and rotational motion to be transmitted reliably without relative slip~\cite{Haggenmueller_2025}. These connections play a critical role in the performance of rotating machinery, including electric motors, gearboxes, pumps, conveyors, wind turbines, and automotive drivetrains. Dependable torque transmission and rotational integrity are essential for safe and efficient operation. A suitable shaft–hub connection must therefore meet several key design requirements:
-\begin{itemize}
-    \item transmit the required torque with adequate safety against slip and local failure,
-    \item avoid excessive stress concentrations and preserve fatigue strength,
-    \item maintain alignment and concentricity under dynamic loading,
-    \item satisfy manufacturing, assembly, and maintenance constraints.
-\end{itemize}
+Shaft–hub connections are essential machine elements that form the mechanical interface between a rotating shaft and a hub, allowing torque and rotational motion to be transmitted reliably without relative slip~\cite{Haggenmueller_2025}. These connections play a critical role in rotating machinery including electric motors, gearboxes, pumps, and automotive drivetrains. A suitable connection must transmit required torque with adequate safety, avoid excessive stress concentrations, maintain alignment under dynamic loading, and satisfy manufacturing and maintenance constraints.
 
-Selecting the correct connection type is crucial because failure can lead to
-slippage, fretting, shaft damage, fatigue cracking, or catastrophic system
-failure. Despite their widespread use, no publicly available labelled datasets
-exist for automated shaft--hub connection selection. Industrial practice
-typically relies on engineer experience, handbook charts, and repeated
-analytical checks, resulting in a manual and time-consuming design process with
-limited decision support.
+Selecting the correct connection type is crucial because failure can lead to slippage, fretting, shaft damage, or catastrophic system failure. Despite their widespread use, no publicly available labelled datasets exist for automated shaft--hub connection selection. While large datasets derived from experiments, simulations, or historical design databases do exist, they represent proprietary knowledge held by research institutes and companies and are not accessible for this work. Industrial practice typically relies on engineer experience, handbook charts, and repeated analytical checks, resulting in a manual and time-consuming design process.
 
-The complexity arises because:
-\begin{itemize}
-    \item torque capacity depends on interacting geometric, material, and surface parameters;
-    \item three distinct connection types (press fit, key, spline) have fundamentally different load paths;
-    \item user/application preferences often override pure mechanical capacity;
-    \item nonlinear relationships and discrete standardized geometries make manual comparison difficult;
-    \item standards (DIN~7190, DIN~6885, DIN~5480) define rules but do not guide connection \emph{selection}.
-\end{itemize}
-
-These observations motivate a hybrid analytical--ML approach: analytical models
-provide physics-consistent feasibility and transparent capacity values, while ML
-provides rapid probabilistic recommendations learned from analytically labelled
-synthetic data, and preference weighting enables application-specific trade-offs.
+The complexity arises because torque capacity depends on interacting geometric, material, and surface parameters; three distinct connection types (press fit, key, spline) have fundamentally different load paths; user/application preferences often override pure mechanical capacity; and standards (DIN~7190, DIN~6885, DIN~5480) define rules but do not guide connection selection. These observations motivate a hybrid analytical--ML approach: analytical models provide physics-consistent feasibility and transparent capacity values, while ML provides rapid probabilistic recommendations learned from analytically labelled synthetic data, and preference weighting enables application-specific trade-offs.
 
 % ---------------------------------------------------------------------------
 \section{Shaft--Hub Connections in Rotating Machinery}
@@ -51,11 +27,19 @@ Connection types fall into two main categories: \emph{friction closure} and
 
 Each type exhibits characteristic strengths and limitations. In practice, these trade-offs mean that standards-based feasibility alone rarely determines the final design choice; further analysis is typically needed, especially when multiple connection types are feasible.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/3D-Modelle.png}
+\caption{Three-dimensional models of different shaft--hub connection types: press fit (PV), multi-part press fit (MPV), knurled press fit (RPV), splined connection (ZWV), and keyed connection (PFV), illustrating the torque transmission mechanisms (friction closure, form closure, or combination)~\cite{forsch_ingenieurwes_3d_modelle_2015}.}
+\label{fig:3d_modelle}
+\end{figure}
+
+
 % ---------------------------------------------------------------------------
 \subsection{Friction Closure: Interference (Press) Fits}
 \label{sec:press_fits_background}
 
-Press fits transmit torque through friction generated by radial interference between a shaft and a hub. During assembly, the hub may be heated or the shaft cooled (shrink fit), or the parts may be force-assembled at ambient temperature (press fit). After temperature equalisation and elastic recovery, a radial contact pressure $p$ develops at the interface.
+Press fits transmit torque through friction generated by radial interference between a shaft and a hub~\cite{Budynas_Nisbett_2020,Juvinall_Marshek_2020,Mott_Vavrek_Wang_2020,kittsteiner1990welle}. During assembly, the hub may be heated or the shaft cooled (shrink fit), or the parts may be force-assembled at ambient temperature (press fit). After temperature equalisation and elastic recovery, a radial contact pressure $p$ develops at the interface.
 
 For a cylindrical shaft of diameter $d$ and engagement length $L$, the contact area is
 \begin{equation}
@@ -65,35 +49,163 @@ A_{\text{contact}} = \pi d L .
 Assuming uniform pressure distribution and a friction coefficient $\mu$, the transmissible torque is
 \begin{equation}
 M_{t,\text{press}} = \mu \, p \, A_{\text{contact}} \, \frac{d}{2}
-= \frac{\pi}{2} \, \mu \, p \, L \, d^{2}.
+= \frac{\pi}{2} \, \mu \, p \, L \, d^{2}. \label{eq:press_torque}
 \end{equation}
 
-For a required torque $M_{\text{req}}$ and a torque safety factor $S_R$, the required interface pressure is
+For a required torque $M_{\text{req}}$ and a torque safety factor $S_R$, the required interface pressure, $p_{\text{req}}$, which denotes the minimum interface pressure required for the press-fit connection to safely transmit the factored design torque is 
 \begin{equation}
 p_{\text{req}} =
 \frac{2 M_{\text{req}} S_R}{\pi \mu L d^{2}} .
 \end{equation}
 
-This formulation preserves dimensional consistency and ensures that the safety factor is applied directly to the torque demand.
+This formulation preserves dimensional consistency and ensures that the safety factor is applied directly to the torque demand, allowing the resulting required pressure to be compared consistently with allowable pressure limits derived from material strength.
 
 \paragraph{Allowable Pressure Considerations}
-The allowable contact pressure is limited by both shaft and hub constraints. In this work, the effective allowable pressure is therefore defined as
+The allowable contact pressure $p_{\text{allow}}$ represents the maximum interface pressure that can be safely sustained without exceeding material strength limits in either the shaft or hub. This limit is constrained by both components, and the effective allowable pressure is taken as the minimum of the two:
 \begin{equation}
 p_{\text{allow}} = \min \left( p_{\text{allow,shaft}}, \; p_{\text{allow,hub}} \right).
 \end{equation}
 
-While the shaft limit is governed primarily by material strength, the hub limit additionally depends on geometry. A representative geometric ratio is
+To determine these component-specific limits, the allowable stress $\sigma_{\text{zul}}$ for each material is first established based on its strength properties and ductility classification:
 \begin{equation}
-Q = \frac{d}{D},
+\sigma_{\text{zul}} =
+\begin{cases}
+\sigma_y / S_F, & \text{if ductile}, \\
+\sigma_{uts} / S_B, & \text{if brittle},
+\end{cases}
 \end{equation}
-where $D$ is the hub outer diameter. As $Q \rightarrow 1$ (thin hubs), the hub's ability to sustain interface pressure decreases significantly, highlighting the sensitivity of press fits to hub thickness.
+where $\sigma_y$ is the yield strength, $\sigma_{uts}$ is the ultimate tensile strength, and $S_F$ and $S_B$ are safety factors for yield-based and ultimate-based limits, respectively.
 
-Mechanical feasibility requires
+For ductile materials, the allowable stress is based on the yield strength, since exceeding
+$\sigma_y$ initiates plastic deformation that can permanently alter the press-fit geometry
+and relax the interface pressure, even without fracture. For brittle materials, which exhibit
+negligible plastic deformation and may fail abruptly by crack initiation and propagation,
+the ultimate tensile strength $\sigma_{uts}$ provides a more appropriate basis for limiting
+failure risk.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/Stress-strain curve from a uniaxial tensile test.png}
+\caption{Stress--strain curve from a uniaxial tensile test, showing elastic deformation, yield strength, uniform and non-uniform plastic deformation, ultimate tensile strength, and fracture. The curve illustrates the material behavior that forms the basis for von Mises yield criterion, which compares multiaxial stress states to the uniaxial yield strength~\cite{simscale_von_mises}.}
+\label{fig:stress_strain_curve}
+\end{figure}
+
+
+The geometric configuration also influences the allowable pressure. For the hub, the diameter ratio
+\begin{equation}
+Q_A = \frac{d}{D}
+\end{equation}
+characterizes the hub wall thickness, where $D$ is the hub outer diameter. As $Q_A \rightarrow 1$ (thin-walled hubs), the hub's ability to sustain interface pressure decreases significantly. For the shaft, the ratio
+\begin{equation}
+Q_I = \frac{d_i}{d}
+\end{equation}
+accounts for hollow shafts, where $d_i$ is the inner diameter (zero for solid shafts).
+
+The component-specific pressure limits are then calculated using thick-walled cylinder theory, accounting for the stress state under internal pressure. The hub and shaft pressure limits are:
+\begin{align}
+p_{\text{allow,hub}} &= \frac{1 - Q_A^2}{\sqrt{3}}\,\sigma_{\text{zul,hub}}, \label{eq:pressure_limit_hub} \\
+p_{\text{allow,shaft}} &= \frac{2}{\sqrt{3}}\,\sigma_{\text{zul,shaft}}\,(1 - Q_I^2), \label{eq:pressure_limit_shaft}
+\end{align}
+
+As the diameter ratios $Q_A=d/D$ and $Q_I=d_i/d$ increase, the geometric terms
+$(1 - Q_A^2)$ and $(1 - Q_I^2)$ decrease, leading to a reduction in the allowable
+interface pressure. In the hub, increasing $Q_A$ corresponds to a thinner wall,
+which results in higher circumferential (hoop) stresses and therefore a lower
+allowable pressure. In the shaft, increasing $Q_I$ reflects increased hollowness,
+which reduces the load-carrying cross-section and raises the induced stress for a
+given interface pressure.
+
+The factor $1/\sqrt{3}$ in Equations~\eqref{eq:pressure_limit_hub} and~\eqref{eq:pressure_limit_shaft} arises from the application of the von Mises equivalent stress criterion to the biaxial stress state in the cylindrical components. To understand this, it is necessary to examine what is meant by a biaxial stress state and why the von Mises criterion is required.
+
+\subsection{Biaxial Stress State in Press Fits}
+
+In a press fit, the shaft and hub are not loaded in just one direction. Because of the interface pressure $p$, each cylindrical component experiences two principal stresses acting simultaneously and perpendicular to each other creating what is known as a \emph{biaxial stress state}:
+
+\begin{itemize}
+    \item \textbf{Radial stress} $\sigma_r$: Acts inward (compressive) and is caused directly by the contact pressure at the interface.
+    \item \textbf{Circumferential (hoop) stress} $\sigma_\theta$: Acts around the circumference of the cylinder. In the hub, this stress is tensile, while in the shaft it is compressive. The hoop stress is usually larger in magnitude than the radial stress.
+\end{itemize}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/Types of stresses.png}
+\caption{Types of stresses in cylindrical components: (a) circumferential (hoop) stress, (b) longitudinal stress, and (c) radial stress. In press fits, the dominant stresses are radial and circumferential, creating a biaxial stress state~\cite{weldingandndt_stresses_2019}.}
+\label{fig:types_of_stresses}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/compressive and tensile stresses.jpeg}
+    \caption{Illustration of types of circumferential (hoop) stress in curved components. The direction of arrows indicates how forces cause compression and tension within a material~\cite{pulstec_compressive_tensile_2023}.}
+    \label{fig:compressive_tensile_stresses}
+    \end{figure}
+
+Materials do not fail because of just radial stress or hoop stress alone; failure occurs because of the combined effect of all stresses acting together. Therefore, a method is needed to combine $\sigma_r$ and $\sigma_\theta$ into a single equivalent stress value that can be compared to the material's uniaxial yield strength. This is where the von Mises yield criterion provides the solution.
+
+\subsection{The von Mises Yield Criterion}
+
+The von Mises yield criterion states that a ductile material yields when the distortional (shear-related) energy in the material reaches the same level as in a uniaxial tensile test at yield (see Figure~\ref{fig:stress_strain_curve}). The key insight is that von Mises converts a multiaxial stress state into an equivalent single stress value, called the von Mises equivalent stress $\sigma_{vM}$. This allows safe comparison of $\sigma_{vM}$ against the allowable stress $\sigma_{\text{zul}}$.
+
+For a cylinder under internal or external pressure, the axial stress is negligible under the open-ended assumption. The dominant stresses are $\sigma_r$ and $\sigma_\theta$, creating a plane (biaxial) stress condition. When these stresses are inserted into the von Mises formula:
+\begin{equation}
+\sigma_{vM} = \sqrt{\sigma_\theta^2 - \sigma_\theta\sigma_r + \sigma_r^2},
+\end{equation}
+and the expressions from thick-walled cylinder theory are substituted, the result simplifies to a form proportional to the interface pressure $p$. Solving this relation for $p$ introduces the factor $1/\sqrt{3}$.
+
+
+
+These different stress distributions lead to different proportionality constants in the pressure limit equations. The additional factor of 2 in the shaft expression (Equation~\eqref{eq:pressure_limit_shaft}) reflects the more favorable compressive stress state of the shaft, allowing it to tolerate higher interface pressures than the hub. However, both components rely on the same von Mises concept: combining radial and hoop stresses into one equivalent stress that can be compared against the material's yield strength.
+
+
+Mechanical feasibility requires that the required pressure does not exceed the allowable:
 \begin{equation}
 p_{\text{req}} \le p_{\text{allow}} .
 \end{equation}
 
-Press fits are compact, backlash-free, and provide excellent concentricity. However, they are sensitive to surface condition, lubrication, and assembly constraints. Extremely high interferences may be torque-feasible in theory but impractical or damaging in assembly. Thin hubs are particularly critical, as hub compliance can lead to deformation such as bell-mouthing. These considerations motivate the additional manufacturability and stiffness checks introduced later in the analytical model.
+\paragraph{Interference and Torque Capacity}
+The fundamental parameter governing  press-fit performance is the \emph{interference}, defined as the amount by which the shaft diameter exceeds the hub bore diameter before assembly. This geometric difference creates the radial contact pressure $p$ at the interface. The relationship between interference and torque capacity follows a direct chain: larger interference leads to higher contact pressure $p$, which increases the friction force (proportional to $\mu p$), and consequently increases the transmissible torque (Equation~\eqref{eq:press_torque}). Therefore, analytically, more interference results in greater torque capacity. However, practical limits exist: extremely high interferences may be torque-feasible in theory but become impractical or damaging during assembly, requiring excessive press forces or thermal methods that can cause material damage or geometric distortion.
+
+\paragraph{Backlash-Free Operation}
+Press fits are inherently backlash-free, meaning they exhibit no play or relative motion under load reversal. Backlash occurs when clearance exists between mating parts, allowing torque reversal to cause relative motion before load is re-engaged. In a press fit, the shaft and hub are in continuous interference contact with no clearance in the circumferential direction. The friction force resists motion in both rotation directions equally, eliminating play under load reversal. This absence of clearance prevents rattle, impact loading, and positioning errors, making press fits particularly suitable for applications requiring precise bidirectional torque transmission and smooth operation.
+
+\paragraph{Excellent Concentricity}
+Press fits provide excellent concentricity, meaning the shaft and hub axes align with high geometric accuracy. In press fits, both parts are cylindrical, and the interference causes self-centering during assembly as the parts naturally seek the position of minimum potential energy. Unlike form-closure connections (keys, splines) that rely on discrete contact points, press fits achieve uniform radial contact around the entire circumference. This uniform contact distribution results in high geometric alignment, making press fits especially suitable for high-speed rotation, low vibration applications, and fatigue-sensitive components where misalignment would cause dynamic unbalance or stress concentrations.
+
+Despite these advantages, press fits are sensitive to several practical factors that limit their applicability. Surface condition directly affects the friction coefficient $\mu$, which governs torque capacity according to Equation~\eqref{eq:press_torque}. Contamination, oxidation, or improper surface finish can significantly reduce friction, compromising torque transmission. Lubrication during assembly or operation can similarly reduce friction, potentially causing slip under load. Assembly constraints pose another challenge: achieving the required interference demands either high press forces (which can damage components or require specialized equipment) or thermal methods (heating hub or cooling shaft), both of which introduce complexity and potential failure modes. Thin hubs are particularly critical, as insufficient wall thickness leads to excessive hub compliance. This compliance can cause non-uniform deformation during assembly, resulting in phenomena such as bell-mouthing (where the hub opening flares outward), which reduces effective contact area and compromises torque capacity. These considerations motivate the additional manufacturability and stiffness checks introduced later in the analytical model to filter out mechanically feasible but practically unrealistic designs.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/press_fit_properties.png}
+    \caption{Radar chart summarizing qualitative characteristics of a press-fit shaft–hub connection. The chart compares relative strengths and weaknesses across multiple design criteria that are important in practice but difficult to quantify analytically. In the radar chart, values farther from the center indicate better performance, while values closer to the center indicate poorer performance. The filled polygon shows how a cylindrical press fit performs across these criteria. See Table~\ref{tab:press_fit_radar_axes} for explanation of each axis~\cite{kittsteiner1990welle}.}
+    \label{fig:press_fit_properties}
+    \end{figure}
+    
+\begin{table}[ht]
+\centering
+\caption{Explanation of axes in the press-fit radar chart (Figure~\ref{fig:press_fit_properties})}
+\label{tab:press_fit_radar_axes}
+\begin{tabular}{p{5cm}p{9cm}}
+\toprule
+\textbf{Axis} & \textbf{Explanation} \\
+\midrule
+\textbf{Übertragbares Drehmoment} (Transmissible torque) & Press fits score high because torque is transmitted over the entire cylindrical surface via friction. This aligns with the analytical model showing strong torque capacity, making press fits excellent for high torque transmission. \\
+\midrule
+\textbf{Selbstzentrierung} (Self-centering) & Rated good. The interference fit naturally aligns shaft and hub concentrically during assembly with no clearance or geometric play, explaining why press fits provide excellent concentricity. \\
+\midrule
+\textbf{Montageaufwand} (Assembly effort) & Rated unfavorable/high effort. Requires high press forces or thermal assembly, controlled tolerances, and specialized equipment, matching the statement about assembly constraints. \\
+\midrule
+\textbf{WNV-Kosten} (Cost of shaft--hub connection) & Rated favorable. No additional components (keys, splines, fasteners) and simple geometry result in low part cost, though tooling and assembly may still be expensive. \\
+\midrule
+\textbf{Demontierbarkeit der WNV} (Disassemblability) & Rated poor. Press fits are often difficult to remove and potentially damaging during disassembly, making them typically permanent or semi-permanent joints. \\
+\midrule
+\textbf{Kerbwirkung der WNV auf Bauteile} (Notch/stress-concentration effect on components) & Rated low. No geometric discontinuities like keyways or spline teeth result in smooth stress distribution, providing a major fatigue advantage of press fits. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
 
 % ---------------------------------------------------------------------------
 \subsection{Form Closure: Keys and Splines}
@@ -102,47 +214,178 @@ Press fits are compact, backlash-free, and provide excellent concentricity. Howe
 Form-closure connections transmit torque through geometric interlocking rather than frictional interface pressure. In this work, parallel keys and splines are considered as representative form-closure solutions.
 
 \paragraph{Keys}
-A rectangular parallel key engages matching keyways in the shaft and hub. Torque transmission is governed by two primary failure modes: shear of the key and bearing pressure on the key flanks.
+A rectangular parallel key engages matching keyways in the shaft and hub~\cite{Norton_2019,Budynas_Nisbett_2020,Mott_Vavrek_Wang_2020,kittsteiner1990welle}. Torque transmission is governed by two primary failure modes that must both be considered: shear failure of the key cross-section and bearing (crushing) failure at the contact surfaces between the key and keyway.
 
-The shear-limited torque capacity is
+\emph{Shear failure} occurs when the shear stress in the key exceeds the material's allowable shear strength. The key acts as a mechanical fuse, transmitting torque through its cross-sectional area. When the applied torque creates a shear force that exceeds the key's shear capacity, the key fails by shearing across its width. The shear-limited torque capacity is
 \begin{equation}
-T_{\tau} = \tau_{\text{allow}} \, b \, L \, \frac{d}{2},
+T_{\tau} = \tau_{\text{allow}} \, b \, L \, \frac{d}{2}, \label{eq:key_shear}
 \end{equation}
-while the bearing-pressure-limited capacity is
-\begin{equation}
-T_{p} = p_{\text{allow}} \left( \frac{h}{2} \right) L \frac{d}{2},
-\end{equation}
-where $b$ is the key width, $h$ is the key height, and $L$ is the engagement length.
+where $\tau_{\text{allow}}$ is the allowable shear stress of the key material, $b$ is the key width, and $L$ is the engagement length.
 
-The transmissible torque is therefore
+\emph{Bearing failure} occurs when the contact pressure between the key flanks and the keyway walls exceeds the allowable bearing pressure of either the key or the keyway material. This failure mode manifests as localized plastic deformation or crushing at the contact surfaces, which can lead to loss of fit and reduced torque capacity. The bearing-pressure-limited capacity is
 \begin{equation}
-M_{t,\text{key}} = \min \left( T_{\tau}, \, T_{p} \right).
+T_{p} = p_{\text{allow}} \left( \frac{h}{2} \right) L \frac{d}{2}, \label{eq:key_bearing}
+\end{equation}
+where $p_{\text{allow}}$ is the allowable bearing pressure and $h$ is the key height. The factor $h/2$ represents the effective moment arm for the bearing force, corresponding to half the key height where the contact pressure acts.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/keyfit_diagram.png}
+    \caption{Parallel key and keyway fit according to DIN~6885, showing the shaft–hub connection and load-transmitting contact surfaces~\cite{mikipulley_key_crosssection}.}
+    \label{fig:key_fit_din6885}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/key-diagram.jpg}
+    \caption{Exploded view of a keyed shaft--hub connection, highlighting the key, keyseat (shaft keyway), and hub keyway~\cite{engineeringchoice_shaft_key}.}
+    \label{fig:key_diagram_exploded}
+\end{figure}
+
+
+The transmissible torque is therefore governed by the more restrictive of these two failure modes:
+\begin{equation}
+M_{t,\text{key}} = \min \left( T_{\tau}, \, T_{p} \right). \label{eq:key_torque}
 \end{equation}
 
-In practice, the bearing pressure limit often governs, particularly for softer hub materials. To reflect this, the allowable bearing pressure is conservatively taken as the minimum allowable value of the shaft--hub material pair. Keys are inexpensive and easy to assemble and disassemble, but they introduce stress concentrations at the keyway, which can reduce fatigue strength and lead to backlash behavior under reversing loads.
+For keyed connections involving different shaft and hub materials, the allowable bearing pressure $p_{\text{allow}}$ used in Equation~\eqref{eq:key_bearing} is conservatively taken as the minimum of the shaft and hub material allowables:
+\begin{equation}
+p_{\text{allow}} = \min \left( p_{\text{allow,shaft}}, \, p_{\text{allow,hub}} \right).
+\end{equation}
+This ensures that local contact stresses remain within admissible bounds for both mating parts, with the weaker material governing the design. Keys are inexpensive and easy to assemble and disassemble, but they introduce stress concentrations at the keyway, which can reduce fatigue strength and lead to backlash behavior under reversing loads.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/key_fit_properties.png}
+\caption{Radar chart summarizing qualitative characteristics of a keyed shaft–hub connection (DIN 6885). See Table~\ref{tab:key_fit_radar_axes} for explanation of each axis~\cite{kittsteiner1990welle}.}
+\label{fig:key_fit_properties}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\caption{Explanation of axes in the keyed connection radar chart (Figure~\ref{fig:key_fit_properties})}
+\label{tab:key_fit_radar_axes}
+\begin{tabular}{p{5cm}p{9cm}}
+\toprule
+\textbf{Axis} & \textbf{Explanation} \\
+\midrule
+\textbf{Übertragbares Drehmoment} (Transmissible torque) & Rated moderate to good. Torque is transmitted by form closure via the key. Capacity is limited by key shear and bearing pressure in key and keyway, typically lower than press fits or splines for the same shaft size. Keyed connections provide reliable torque transmission but are not optimal for very high torques. \\
+\midrule
+\textbf{Selbstzentrierung} (Self-centering) & Rated poor. The key does not ensure concentric alignment. Radial positioning relies on shaft--hub clearance and manufacturing accuracy. Keyed joints generally exhibit worse concentricity than press fits or splines. \\
+\midrule
+\textbf{Montageaufwand} (Assembly effort) & Rated low. Simple assembly: insert key and slide hub onto shaft. No high forces or thermal methods required. This is a major practical advantage of keyed connections. \\
+\midrule
+\textbf{WNV-Kosten} (Cost of shaft--hub connection) & Rated favorable. Standardized components (keys per DIN 6885) and simple machining processes make keyed joints cost-effective and widely used. \\
+\midrule
+\textbf{Demontierbarkeit der WNV} (Disassemblability) & Rated good. Hub can be removed easily with no permanent deformation or interference. Well-suited for applications requiring maintenance or frequent disassembly. \\
+\midrule
+\textbf{Kerbwirkung der WNV auf Bauteile} (Notch/stress-concentration effect on components) & Rated unfavorable. Keyways introduce sharp geometric discontinuities and stress concentrations, reducing fatigue strength of shaft and hub. This is the main mechanical disadvantage of keyed connections. \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{Splines}
-Splines distribute torque across multiple teeth, significantly increasing load-carrying capacity and improving fatigue performance. The projected flank area may be expressed as
-\begin{equation}
-A_{\text{proj}} = z \, b \, h_{\text{proj}},
-\qquad
-h_{\text{proj}} = \frac{D - d}{2},
-\end{equation}
-where $z$ is the number of teeth.
+Splines transmit torque through multiple interlocking teeth that engage matching grooves in both the shaft and hub~\cite{Juvinall_Marshek_2020,Budynas_Nisbett_2020,Mott_Vavrek_Wang_2020,kittsteiner1990welle}. Unlike keys, which rely on a single rectangular element, splines distribute the load across multiple teeth, significantly increasing load-carrying capacity and improving fatigue performance through load sharing. Each tooth contributes to torque transmission through bearing contact on its flanks (the angled surfaces that engage with the mating spline).
 
-Rather than using the full projected geometry directly, the torque capacity in this work is based on an effective flank height and a mean radius to account for non-uniform load sharing:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/spline_diagram.png}
+    \caption{Simplified spline cross-section indicating outer diameter $D$, inner diameter $d$, and tooth width $b$ used in the analytical formulation~\cite{DIN5480_1_2006}.}
+    \label{fig:spline_diagram_dims}
+\end{figure}
+
+The total projected flank area available for load transmission can be expressed as
 \begin{equation}
-M_{t,\text{spline}} =
-K \, L \, z \, h_{\text{eff}} \, r_m \, p_{\text{allow}},
+A_{\text{proj}} = z \, b \, h_{\text{proj}}, \label{eq:spline_projected_area}
 \end{equation}
-with
+where $z$ is the number of teeth, $b$ is the tooth width (circumferential dimension), and $h_{\text{proj}}$ is the projected flank height, given by
 \begin{equation}
-r_m = \frac{d + D}{4},
-\qquad
-h_{\text{eff}} \approx 0.8 \, h_{\text{proj}}.
+h_{\text{proj}} = \frac{D - d}{2}, \label{eq:spline_flank_height}
 \end{equation}
+where $D$ is the outer diameter and $d$ is the inner diameter of the spline.
+
+In practice, load distribution across spline teeth is not uniform due to manufacturing tolerances, elastic deformation, and geometric misalignment. The teeth closest to the load application point typically carry more load than those farther away. To account for this non-uniform load sharing, the torque capacity calculation uses conservative reduction factors. Rather than using the full projected geometry directly, the torque capacity is based on an effective flank height and a mean radius:
+\begin{equation}
+M_{t,\text{spline}} = K \, L \, z \, h_{\text{eff}} \, r_m \, p_{\text{allow}}, \label{eq:spline_torque}
+\end{equation}
+where $L$ is the engagement length, $r_m$ is the effective ``lever arm'' radius at which the tooth contact forces act, and $p_{\text{allow}}$ is the maximum allowable contact (bearing) pressure on the spline flanks before local yielding/crushing occurs. The factor $K$ is a conservative load-sharing factor that reduces the ideal capacity to account for the fact that, in reality, not all teeth carry equal load; some teeth are loaded more heavily due to small geometric errors and elastic deformation. In this work, $K = 0.75$ is used to represent these load-sharing losses and practical non-uniformities.
+
+The mean radius $r_m$ represents the effective moment arm for torque transmission:
+\begin{equation}
+r_m = \frac{d + D}{4}, \label{eq:spline_mean_radius}
+\end{equation}
+which is the average of the inner and outer radii (a simple way to approximate where the resultant tooth force acts).
+
+The effective flank height $h_{\text{eff}}$ accounts for the fact that not all of the projected flank height contributes equally to load transmission. In practice, contact may be non-uniform along the tooth height (e.g., edge contact, micro-misalignment, and manufacturing tolerances), so the full geometric height $h_{\text{proj}}$ would overestimate the true load-carrying area. A common conservative approximation is:
+\begin{equation}
+h_{\text{eff}} \approx 0.8 \, h_{\text{proj}}. \label{eq:spline_effective_height}
+\end{equation}
+This 0.8 factor is therefore an empirical/conservative reduction (not a fundamental geometry identity) used to reflect practical contact conditions and ensure the resulting torque capacity estimate remains realistic.
 
 Splines provide high torque capacity, excellent fatigue behavior, and may be designed for controlled axial sliding. Their main drawbacks are increased manufacturing complexity, tighter tolerances, and higher cost compared to keys and press fits.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/spline_fit_properties.png}
+\caption{Radar chart providing a qualitative assessment of a splined shaft--hub connection according to DIN 5480. See Table~\ref{tab:spline_fit_radar_axes} for explanation of each axis~\cite{kittsteiner1990welle}.}
+\label{fig:spline_fit_properties}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\caption{Explanation of axes in the splined connection radar chart (Figure~\ref{fig:spline_fit_properties})}
+\label{tab:spline_fit_radar_axes}
+\begin{tabular}{p{5cm}p{9cm}}
+\toprule
+\textbf{Axis} & \textbf{Explanation} \\
+\midrule
+\textbf{Übertragbares Drehmoment} (Transmissible torque) & Rated high. Torque is transmitted by form closure across multiple spline teeth. Load is distributed over several contact surfaces. Splines provide high torque capacity, especially for larger diameters and higher power levels. \\
+\midrule
+\textbf{Selbstzentrierung} (Self-centering) & Rated good. Involute spline geometry provides accurate radial positioning with improved concentricity compared to keyed connections. Suitable for applications requiring good rotational accuracy. \\
+\midrule
+\textbf{Montageaufwand} (Assembly effort) & Rated moderate. Requires precise manufacturing of spline geometry. Assembly is straightforward once tolerances are met. More complex than keys, but less demanding than press fits. \\
+\midrule
+\textbf{WNV-Kosten} (Cost of shaft--hub connection) & Rated unfavorable to moderate. Higher machining cost due to specialized tooling and tight tolerances. Cost is the main disadvantage of splined connections. \\
+\midrule
+\textbf{Demontierbarkeit der WNV} (Disassemblability) & Rated good. Can be assembled and disassembled repeatedly with no permanent deformation involved. Well-suited for serviceable and modular designs. \\
+\midrule
+\textbf{Kerbwirkung der WNV auf Bauteile} (Notch/stress-concentration effect on components) & Rated moderate. Stress concentrations exist at spline roots, but less severe than keyways due to load sharing and rounded profiles. Better fatigue behavior than keyed connections, but worse than press fits. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Comparison of Connection Types}
+\label{subsec:connection_comparison}
+
+Table~\ref{tab:connection_comparison} provides a systematic comparison of the three connection types across key engineering criteria, summarizing their characteristic strengths and limitations.
+
+\begin{table}[ht]
+\centering
+\caption{Comparison of shaft--hub connection types}
+\label{tab:connection_comparison}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Criterion} & \textbf{Press Fit} & \textbf{Key} & \textbf{Spline} \\
+\midrule
+\textbf{Torque transmission} & Friction & Form closure & Form closure \\
+\textbf{Typical capacity} & Moderate & Low--Moderate & High \\
+\textbf{Assembly/disassembly} & Difficult (permanent) & Easy & Moderate \\
+\textbf{Axial movement} & Not possible & Limited & Excellent \\
+\textbf{Manufacturing cost} & Moderate & Low & High \\
+\textbf{Bidirectional torque} & Good & Moderate & Excellent \\
+\textbf{Vibration resistance} & Excellent & Moderate & Good \\
+\textbf{High-speed suitability} & Excellent & Moderate & Good \\
+\textbf{Maintenance ease} & Poor & Good & Moderate \\
+\textbf{Durability/fatigue} & Good & Moderate & Excellent \\
+\textbf{Concentricity} & Excellent & Good & Excellent \\
+\textbf{Backlash} & None & Possible & Minimal \\
+\textbf{Stress concentration} & Low & High (keyway) & Low \\
+\textbf{Standard} & DIN~7190 & DIN~6885 & DIN~5480 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The comparison reveals that each connection type occupies a distinct niche in the design space. Press fits excel in applications requiring high concentricity, vibration resistance, and zero backlash, but are limited by assembly constraints and inability to accommodate axial movement. Keys offer the best cost--performance trade-off for moderate torque applications with frequent disassembly needs, but suffer from stress concentrations and potential backlash. Splines provide the highest capacity and durability for demanding applications, particularly those requiring axial movement or bidirectional torque, but at significantly higher manufacturing cost.
 
 % ---------------------------------------------------------------------------
 \section{Relevant Industry Standards}
@@ -151,24 +394,62 @@ Splines provide high torque capacity, excellent fatigue behavior, and may be des
 Several industry standards inform the analytical foundations of the shaft--hub connection models used in this thesis. These standards provide established formulas, geometric conventions, and limiting criteria for individual connection types. Where standards do not fully specify selection or practical feasibility, conservative engineering heuristics are applied.
 
 \begin{itemize}
-    \item \textbf{DIN 7190 (press fits / interference fits)}~\cite{DIN7190_2017}.  
-    This standard forms the basis for modeling friction-closure shaft–hub connections. DIN-style friction coefficients (Haftbeiwerte) for common material pairings and surface conditions are used to estimate torque transmission capability~\cite{GWJ_eAssistant_DIN7190,FVA_InterferenceFits_2017}. Allowable interface pressure is governed by safety-factored material limits for both shaft and hub, with the effective limit taken as the minimum of the two. Geometric diameter ratios are used to reflect hub and hollow-shaft effects. In addition, practical interference considerations---accounting for elastic recovery and surface roughness---are incorporated to avoid mechanically feasible but impractical designs.
-
-    \item \textbf{DIN 6885 (parallel keys)}~\cite{DIN6885_2021}.  
-    Keyed joints are modeled using standardized key dimensions selected as a function of shaft diameter, consistent with DIN practice. Torque capacity is evaluated based on shear and bearing pressure limits, with conservative allowable values derived from the shaft–hub material combination. The governing capacity is taken as the smaller of these two limits.
-
-    \item \textbf{DIN 5480 (splines)}~\cite{DIN5480_2006}.  
-    Splined connections follow a DIN 5480-inspired approach. For smaller diameters, typical spline geometries are selected from a lookup aligned with standard practice. For larger diameters, a module-based heuristic is used to generate plausible spline geometry parameters. Load sharing is represented through conservative reduction factors applied to the effective flank height and torque capacity.
+    \item \textbf{DIN 7190 (press fits / interference fits)}~\cite{DIN7190_1_2017}.  
+    This standard forms the basis for modeling friction-closure shaft–hub connections. DIN-style friction coefficients (Haftbeiwerte) for common material pairings and surface conditions are used to estimate torque transmission capability~\cite{GWJ_eAssistant_DIN7190}. Figure~\ref{fig:press_friction_din7190} shows the friction coefficient ranges specified in DIN~7190 for different material pairings and surface conditions.
 \end{itemize}
 
-In addition to these standards, engineering practicality adjustments are employed to maintain robust and realistic feasibility assessments, such as conservative load-distribution factors and manufacturability checks. While DIN standards define feasibility boundaries, they do not prescribe how to select between multiple feasible connection types. Consequently, this thesis extends standards-based analysis with a preference-weighted and machine-learning-assisted decision framework to support transparent and application-dependent connection selection.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/press_friction_coefficients_DIN7190.pdf.png}
+	\caption{Friction coefficients (Haftbeiwerte) for press-fit connections according to DIN~7190, showing ranges for different material pairings and surface conditions~\cite{DIN7190_1_2017}.}
+	\label{fig:press_friction_din7190}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{DIN 6885 (parallel keys)}~\cite{DIN6885_1_2021}.  
+    Keyed joints are modeled using standardized key dimensions selected as a function of shaft diameter, consistent with DIN practice. Figure~\ref{fig:key_din6885} illustrates the key dimensions and tolerances specified in DIN~6885. Torque capacity is evaluated based on shear and bearing pressure limits, with conservative allowable values derived from the shaft–hub material combination. The governing capacity is taken as the smaller of these two limits.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/key_DIN.jpg}
+	\caption{Key dimensions and tolerances for parallel keys according to DIN~6885, showing standardized key sizes as a function of shaft diameter~\cite{DIN6885_1_2021}.}
+	\label{fig:key_din6885}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{DIN 5480 (splines)}~\cite{DIN5480_1_2006}.  
+    Splined connections follow a DIN 5480-inspired approach. Figure~\ref{fig:spline_din5480} shows the spline geometry and dimensions specified in DIN~5480. For smaller diameters, typical spline geometries are selected from a lookup aligned with standard practice. For larger diameters, a module-based heuristic is used to generate plausible spline geometry parameters. Load sharing is represented through conservative reduction factors applied to the effective flank height and torque capacity.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/spline_DIN.jpg}
+\caption{Spline geometry and dimensions for involute splines based on reference diameters according to DIN~5480~\cite{DIN5480_1_2006}.}
+\label{fig:spline_din5480}
+\end{figure}
+
+In addition to these standards, engineering practicality adjustments are employed to maintain robust and realistic feasibility assessment. While DIN standards define feasibility boundaries, they do not prescribe how to select between multiple feasible connection types. Consequently, this thesis extends standards-based analysis with a preference-weighted and machine-learning-assisted decision framework to support transparent and application-dependent connection selection.
 
 
 % ---------------------------------------------------------------------------
 \section{Materials and Contact Mechanics}
 \label{sec:materials_contact_mechanics}
 
-Material properties govern allowable stresses, elastic deformation, and compatibility in shaft--hub connections. The materials considered in this work include representative structural and alloy steels (e.g., C45, 42CrMo4), stainless steels, cast irons, bronzes, and aluminum alloys. For each material, a set of mechanical properties is defined, including Young’s modulus $E$, Poisson’s ratio $\nu$, yield and ultimate tensile strength proxies, and ductility classification. These properties are used to derive safety-factored allowable stresses that limit torque transmission capacity.
+Material properties govern allowable stresses, elastic deformation, and compatibility in shaft--hub connections. The materials considered in this work include representative structural and alloy steels (e.g., C45, 42CrMo4), stainless steels, cast irons, bronzes, and aluminum alloys. For each material, a set of mechanical properties is defined, including Young's modulus $E$, Poisson's ratio $\nu$, yield and ultimate tensile strength proxies, and ductility classification. These properties are used to derive safety-factored allowable stresses that limit torque transmission capacity.
+
+The relationship between stress and strain in elastic materials is governed by Hooke's law, which relates normal stress $\sigma$ to normal strain $\epsilon$ through Young's modulus $E = \sigma / \epsilon$, and shear stress $\tau$ to shear strain $\gamma$ through the shear modulus $G = E / [2(1 + \nu)]$. Young's modulus $E$ describes how stiff a material is in tension or compression: for a given stress, a higher $E$ means a smaller elastic strain and thus less elastic stretching or squeezing of the component. Poisson's ratio $\nu$ characterizes how much a material contracts laterally when stretched (or expands laterally when compressed), and in the linear elastic range is defined as
+\begin{equation}
+    \nu = -\frac{\epsilon_{\text{transverse}}}{\epsilon_{\text{axial}}}.
+\end{equation}
+Together, $E$ and $\nu$ determine how a material deforms elastically under multiaxial loading and enter the press-fit and spline formulations through $G$ and interference-related deformation estimates.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/Hookesches_Gesetz_for_material_properties.jpg}
+\caption{Hooke's law relationships for material properties, showing the relationship between stress and strain for normal and shear loading, and the connection between Young's modulus $E$, shear modulus $G$, and Poisson's ratio $\nu$~\cite{zwickau_konstruktionslehre_2023}.}
+\label{fig:hookes_law}
+\end{figure}
 
 For form-closure connections, allowable shear stresses and permissible bearing pressures are assigned on a material-specific basis. In keyed and splined joints, bearing pressure limits are conservatively governed by the weaker component of the shaft--hub material pair, ensuring that local contact stresses remain within admissible bounds for both mating parts.
 
@@ -176,8 +457,7 @@ For friction-closure connections, contact mechanics are governed by interface pr
 \begin{itemize}
     \item material pairing (e.g., steel--steel versus steel--aluminum),
     \item surface condition (dry or oiled),
-    \item surface roughness,
-    \item assembly method (press fit or shrink fit).
+    \item surface roughness.
 \end{itemize}
 
 Conservative friction coefficient ranges inspired by DIN practice are used to estimate torque transmission capacity while maintaining safety against slip. Rather than assigning a single fixed value, friction coefficients are sampled within bounded intervals corresponding to the selected material pairing and surface condition. This approach preserves physical interpretability while introducing controlled variability during synthetic dataset generation.
@@ -199,7 +479,7 @@ Beyond strength-related limits, practical and geometric considerations are commo
 required to avoid non-physical or unrealistically difficult designs (e.g., invalid diameter
 relationships or configurations that are impractical to assemble). In this thesis, these
 feasibility considerations serve as a prerequisite to the subsequent preference-based
-evaluation and selection, while the detailed formulation and implementation of the
+evaluation and selection, the detailed formulation and implementation of the
 feasibility checks are presented in Chapter~\ref{ch:methodology}.
 
 % ---------------------------------------------------------------------------
@@ -229,36 +509,28 @@ introduced in Chapter~\ref{ch:methodology}.
 \section{Synthetic Data in Engineering Design}
 
 Because no labelled datasets exist for shaft--hub connection selection, this thesis
-relies on synthetically generated data. Each synthetic sample represents a plausible
-engineering design scenario, characterized by:
-\begin{itemize}
-    \item geometric parameters (e.g., shaft diameter, engagement length, hub diameter,
-    solid or hollow shafts),
-    \item material combinations and surface conditions,
-    \item required torque and safety factor,
-    \item user-defined preference weights.
-\end{itemize}
+relies on \emph{synthetically generated data}, artificially created training examples that simulate real engineering scenarios.
 
-A combination of analytical and preference-based steps is used to establish
-mechanical feasibility and to identify suitable connection types, resulting in a
-physically grounded dataset~\cite{Picard_2023}. This approach enables supervised machine learning
-while avoiding the cost and complexity of large-scale experimental data acquisition.
-The data generation procedure is detailed in Chapter~\ref{ch:methodology}.
+\paragraph{The Need for Synthetic Data.}
+Machine learning models require training data: examples where both the input (design parameters) and the correct output (optimal connection type) are known. In many engineering domains, such labeled datasets don't exist because collecting experimental data is expensive, historical design databases are proprietary, and each design scenario is unique. Synthetic data generation solves this problem by using analytical models as a ``labeling oracle'' to automatically create thousands of realistic design scenarios and determine the correct connection type for each. The analytical models provide correct answers based on engineering knowledge encoded in standards and design rules, rather than requiring expensive experiments or expert annotation. The detailed data generation procedure is presented in Chapter~\ref{ch:methodology}.
 
 
 % ---------------------------------------------------------------------------
 \section{Machine Learning Concepts for Hybrid Prediction}
 \label{sec:background_ml}
 
+\subsection{What is Machine Learning?}
+\label{subsec:background_ml_intro}
+
+Machine learning enables computers to learn patterns from data without explicit programming. In this thesis, machine learning complements analytical models by learning subtle patterns and trade-offs that are difficult to encode explicitly in rules. While analytical models provide physically grounded calculations, machine learning captures complex interactions between multiple factors (geometry, materials, preferences) that influence connection selection.
+
 \subsection{Supervised Classification}
 \label{subsec:background_supervised}
 
-Machine learning provides a complementary decision layer to the analytical
-engineering approach. In a supervised classification setting, a model learns a
-mapping from input features to a recommended shaft--hub connection type. In this
-work, the input features describe the mechanical design context, including geometric
-parameters, required torque and safety factor, shaft type, shaft material and surface
-condition, as well as user-defined preference weights.
+Machine learning provides a decision layer to the analytical
+engineering approach. 
+\paragraph{Training Process.}
+In supervised classification, the model learns from a training dataset where each example consists of input features (geometric parameters, materials, preferences) and a target label (connection type determined by the analytical scoring system). The dataset is divided into training (70--80\%), validation (10--15\%), and test (10--20\%) sets. The validation set is used for hyperparameter tuning, while the test set provides an unbiased performance estimate. To prevent overfitting, techniques such as regularization, early stopping, and cross-validation are employed to ensure the model learns generalizable patterns rather than memorizing training examples.
 
 \subsection{Tree-Based Models and Gradient Boosting}
 \label{subsec:background_boosting}
@@ -266,38 +538,108 @@ condition, as well as user-defined preference weights.
 Tree-based models are well suited to this problem because they can represent
 nonlinear decision boundaries that commonly arise from mechanical feasibility
 constraints and can naturally handle a mixture of numerical and categorical inputs.
-Accordingly, this thesis considers Random Forest classifiers~\cite{Breiman_2001} as well as several
-gradient-boosted tree frameworks, including:
+
+\paragraph{Decision Trees.}
+A decision tree is a hierarchical model that makes predictions by asking a series of yes/no questions about input features, branching based on feature values until reaching leaf nodes that provide class predictions. Decision trees can naturally handle both numerical and categorical features, making them well-suited for engineering problems with mixed data types. However, individual trees are prone to overfitting and can be sensitive to small changes in the training data.
+
+\paragraph{Random Forest and Bagging.}
+Random Forest~\cite{Breiman_2001} addresses the limitations of single decision trees through \emph{bagging} (bootstrap aggregating). The algorithm trains many independent decision trees, each on a random subset of the training data (bootstrapping) (sampled with replacement). Additionally, at each split, only a random subset of features is considered, introducing diversity among trees. During prediction, all trees vote (aggregation), and the majority class is selected. This ensemble approach reduces overfitting and variance: while individual trees may make errors, their collective decision is more robust. Random Forest provides feature importance scores by measuring how much each feature contributes to reducing impurity across all trees, offering interpretability into which design parameters most influence predictions.
+
+\paragraph{Gradient Boosting.}
+Gradient boosting~\cite{Friedman_2001} takes a different ensemble approach: instead of training trees independently, it trains them sequentially, with each new tree focusing on correcting the errors of the previous ensemble. The algorithm starts with a simple model (often a single leaf predicting the average), then iteratively adds trees that predict the residual errors. Each new tree is trained on the gradient of the loss function with respect to the current predictions, effectively learning to correct mistakes. This sequential learning enables gradient boosting to capture complex, nonlinear relationships that would be difficult for a single tree or independently trained ensemble to learn. The final prediction is the sum of all tree predictions, weighted by a learning rate that controls how aggressively each tree contributes.
+
+\paragraph{Gradient-Boosted Tree Frameworks.}
+This thesis considers several modern gradient-boosted tree frameworks, each with specific optimizations:
 \begin{itemize}
-    \item \textbf{XGBoost}: gradient boosting with regularization and second-order
-    optimization,
-    \item \textbf{LightGBM}: histogram-based gradient boosting optimized for efficient
-    training,
-    \item \textbf{CatBoost}: gradient boosting with robust handling of categorical
-    variables and reduced overfitting tendencies.
+    \item \textbf{XGBoost}~\cite{Chen_Guestrin_2016}: Extends gradient boosting with regularization terms (L1 and L2 penalties) to prevent overfitting, and uses second-order optimization (considering both first and second derivatives) for faster convergence. XGBoost also includes built-in handling of missing values and parallel tree construction, making it robust and computationally efficient.
+    
+    \item \textbf{LightGBM}~\cite{Ke_Wang_Meng_Ye_Zhu_Fan_2017}: Optimizes training speed and memory usage through histogram-based algorithms that discretize continuous features into bins, reducing the number of split candidates to evaluate. LightGBM uses a leaf-wise (best-first) tree growth strategy instead of level-wise growth, often achieving similar accuracy with fewer trees and faster training times.
+    
+    \item \textbf{CatBoost}~\cite{Prokhorenkova_Gusev_Vorobev_Dorogush_Gulin_2018}: Specifically designed for robust handling of categorical variables (such as material names) through a novel method that avoids target leakage during encoding. CatBoost uses ordered boosting, where each tree is trained on a different permutation of the data, reducing overfitting tendencies and improving generalization performance.
 \end{itemize}
 
 \subsection{Ensemble Learning}
 \label{subsec:background_ensemble}
 
-In addition to individual classifiers, ensemble learning can improve robustness and
-generalization. A \emph{soft-voting ensemble} combines multiple base classifiers by
-averaging their predicted class probabilities and selecting the class with the highest
-average probability. By aggregating partially uncorrelated models, such ensembles can
-reduce variance and improve prediction stability.
+In addition to individual classifiers, \emph{ensemble learning} can improve robustness and
+generalization by combining multiple models. The principle is similar to seeking multiple expert opinions before making an important decision, while individual experts might make mistakes, their collective judgment is often more reliable.
+
+\paragraph{Ensemble Learning and Model Outputs.}
+A soft-voting ensemble combines multiple base classifiers by averaging their predicted class probabilities, reducing variance and improving prediction stability. Machine learning models provide probability estimates for each class, indicating confidence levels. High probabilities suggest confident predictions, while evenly distributed probabilities indicate uncertainty. Tree-based models also provide feature importance scores, identifying which design parameters most influence predictions, validating that the model uses both mechanical constraints and user priorities.
 
 \subsection{Evaluation Metrics and Model Selection}
 \label{subsec:background_metrics}
 
-Classification performance is commonly assessed using metrics that capture both
-overall correctness and class-specific behavior. In multi-class settings, it is useful to
-report accuracy alongside class-balanced measures such as macro-averaged precision,
-macro-averaged recall, and macro-averaged F1-score. In this thesis, model comparison
-and selection are based primarily on the macro-averaged F1-score to avoid favoring a
-single dominant class, while accuracy is reported as a complementary summary metric.
-A confusion matrix is additionally used to visualize systematic confusions between the
-three connection types (press fit, key, spline) and to support qualitative error analysis.
+To assess model performance, this thesis uses several evaluation metrics that provide different perspectives on classification quality. Understanding these metrics requires defining the fundamental classification outcomes for each class: \emph{true positives} (TP), where the model correctly predicts the class; \emph{false positives} (FP), where the model incorrectly predicts the class when it should be another; \emph{true negatives} (TN), where the model correctly predicts a different class; and \emph{false negatives} (FN), where the model incorrectly predicts a different class when it should be the target class.
 
+\paragraph{Confusion Matrix.}
+A confusion matrix provides a detailed breakdown of classification performance by showing how many instances of each true class were predicted as each possible class. For a three-class problem (press fit, key, spline), the confusion matrix is a $3 \times 3$ table where rows represent true classes and columns represent predicted classes. Diagonal elements show correct predictions (TP for each class), while off-diagonal elements reveal which classes are confused with which others. The confusion matrix enables qualitative error analysis, identifying systematic misclassification patterns (e.g., whether keys are frequently confused with splines).
+
+\paragraph{Accuracy, Precision, and Recall.}
+\emph{Accuracy} measures the overall percentage of correct predictions:
+\begin{equation}
+\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{FP} + \text{TN} + \text{FN}} = \frac{\text{Correct Predictions}}{\text{Total Predictions}}.
+\end{equation}
+While intuitive, accuracy can be misleading with imbalanced classes: a model that always predicts the majority class achieves high accuracy but fails to learn meaningful patterns.
+
+\emph{Precision} measures the reliability of positive predictions, of all instances predicted as a class, how many were actually that class:
+\begin{equation}
+\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}.
+\end{equation}
+High precision indicates that when the model predicts a class, it is usually correct, reducing false alarms.
+
+\emph{Recall} (also called sensitivity) measures how well a model finds all instances of a class, of all actual instances of a class, how many were correctly identified:
+\begin{equation}
+\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}.
+\end{equation}
+High recall indicates that the model successfully identifies most instances of a class, reducing missed detections.
+
+\paragraph{F1-Score and Macro-Averaging.}
+Precision and recall often trade off against each other: a conservative model may achieve high precision but low recall (missing many instances), while an aggressive model may achieve high recall but low precision (making many false predictions). The \emph{F1-score} combines precision and recall as their harmonic mean, balancing both concerns:
+\begin{equation}
+\text{F1} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} = \frac{2 \cdot \text{TP}}{2 \cdot \text{TP} + \text{FP} + \text{FN}}.
+\end{equation}
+The harmonic mean penalizes extreme imbalances: if either precision or recall is low, the F1-score will be low, encouraging balanced performance.
+
+For multi-class problems, \emph{macro-averaging} computes precision, recall, and F1-score separately for each class, then takes the simple average across all classes:
+\begin{equation}
+\text{Macro F1} = \frac{1}{C} \sum_{i=1}^{C} \text{F1}_i,
+\end{equation}
+where $C$ is the number of classes and $\text{F1}_i$ is the F1-score for class $i$. This ensures all classes are weighted equally, preventing dominant classes from masking poor performance on minority classes. In this thesis, model selection is based primarily on macro-averaged F1-score to avoid favoring dominant classes, with the confusion matrix used for qualitative error analysis to understand specific misclassification patterns.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/conf-matrix3x3.png}
+	\caption{Confusion matrix for the three-class problem, showing how predictions are distributed across true and predicted classes~\cite{researchgate_confusion_matrix_2021}.}
+	\label{fig:confusion_matrix}
+\end{figure}
+
+% ---------------------------------------------------------------------------
+\section{State of the Art in Engineering Design Automation}
+\label{sec:state_of_the_art}
+
+The field of engineering design automation has evolved significantly over recent decades, with approaches ranging from purely analytical rule-based systems to data-driven machine-learning methods~\cite{Puttegowda_Nagaraju_2025,Gao_etal_2024}. The broader context of Industry 4.0 (Understanding the current landscape helps contex-
+tualize the contribution of this thesis) and digitization has accelerated the adoption of AI in engineering processes, creating opportunities for improved efficiency and automation~\cite{Ghobakhloo_2020,Arinze_Izionworu_Onuegbu_Isong_Daudu_Adefemi_2024}. Understanding the current landscape helps contextualize the contribution of this thesis.
+
+Traditional engineering design relies heavily on analytical calculations derived from first principles and standardized design codes. These methods provide transparent, physically grounded solutions but require expert knowledge and manual iteration. For shaft--hub connections specifically, engineers typically consult handbook charts, perform iterative calculations using DIN standards, and rely on experience to select among feasible options. While reliable, this process is time-consuming and does not scale well to rapid design exploration or automated optimization workflows. Recent work has explored AI techniques for specific aspects of shaft--hub connections, such as improving shrink-fit couplings through machine learning~\cite{Saeed_Falter_Dausch_Wagner_Kreimeyer_Eisenbart_2023}, demonstrating the potential for AI-assisted design in this domain. A previous bachelor thesis by Massoud~\cite{Massoud_2025} developed an AI-supported algorithm for the differentiated selection of shaft--hub connections using XGBoost and Random Forest, providing a foundation and motivation for the analytical and data-driven approach developed in this work.
+
+Rule-based expert systems emerged as an early attempt to automate engineering decisions. These systems encode expert knowledge as explicit if-then rules, enabling consistent application of design logic. However, they suffer from brittleness; they cannot handle cases outside their predefined rules and require extensive maintenance as knowledge evolves. Moreover, they struggle with multi-criteria trade-offs where multiple factors interact in complex ways.
+
+The advent of machine learning promised to overcome these limitations by learning patterns directly from data. Supervised learning approaches can capture complex, nonlinear relationships between design parameters and optimal solutions. However, machine learning requires large, labeled datasets. While such datasets derived from experiments, simulations, or historical design databases do exist, they represent proprietary knowledge held by research institutes and companies and are not publicly accessible. Collecting experimental data is expensive and time-consuming, while extracting historical design data from industry databases faces challenges of data quality, consistency, and proprietary restrictions. At the moment, this work does not have access to these proprietary datasets.
+
+Hybrid approaches that combine analytical models with machine learning have gained traction as a way to leverage the strengths of both paradigms~\cite{Raissi_Perdikaris_Karniadakis_2019,Karniadakis_Kevrekidis_Lu_Perdikaris_Wang_Yang_2021,Wang_Yang_2021}. Physics-informed machine learning incorporates domain knowledge directly into model architectures, ensuring predictions respect physical constraints~\cite{Raissi_Perdikaris_Karniadakis_2019}. Surrogate modeling uses machine learning to approximate expensive simulations, enabling rapid design exploration. However, most hybrid approaches still require some form of training data, whether from simulations or experiments.
+
+Synthetic data generation represents a promising direction for domains lacking empirical datasets. By using analytical models or simulations as labeling oracles, large datasets can be generated that reflect engineering knowledge encoded in standards and design rules. This approach bridges the gap between rule-based systems and data-driven methods, enabling machine learning while maintaining physical consistency.
+
+The specific problem of shaft--hub connection selection sits at the intersection of these trends. It requires handling multiple competing criteria, respecting mechanical constraints, and providing interpretable recommendations, all while operating in a data-scarce environment. The approach developed in this thesis addresses these challenges by generating synthetic data from analytical models, training machine-learning classifiers on this data, and integrating both components into a unified decision-support system.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/system_architecture.png}
+	\caption{System architecture of the proposed hybrid analytical--machine learning framework. User inputs are collected in a React frontend and sent to a FastAPI REST API for request validation and response formatting. The backend executes an analytical engine (DIN-based capacity calculations, feasibility filtering, and preference scoring) supported by a material database, alongside an ML pipeline (feature preprocessing and a CatBoost classifier providing predictions and confidence scores). An offline dataset generation module creates a synthetic dataset used to train the ML component. Source: own illustration.}
+	\label{fig:system_architecture}
+\end{figure}
 
 % ---------------------------------------------------------------------------
 \section{Summary}

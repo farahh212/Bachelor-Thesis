@@ -3,7 +3,23 @@
 \renewcommand{\appendixpagename}{\appendixtocname}
 \addappheadtotoc
 \setboolean{@twoside}{false}
-\appendixpage
+\setlength\parskip{.1\baselineskip plus .05\baselineskip minus .05\baselineskip}
+% Reduce spacing around sections and subsections
+\makeatletter
+\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname\quad}
+% Reduce spacing before/after sections
+\@addtoreset{section}{chapter}
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+  {-3.5ex \@plus -1ex \@minus -.2ex}%
+  {2.3ex \@plus.2ex}%
+  {\normalfont\Large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\normalfont\large\bfseries}}
+\makeatother
+
+\input{nomenclature}
 
 \chapter{Lists}
 \addcontentsline{toc}{section}{List of Abbreviations}
@@ -19,5 +35,300 @@
 \clearpage
 \listoffigures
 \addcontentsline{toc}{section}{List of Figures}
-% \listoftables
-% \addcontentsline{toc}{section}{List of Tables}
+\listoftables
+\addcontentsline{toc}{section}{List of Tables}
+
+\chapter{Source Code}
+\label{ch:source_code}
+This appendix provides key code snippets from the most critical implementation components. The complete source code is available in the \texttt{Bachelor\_Code} directory.
+
+\clearpage
+
+\section{Analytical Selector: Core Functions}
+\label{sec:code_analytical}
+
+\subsection{Press-Fit Capacity Calculation}
+\label{subsec:code_pressfit}
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=Press-Fit Capacity Function, breakable=false]
+\begin{lstlisting}
+def pressfit_capacity(M_req_Nmm: float, d_mm: float, L_mm: float,
+                      shaft_type: str, shaft_mat_name: str, 
+                      hub_mat_name: str, mu: float, S_R: float,
+                      DiI_mm: Optional[float], DaA_mm: Optional[float]) 
+                      -> Dict[str, Any]:
+    """Calculate press-fit torque capacity with interference check."""
+    # Required pressure for design torque
+    p_erf = p_required_pressfit(M_req_Nmm, d_mm, L_mm, mu, S_R)
+    
+    # Allowable pressure from material limits
+    p_zul = p_allow_pressfit(shaft_type, materials[shaft_mat_name],
+                             materials[hub_mat_name], d_mm, DiI_mm, DaA_mm)
+    
+    # Torque capacity from allowable pressure
+    Mt_from_pzul = (math.pi * mu * p_zul * L_mm * (d_mm ** 2)) / 2.0
+    
+    # Interference manufacturability check
+    intr = pressfit_interference_check(d_mm, p_erf, shaft_type,
+                                       shaft_mat_name, hub_mat_name,
+                                       DiI_mm, DaA_mm)
+    
+    return {"Mt_from_pzul": Mt_from_pzul, "interference": intr, ...}
+\end{lstlisting}
+\end{tcolorbox}
+
+\clearpage
+
+\subsection{Key Capacity Calculation}
+\label{subsec:code_key}
+
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=Key Capacity Function, breakable=false]
+\begin{lstlisting}
+def key_capacity(d_mm: float, l_key_mm: float,
+                 shaft_mat_name: str, hub_mat_name: str) -> Dict[str, Any]:
+    """Calculate key torque capacity (shear and bearing limits)."""
+    b_mm, h_mm = key_geometry_from_d(d_mm)  # DIN 6885 lookup
+    
+    mat_shaft = materials[shaft_mat_name]
+    mat_hub = materials[hub_mat_name]
+    
+    # Effective allowable: minimum of shaft and hub
+    tau_allow = float(mat_shaft["tau_allow_key"])
+    p_allow_effective = min(float(mat_shaft["p_allow_key"]),
+                         float(mat_hub["p_allow_key"]))
+    
+    # Calculate both failure modes
+    A_shear = b_mm * l_key_mm
+    A_bear = (h_mm / 2.0) * l_key_mm
+    r = 0.5 * d_mm
+    
+    T_tau = tau_allow * A_shear * r      # Shear capacity
+    T_p = p_allow_effective * A_bear * r # Bearing capacity
+    
+    # Governing failure mode (minimum)
+    return {"Mt": min(T_tau, T_p), ...}
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+\subsection{Spline Capacity Calculation}
+\label{subsec:code_spline}
+
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=Spline Capacity Function, breakable=false]
+\begin{lstlisting}
+def spline_capacity(d_mm: float, L_mm: float,
+                    shaft_mat_name: str, hub_mat_name: str,
+                    major_d_override: Optional[float] = None,
+                    tooth_count_override: Optional[int] = None) 
+                    -> Dict[str, Any]:
+    """Calculate spline torque capacity with load sharing factor."""
+    # Geometry lookup (DIN 5480)
+    z, h_proj_mm, D_mm, b_table_mm = spline_geometry_from_d_lookup(d_mm)
+    
+    # Effective allowable pressure
+    mat_shaft = materials[shaft_mat_name]
+    mat_hub = materials[hub_mat_name]
+    p_allow_effective = min(float(mat_shaft["p_allow_spline"]),
+                         float(mat_hub["p_allow_spline"]))
+    
+    # Effective parameters
+    r_m = 0.25 * (d_mm + D_mm)      # Mean radius
+    h_eff = 0.8 * h_proj_mm          # Effective flank height
+    K = 0.75                          # Load sharing factor
+    
+    # Torque capacity
+    Mt = K * L_mm * z * h_eff * r_m * p_allow_effective
+    
+    return {"Mt": Mt, "z": z, "D_mm": D_mm, ...}
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+\subsection{Preference Scoring Function}
+\label{subsec:code_scoring}
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=Scoring Function, breakable=false]
+\begin{lstlisting}
+def score_candidate(conn: str, Mt_cap: float, M_req: float,
+                    d_mm: float, L_mm: float, prefs: UserPrefs,
+                    DaA_mm: Optional[float] = None) -> float:
+    """Compute composite score for connection candidate."""
+    # 1) Margin reward (capped at 35%)
+    margin_raw = max(0.0, (Mt_cap - M_req) / max(M_req, 1e-6))
+    margin_useful = min(margin_raw, 0.35) / 0.35
+    s_margin = 0.10 * margin_useful
+    
+    # 2) Overdesign penalty (beyond 35%)
+    overkill = max(0.0, margin_raw - 0.35)
+    s_overkill = -0.10 * min(overkill, 0.5)
+    
+    # 3) Preference utility (70% weight)
+    prof = CONN_PROFILE[conn]
+    pref_util = (
+        prefs.ease * prof["assembly/disassembly_ease"] +
+        prefs.cost * prof["manufacturing_cost"] +
+        # ... all 8 preferences ...
+    ) / norm
+    s_prefs = 0.70 * pref_util
+    
+    # 4) Connection-specific penalties
+    s_hub_stiffness = ...  # Press fit thin hub penalty
+    spline_practicality = ...  # Spline penalty when not needed
+    
+    return s_margin + s_overkill + s_prefs + s_hub_stiffness + spline_practicality
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+\subsection{Main Selection Function}
+\label{subsec:code_main_selector}
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=Main Selection Function, breakable=false]
+\begin{lstlisting}
+def select_shaft_connection(request) -> Dict[str, Any]:
+    """Main analytical selector function."""
+    M_req = float(request.required_torque)
+    S_R = float(request.safety_factor)
+    M_design = M_req * S_R
+    
+    # Compute capacities for all three connection types
+    pf = pressfit_capacity(M_req, d, L, ...)
+    key = key_capacity(d, L, ...)
+    spline = spline_capacity(d, L, ...)
+    
+    # Feasibility filtering
+    feasible = {}
+    if pf["Mt_from_pzul"] >= M_design and pf["interference"]["ok"]:
+        feasible["press"] = pf["Mt_from_pzul"]
+    if key["Mt"] >= M_design:
+        feasible["key"] = key["Mt"]
+    if spline["Mt"] >= M_design:
+        feasible["spline"] = spline["Mt"]
+    
+    if not feasible:
+        return {"recommended_connection": "none", "feasible": False}
+    
+    # Score all feasible candidates
+    scores = {conn: score_candidate(conn, Mt_cap, M_design, ...) 
+              for conn, Mt_cap in feasible.items()}
+    
+    # Select highest-scoring candidate
+    best_conn = max(scores.items(), key=lambda x: x[1])[0]
+    
+    return {"recommended_connection": best_conn, "feasible": True, ...}
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+\section{Synthetic Dataset Generation}
+\label{sec:code_dataset}
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=Dataset Generation Pipeline, breakable=false]
+\begin{lstlisting}
+def generate_dataset(n_samples: int = 5000, seed: int = 42) -> pd.DataFrame:
+    """Generate synthetic dataset using analytical selector as labeling oracle."""
+    rng = np.random.default_rng(seed)
+    rows: List[Dict] = []
+    
+    for _ in range(n_samples):
+        # Sample all parameters from DIN-compliant distributions
+        req = sample_request(rng)  # Diameter, torque, materials, preferences
+        
+        # Label using analytical selector
+        result = select_shaft_connection(req)
+        
+        if not result.get("feasible", False):
+            continue  # Discard infeasible samples
+        
+        # Store labeled example
+        rows.append({
+            "shaft_diameter": req.shaft_diameter,
+            "hub_length": req.hub_length,
+            "required_torque": req.required_torque,
+            "pref_ease": req.user_preferences.ease,
+            # ... all features ...
+            "label": result["recommended_connection"]
+        })
+    
+    return pd.DataFrame(rows)
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+\section{Machine Learning Training}
+\label{sec:code_ml_training}
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=Model Training Pipeline, breakable=false]
+\begin{lstlisting}
+def main():
+    # Load and prepare data
+    df = pd.read_csv(DATASET_PATH)
+    X = df[FEATURE_NUMERIC + CATEGORICAL]
+    y = LabelEncoder().fit_transform(df["label"])
+    
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, stratify=y, random_state=42
+    )
+    
+    # Train multiple models
+    models = {
+        "Random Forest": RandomForestClassifier(n_estimators=150),
+        "XGBoost": XGBClassifier(n_estimators=150),
+        "LightGBM": LGBMClassifier(n_estimators=150),
+        "CatBoost": CatBoostClassifier(n_estimators=150)
+    }
+    
+    best_model = None
+    best_score = -1.0
+    
+    for name, estimator in models.items():
+        clf = Pipeline([
+            ("preprocess", preprocessor),  # Standard scaling + one-hot encoding
+            ("model", estimator)
+        ])
+        
+        clf.fit(X_train, y_train)
+        y_pred = clf.predict(X_test)
+        
+        # Evaluate using macro F1-score
+        f1_macro = f1_score(y_test, y_pred, average="macro")
+        
+        if f1_macro > best_score:
+            best_score = f1_macro
+            best_model = clf
+    
+    # Save best model
+    joblib.dump(best_model, MODEL_DIR / "connection_classifier.pkl")
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+\section{Web Application Backend}
+\label{sec:code_backend}
+\FloatBarrier
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50!black, title=FastAPI Endpoint, breakable=false]
+\begin{lstlisting}
+@app.post("/select-connection", response_model=ConnectionResult)
+async def select_connection(request: ShaftConnectionRequest):
+    """Main API endpoint combining analytical and ML predictions."""
+    try:
+        # Analytical prediction
+        result = select_shaft_connection(request)
+        
+        # ML prediction
+        ml_features = _assemble_ml_features(request)
+        ml_prediction = predict_connection(ml_features)
+        
+        # Combine results
+        result["ml_recommendation"] = ml_prediction["label"]
+        result["ml_probabilities"] = ml_prediction["probs"]
+        
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+\end{lstlisting}
+\end{tcolorbox}
+\clearpage
+
+\section{Web Application Frontend}
+\label{sec:code_frontend}
+
+The React frontend (\texttt{shaft-connection-selector/src/App.js}) provides an interactive user interface for inputting design parameters and visualizing results. The frontend communicates with the FastAPI backend via REST API calls, displays both analytical and ML recommendations, and visualizes torque capacities and selection scores.
+
+Screenshots of the frontend interface are provided in Section~\ref{sec:webapp_demo} of the Results chapter, demonstrating the complete user workflow from parameter input through results visualization.
