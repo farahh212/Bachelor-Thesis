@@ -6,7 +6,7 @@ import './App.css';
 // API base URL configuration
 // In production: uses REACT_APP_API_URL environment variable (set in Vercel)
 // In development: uses localhost:8000 for local backend
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE = process.env.REACT_APP_API_URL;
 console.log(API_BASE);
 
 const DIAMETER_MIN = 6;
